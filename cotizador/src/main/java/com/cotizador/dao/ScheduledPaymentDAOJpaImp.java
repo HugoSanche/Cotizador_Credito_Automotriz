@@ -3,9 +3,11 @@ package com.cotizador.dao;
 import com.cotizador.entity.ScheduledPayment;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class ScheduledPaymentDAOJpaImp implements ScheduledPaymentDAO{
     private EntityManager entityManager;
 
