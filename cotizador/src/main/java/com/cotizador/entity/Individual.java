@@ -30,11 +30,13 @@ public class Individual {
 
     @NotNull
     @Email
+    @Column(name="Email")
     private String email;
 
     @NotNull
     @Pattern(regexp="(^$|[0-9]{10})")
     @Size(min=10,max=10)
+    @Column(name="PhoneNumber")
     private String phoneNumber;
 
     @Column(name="MaritalStatus")
