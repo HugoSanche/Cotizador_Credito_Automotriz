@@ -1,10 +1,9 @@
 package com.cotizador.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -27,7 +26,6 @@ public class Individual {
     @Column(name="SecondLastName")
     private String secondLastName;
 
-
     @NotNull
     @Email
     @Column(name="Email")
@@ -41,7 +39,8 @@ public class Individual {
 
     @Column(name="MaritalStatus")
     private String maritalStatus;
-    @Column(name="BirthDate")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "BirthDate", nullable = false)
     private Date birthDate;
 
     @Column(name="Nacionality")
@@ -55,19 +54,21 @@ public class Individual {
     @Column(name="DwellingType")
     private String dwellingType;
 
-
     @Column(name="IsDwellingFreeOfEncumbrance")
     private int isDwellingFreeOfEncumbrance;
 
     @Column(name="Occupation")
     private String occupation;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="StartDateInCurrentJob")
     private Date startDateInCurrentJob;
 
     @Column(name="CurrentPositionName")
     private String currentPositionName;
 
+    @NumberFormat(style= NumberFormat.Style.CURRENCY)
+    @DecimalMin("0.01")
     @Column(name="CurrentMonthlyIncome")
     private BigDecimal CurrentMonthlyIncome;
 
