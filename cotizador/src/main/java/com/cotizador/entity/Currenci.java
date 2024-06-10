@@ -1,2 +1,4 @@
-package com.cotizador.entity;public class Currenci {
+package com.cotizador.entity;
+
+public class Currenci {
 }

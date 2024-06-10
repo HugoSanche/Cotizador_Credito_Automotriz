@@ -4,7 +4,7 @@ import com.cotizador.entity.Paymentcalculator;
 
 import java.util.List;
 
-public interface CotizacionDAO {
+public interface PaymentcalculatorDAO {
     List<Paymentcalculator> findAll();
     Paymentcalculator findById(int id);
     void save(Paymentcalculator paymentcalculator);
