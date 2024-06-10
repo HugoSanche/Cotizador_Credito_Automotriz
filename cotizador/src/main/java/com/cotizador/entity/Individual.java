@@ -16,24 +16,36 @@ public class Individual {
     @Column(name="PersonId")
    private int personId;
 
+
+    @NotNull(message = "is required")
+    @Size (min =3, message = "is required")
     @Column(name="FirstName")
     private String firstName;
 
     @Column(name = "MiddleName")
     private String middleName;
+
+    @NotNull(message = "is required")
+    @Size (min =3, message = "is required")
     @Column(name="FirstLastName")
     private String firstLastName;
+
+    @NotNull(message = "is required")
+    @Size (min =3, message = "is required")
     @Column(name="SecondLastName")
     private String secondLastName;
 
-    @NotNull
-    @Email
+
+    @NotNull(message = "is required")
+    @NotEmpty
+    @Email(message = "Format error")
     @Column(name="Email")
     private String email;
 
     @NotNull
+    @NotEmpty
     @Pattern(regexp="(^$|[0-9]{10})")
-    @Size(min=10,max=10)
+    @Size(min=10,max=10,message = "Must be equal to 10")
     @Column(name="PhoneNumber")
     private String phoneNumber;
 
