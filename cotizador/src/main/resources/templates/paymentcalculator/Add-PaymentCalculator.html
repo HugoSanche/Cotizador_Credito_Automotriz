@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8">
-    <title>Add Individual</title>
+    <title>Simulador de Credito</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add Form</title>
@@ -10,11 +10,10 @@
 </head>
 <body>
 <div class="container">
-    <h3>Individual Directory</h3>
+    <h3>Simulador de Crédito</h3>
     <hr>
-    <p class="h4 mb-4">Add Individual</p>
     <form action="#" th:action="@{/creditos/auto/save}"
-          th:object="${individual}" method="POST">
+          th:object="${individual}" method="POST" class="row g-3">
 
         <!-- Add hidden form filed to handle the update-->
         <input type="hidden" th:field="*{personId}">
@@ -28,14 +27,12 @@
         <div class="col-md-4">
             <label  class="form-label">Middle Name</label>
             <input type="text" th:field="*{middleName}" class="form-control" placeholder="Middle Name" >
-
         </div>
         <div class="col-md-4">
             <label  class="form-label">Last name</label>
             <input type="text" th:field="*{firstLastName}" class="form-control" placeholder="First LastName">
             <span  th:if="${#fields.hasErrors('firstLastName')}" th:errors="*{firstLastName}" class="error"></span>
         </div>
-        <br>
         <div class="col-md-4">
             <label class="form-label">Second Last Name</label>
             <input type="text" th:field="*{secondLastName}" class="form-control" placeholder="Second Last Name">
@@ -54,15 +51,14 @@
             <span  th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="error"></span>
         </div>
 
-
-
         <label>Does Biz Activities</label>
         <input type="text" th:field="*{doesBizActivities}"
                class="form-control mb-4 w-25" placeholder="Does Biz Activities">
-
-
-        <button type="submit" class="btn btn-info col-2">Add</button>
-
+        <br>
+        <br>
+        <div>
+            <button type="submit" class="btn btn-info col-2 row g-2" >Solicitar</button>
+        </div>
 
     </form>
 
