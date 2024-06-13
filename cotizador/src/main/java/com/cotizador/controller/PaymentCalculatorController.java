@@ -3,12 +3,11 @@ package com.cotizador.controller;
 import com.cotizador.entity.Individual;
 import com.cotizador.entity.PaymentCalculator;
 import com.cotizador.service.IndividualService;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/creditos/auto")
@@ -19,13 +18,15 @@ public class PaymentCalculatorController {
         this.individualService = individualService;
     }
 
-    public IndividualService getIndividualService() {
-        return individualService;
+    // add an initbinder ... to convert trim input string
+    //remove leading and training white spaces
+    //resolve issue for our validation
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder){
+        StringTrimmerEditor stringTrimmesrEditor=new StringTrimmerEditor(true);
+        dataBinder.registerCustomEditor(String.class, stringTrimmesrEditor);
     }
 
-    public void setIndividualService(IndividualService individualService) {
-        this.individualService = individualService;
-    }
 
     @GetMapping("/simulador-credito-automotriz")
     public String addPaymentCalculator(Model theModel){
