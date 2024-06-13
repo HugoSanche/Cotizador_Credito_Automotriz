@@ -13,32 +13,25 @@ public class IndividualDAOImp implements IndividualDAO{
     private EntityManager entityManager;
 
     @Autowired
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
-    public void setEntityManager(EntityManager entityManager) {
+    public IndividualDAOImp(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     @Override
     public List<Individual> findAll() {
-        TypedQuery<Individual> query=entityManager.createQuery("from Individual order by firstName",Individual.class);
-
-        return query.getResultList();
+        TypedQuery<Individual> employees=entityManager.createQuery("from Individual order by firstName", Individual.class);
+        return employees.getResultList();
     }
 
     @Override
     public Individual findById(int id) {
         Individual individual=entityManager.find(Individual.class,id);
-
         return individual;
     }
 
     @Override
     public void save(Individual individual) {
         entityManager.persist(individual);
-
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.cotizador.service;
 
 import com.cotizador.dao.IndividualDAO;
 import com.cotizador.entity.Individual;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,6 +10,11 @@ import java.util.List;
 @Service
 public class IndividualServiceImp implements IndividualService {
     IndividualDAO individualDAO;
+
+    @Autowired
+    public IndividualServiceImp(IndividualDAO individualDAO) {
+        this.individualDAO = individualDAO;
+    }
 
     @Override
     public List<Individual> findAll() {
