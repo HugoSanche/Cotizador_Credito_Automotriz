@@ -1,6 +1,6 @@
 package com.cotizador.dao;
 
-import com.cotizador.entity.Paymentcalculator;
+import com.cotizador.entity.PaymentCalculator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
@@ -14,29 +14,29 @@ public class PaymentcalculatorDAOImp implements  PaymentcalculatorDAO{
     }
 
     @Override
-    public List<Paymentcalculator> findAll() {
-        TypedQuery<Paymentcalculator> query=entityManager.createQuery("from Paymentcalculator", Paymentcalculator.class);
+    public List<PaymentCalculator> findAll() {
+        TypedQuery<PaymentCalculator> query=entityManager.createQuery("from Paymentcalculator", PaymentCalculator.class);
         return query.getResultList();
     }
 
     @Override
-    public Paymentcalculator findById(int id) {
-        return entityManager.find(Paymentcalculator.class,id);
+    public PaymentCalculator findById(int id) {
+        return entityManager.find(PaymentCalculator.class,id);
     }
 
     @Override
-    public void save(Paymentcalculator paymentcalculator) {
+    public void save(PaymentCalculator paymentcalculator) {
         entityManager.persist(paymentcalculator);
     }
 
     @Override
-    public void update(Paymentcalculator paymentcalculator) {
+    public void update(PaymentCalculator paymentcalculator) {
         entityManager.merge(paymentcalculator);
     }
 
     @Override
     public void delete(int id) {
-        Paymentcalculator paymentcalculator=entityManager.find(Paymentcalculator.class,id);
+        PaymentCalculator paymentcalculator=entityManager.find(PaymentCalculator.class,id);
         entityManager.merge(paymentcalculator);
         entityManager.remove(paymentcalculator);
     }
