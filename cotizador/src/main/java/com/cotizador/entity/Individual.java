@@ -8,6 +8,7 @@ import org.springframework.format.annotation.NumberFormat;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -53,9 +54,7 @@ public class Individual implements Serializable {
     @Column(name="MaritalStatus")
     private String maritalStatus;
 
-    //    @DateTimeFormat(pattern = "yyyy-MM-dd")
-//    @Column(name="BirthDate")
-//    OffsetDateTime birthDate;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "BirthDate", nullable = false)
     private Date birthDate;
@@ -107,11 +106,8 @@ public class Individual implements Serializable {
     @Column(name="CurrencyId")
     private Integer currencyId;
 
-    // @OneToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
-//    @OneToMany(mappedBy = "individual",cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
-//    private List<Currenci> currenci2;
-
-
+    @OneToMany(mappedBy = "personId")
+    private List<PaymentCalculator> paymentCalculadors;
 
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -122,7 +118,6 @@ public class Individual implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "Register")
     private Date register;
-
 
 
     @PreUpdate
@@ -175,6 +170,14 @@ public class Individual implements Serializable {
     }
 
     public Individual() {
+    }
+
+    public List<PaymentCalculator> getPaymentCalculadors() {
+        return paymentCalculadors;
+    }
+
+    public void setPaymentCalculadors(List<PaymentCalculator> paymentCalculadors) {
+        this.paymentCalculadors = paymentCalculadors;
     }
 
     public String getEmail() {
