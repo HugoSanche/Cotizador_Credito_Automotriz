@@ -4,6 +4,7 @@ import com.cotizador.dao.IndividualDAO;
 import com.cotizador.entity.Individual;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class IndividualServiceImp implements IndividualService {
         return individualDAO.findById(id);
     }
 
+    @Transactional
     @Override
     public void save(Individual individual) {
         individualDAO.save(individual);

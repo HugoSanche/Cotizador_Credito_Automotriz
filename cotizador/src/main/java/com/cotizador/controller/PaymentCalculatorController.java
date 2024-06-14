@@ -9,6 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequestMapping("/creditos/auto")
 public class PaymentCalculatorController {
@@ -31,15 +34,33 @@ public class PaymentCalculatorController {
     @GetMapping("/simulador-credito-automotriz")
     public String addPaymentCalculator(Model theModel){
         Individual individual=new Individual();
+
+
+
         theModel.addAttribute("individual", individual);
-        PaymentCalculator paymentCalculator=new PaymentCalculator();
+
         return "paymentcalculator/Add-PaymentCalculator";
     }
     @PostMapping("/save")
     public String saveIndividual(@ModelAttribute("individual") Individual theIndividual){
 
+        //fill null values
+        theIndividual.setDwellingType("NotApplies");
+        theIndividual.setMaritalStatus("Unknoww");
+        theIndividual.setNumberOfDependents(0);
+        theIndividual.setHiringType("Normalpayroll");
+        System.out.println(theIndividual.getPaymentCalculadors().get(0).getYearVehicle());
+
+        List<PaymentCalculator> paymentCalculatorList=new ArrayList<>();
+
+        PaymentCalculator paymentCalculator=new PaymentCalculator(theIndividual.getPaymentCalculadors().get(0).getYearVehicle(),
+                theIndividual.getPaymentCalculadors().get(0).getVehiclePrice(),
+                theIndividual.getPaymentCalculadors().get(0).getDownPayment(),
+                theIndividual.getPaymentCalculadors().get(0).getLoanTerm());
+        paymentCalculatorList.add(paymentCalculator);
         // System.out.println("getCurrentMonthlyIncome "+theIndividual.getCurrentMonthlyIncome());
         //save the individual
+        theIndividual.setPaymentCalculadors(paymentCalculatorList);
         individualService.save(theIndividual);
 
         // use a redirect to prevent duplicate submissions
