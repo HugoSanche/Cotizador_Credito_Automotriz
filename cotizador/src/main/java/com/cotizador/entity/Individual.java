@@ -18,7 +18,7 @@ public class Individual implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="PersonId")
-    public int personId;
+    private int personId;
 
     @NotNull(message = "is required")
     @Size (min =3, message = "is required")
@@ -106,7 +106,8 @@ public class Individual implements Serializable {
     @Column(name="CurrencyId")
     private Integer currencyId;
 
-    @OneToMany(mappedBy = "personId")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="personId")
     private List<PaymentCalculator> paymentCalculadors;
 
 

@@ -21,10 +21,10 @@ public class PaymentCalculator {
     private double downPayment;
 
 
-    @Column(name = "PersonId")
-    private int personId;
+//    @Column(name = "PersonId")
+//    private int personId;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name ="personId" )
     private Individual individual;
 
@@ -38,11 +38,18 @@ public class PaymentCalculator {
     @Column(name = "Version")
     private int version;
 
-    public PaymentCalculator(  int yearVehicle, double vehiclePrice, double downPayment, int loanTerm) {
+    public PaymentCalculator( Date fechaCotizacion, int yearVehicle, double vehiclePrice,
+                             double downPayment,int brandId, int modelId, int loanTerm,int version) {
+
+        this.fechaCotizacion = fechaCotizacion;
         this.yearVehicle = yearVehicle;
         this.vehiclePrice = vehiclePrice;
         this.downPayment = downPayment;
+
+        this.brandId = brandId;
+        this.modelId = modelId;
         this.loanTerm = loanTerm;
+        this.version = version;
     }
 
     public PaymentCalculator(int paymentCalculatorId, Date fechaCotizacion, int yearVehicle, double vehiclePrice,
@@ -53,7 +60,7 @@ public class PaymentCalculator {
         this.yearVehicle = yearVehicle;
         this.vehiclePrice = vehiclePrice;
         this.downPayment = downPayment;
-        this.personId = personId;
+
         this.individual = individual;
         this.brandId = brandId;
         this.modelId = modelId;
@@ -105,13 +112,6 @@ public class PaymentCalculator {
         this.downPayment = downPayment;
     }
 
-    public int getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(int personId) {
-        this.personId = personId;
-    }
 
     public Individual getIndividual() {
         return individual;
@@ -161,7 +161,7 @@ public class PaymentCalculator {
                 ", yearVehicle=" + yearVehicle +
                 ", vehiclePrice=" + vehiclePrice +
                 ", downPayment=" + downPayment +
-                ", personId=" + personId +
+
                 ", individual=" + individual +
                 ", brandId=" + brandId +
                 ", modelId=" + modelId +

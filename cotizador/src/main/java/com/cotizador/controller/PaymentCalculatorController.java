@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -51,12 +53,22 @@ public class PaymentCalculatorController {
         theIndividual.setHiringType("Normalpayroll");
         System.out.println(theIndividual.getPaymentCalculadors().get(0).getYearVehicle());
 
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        System.out.println(formatter.format(date));
+
         List<PaymentCalculator> paymentCalculatorList=new ArrayList<>();
 
-        PaymentCalculator paymentCalculator=new PaymentCalculator(theIndividual.getPaymentCalculadors().get(0).getYearVehicle(),
+        PaymentCalculator paymentCalculator=new PaymentCalculator(
+                date,
+                theIndividual.getPaymentCalculadors().get(0).getYearVehicle(),
                 theIndividual.getPaymentCalculadors().get(0).getVehiclePrice(),
                 theIndividual.getPaymentCalculadors().get(0).getDownPayment(),
-                theIndividual.getPaymentCalculadors().get(0).getLoanTerm());
+                //theIndividual.getPersonId(),
+                0,
+                0,
+                theIndividual.getPaymentCalculadors().get(0).getLoanTerm(),
+                0);
         paymentCalculatorList.add(paymentCalculator);
         // System.out.println("getCurrentMonthlyIncome "+theIndividual.getCurrentMonthlyIncome());
         //save the individual
