@@ -51,9 +51,36 @@
             <span  th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="error"></span>
         </div>
 
-        <label>Does Biz Activities</label>
+        <div class="col-md-4">
+        <label class="form-label">Does Biz Activities</label>
         <input type="text" th:field="*{doesBizActivities}"
                class="form-control mb-4 w-25" placeholder="Does Biz Activities">
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Year Vehicle</label>
+            <input type="text" th:field="*{paymentCalculadors[0].yearVehicle}"
+                   class="form-control mb-4 w-25" placeholder="yearVehicle">
+        </div>
+
+        <div class="col-md-4">
+        <label class="form-label">vehiclePrice</label>
+        <input type="text" th:field="*{paymentCalculadors[0].vehiclePrice}"
+               class="form-control mb-4 w-25" placeholder="vehiclePrice">
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Down Payment</label>
+            <input type="text" th:field="*{paymentCalculadors[0].downPayment}"
+                   class="form-control mb-4 w-25" placeholder="downPayment">
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Loan Term</label>
+            <input type="text" th:field="*{paymentCalculadors[0].loanTerm}"
+                   class="form-control mb-4 w-25" placeholder="loanTerm">
+        </div>
+
         <br>
         <br>
         <div>
