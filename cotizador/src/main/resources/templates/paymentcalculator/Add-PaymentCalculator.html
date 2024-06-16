@@ -82,9 +82,25 @@
 
         <div class="col-md-4">
             <label class="form-label">Loan Term</label>
-            <input type="text" th:field="*{paymentCalculadors[0].loanTerm}"
-                   class="form-control mb-4 w-25" placeholder="loanTerm">
+
+            <select class="form-select form-select-sm" th:field="*{paymentCalculadors[0].loanTerm}">
+                <option th:value=1>12</option>
+                <option th:value=2>24</option>
+                <option th:value=3>36</option>
+                <option th:value=4>48</option>
+                <option th:value=5>60</option>
+            </select>
+
+
+
+
+
+
+
+
         </div>
+
+
 
         <br>
         <br>
