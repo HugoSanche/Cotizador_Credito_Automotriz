@@ -53,8 +53,13 @@
 
         <div class="col-md-4">
         <label class="form-label">Does Biz Activities</label>
-        <input type="text" th:field="*{doesBizActivities}"
-               class="form-control mb-4 w-25" placeholder="Does Biz Activities">
+        <select class="form-select form-select-sm" th:field="*{doesBizActivities}">
+
+            <option th:value=1>Fisica</option>
+            <option th:value=2>Fisica con Actividad Empresarial</option>
+            <option th:value=3>Moral</option>
+
+        </select>
         </div>
 
         <div class="col-md-4">
