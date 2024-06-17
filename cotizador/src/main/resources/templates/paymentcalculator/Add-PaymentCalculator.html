@@ -20,34 +20,34 @@
 
         <div class="col-md-4">
             <label class="form-label">First name</label>
-            <input type="text" th:field="*{firstName}"  class="form-control"  placeholder="First name"  >
+            <input type="text" th:field="*{firstName}"  class="form-control form-control-sm"  placeholder="First name"  >
             <span  th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="error"></span>
         </div>
 
         <div class="col-md-4">
             <label  class="form-label">Middle Name</label>
-            <input type="text" th:field="*{middleName}" class="form-control" placeholder="Middle Name" >
+            <input type="text" th:field="*{middleName}" class="form-control form-control-sm" placeholder="Middle Name" >
         </div>
         <div class="col-md-4">
             <label  class="form-label">Last name</label>
-            <input type="text" th:field="*{firstLastName}" class="form-control" placeholder="First LastName">
+            <input type="text" th:field="*{firstLastName}" class="form-control form-control-sm" placeholder="First LastName">
             <span  th:if="${#fields.hasErrors('firstLastName')}" th:errors="*{firstLastName}" class="error"></span>
         </div>
         <div class="col-md-4">
             <label class="form-label">Second Last Name</label>
-            <input type="text" th:field="*{secondLastName}" class="form-control" placeholder="Second Last Name">
+            <input type="text" th:field="*{secondLastName}" class="form-control form-control-sm" placeholder="Second Last Name">
             <span  th:if="${#fields.hasErrors('secondLastName')}" th:errors="*{secondLastName}" class="error"></span>
         </div>
 
         <div class="col-md-4">
             <label class="form-label">Email</label>
-            <input type="text" th:field="*{email}" class="form-control " placeholder="Email">
+            <input type="text" th:field="*{email}" class="form-control form-control-sm" placeholder="Email">
             <span  th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></span>
         </div>
 
         <div class="col-md-4">
             <label class="form-label">Phone Number</label>
-            <input type="text" th:field="*{phoneNumber}" class="form-control" placeholder="Phone Number, 10 digits">
+            <input type="text" th:field="*{phoneNumber}" class="form-control form-control-sm" placeholder="Phone Number, 10 digits">
             <span  th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="error"></span>
         </div>
 
@@ -65,19 +65,19 @@
         <div class="col-md-4">
             <label class="form-label">Year Vehicle</label>
             <input type="text" th:field="*{paymentCalculadors[0].yearVehicle}"
-                   class="form-control mb-4 w-25" placeholder="yearVehicle">
+                   class="form-control form-control-sm" placeholder="yearVehicle">
         </div>
 
         <div class="col-md-4">
         <label class="form-label">vehiclePrice</label>
         <input type="text" th:field="*{paymentCalculadors[0].vehiclePrice}"
-               class="form-control mb-4 w-25" placeholder="vehiclePrice">
+               class="form-control form-control-sm" placeholder="vehiclePrice">
         </div>
 
         <div class="col-md-4">
             <label class="form-label">Down Payment</label>
             <input type="text" th:field="*{paymentCalculadors[0].downPayment}"
-                   class="form-control mb-4 w-25" placeholder="downPayment">
+                   class="form-control form-control-sm" placeholder="downPayment">
         </div>
 
         <div class="col-md-4">
