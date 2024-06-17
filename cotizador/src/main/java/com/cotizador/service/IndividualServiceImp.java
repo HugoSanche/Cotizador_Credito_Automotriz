@@ -33,11 +33,13 @@ public class IndividualServiceImp implements IndividualService {
         individualDAO.save(individual);
     }
 
+    @Transactional
     @Override
     public void update(Individual individual) {
         individualDAO.update(individual);
     }
 
+    @Transactional
     @Override
     public void delete(int id) {
         individualDAO.delete(id);
