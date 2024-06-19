@@ -169,6 +169,12 @@ public class PaymentCalculator {
                 ", version=" + version +
                 '}';
     }
+    public double calculateInterestAmount(){
+        double interestAmount=vehiclePrice-downPayment;
+        interestAmount=interestAmount+(interestAmount*0.75);
+        return interestAmount;
+
+    }
 }
 
 
