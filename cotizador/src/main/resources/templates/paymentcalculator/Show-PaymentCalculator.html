@@ -16,14 +16,12 @@
 <div class="container">
     <h3>Simulador de Crédito</h3>
     <hr>
-
     <form action="#" th:action="@{/creditos/auto/save}"
           th:object="${individual}" method="POST" class="row g-3">
 
         <!-- Add hidden form filed to handle the update-->
         <input type="hidden" th:field="*{personId}">
 
-        <h5>Datos Personales</h5>
         <div class="col-md-4">
             <label class="form-label">First name</label>
             <input type="text" th:field="*{firstName}"  class="form-control form-control-sm"  placeholder="First name"  >
@@ -68,9 +66,6 @@
         </select>
         </div>
 
-        <br>
-        <hr>
-        <h5>Datos del Vehiculo</h5>
         <div class="col-md-4">
             <label class="form-label">Year Vehicle</label>
             <input type="text" th:field="*{paymentCalculadors[0].yearVehicle}"
@@ -83,9 +78,6 @@
                class="form-control form-control-sm" placeholder="vehiclePrice">
         </div>
 
-        <br>
-        <hr>
-        <h5>Datos del Credito</h5>
         <div class="col-md-4">
             <label class="form-label">Down Payment</label>
             <input type="text" th:field="*{paymentCalculadors[0].downPayment}"
