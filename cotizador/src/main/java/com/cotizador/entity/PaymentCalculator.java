@@ -1,6 +1,5 @@
 package com.cotizador.entity;
 
-import com.cotizador.util.CalculationValue;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -21,10 +20,6 @@ public class PaymentCalculator  {
     @Column(name = "DownPayment")
     private double downPayment;
 
-
-//    @Column(name = "PersonId")
-//    private int personId;
-
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name ="personId" )
     private Individual individual;
@@ -36,11 +31,18 @@ public class PaymentCalculator  {
 
     @Column(name = "LoanTerm")
     private int loanTerm;
+
+    @Column(name = "RateId")
+    private int rateId;
+
+    @Column(name = "RateValue")
+    private double rateValue;
+
     @Column(name = "Version")
     private int version;
 
     public PaymentCalculator(Date fechaCotizacion, int yearVehicle, double vehiclePrice,
-                             double downPayment, int brandId, int modelId, int loanTerm, int version) {
+                             double downPayment, int brandId, int modelId, int rateId, double rateValue,int loanTerm, int version) {
 
         this.fechaCotizacion = fechaCotizacion;
         this.yearVehicle = yearVehicle;
@@ -50,6 +52,8 @@ public class PaymentCalculator  {
         this.brandId = brandId;
         this.modelId = modelId;
         this.loanTerm = loanTerm;
+        this.rateId=rateId;
+        this.rateValue=rateValue;
         this.version = version;
     }
 
@@ -173,15 +177,6 @@ public class PaymentCalculator  {
     public double calculateAmountCredit(){
         double interestAmount=vehiclePrice-downPayment;
 
-        return interestAmount;
-
-    }
-    public double comisionXApertura(){
-        CalculationValue calculationValue=new CalculationValue();
-        System.out.println("comisionXApertura");
-        double importeComisionXApertura= calculationValue.getCalculationValue("COMISION POR APERTURA");
-        double interestAmount=vehiclePrice-downPayment;
-        interestAmount=interestAmount+(interestAmount*importeComisionXApertura);
         return interestAmount;
 
     }
