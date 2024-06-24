@@ -3,20 +3,23 @@ package com.cotizador.dao;
 import com.cotizador.entity.Charges;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public class ChargesDAOImp implements ChargesDAO{
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
+    @Autowired
     public ChargesDAOImp(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     @Override
     public List<Charges> findAll() {
+
         TypedQuery<Charges> charges=entityManager.createQuery("from Charges", Charges.class);
         return charges.getResultList();
     }
@@ -29,8 +32,24 @@ public class ChargesDAOImp implements ChargesDAO{
 
     @Override
     public List<Charges> findByName(String nameCharge) {
-        TypedQuery<Charges> charges=entityManager.createQuery("from charges where name="+nameCharge, Charges.class);
-        return charges.getResultList();
+
+//        //create a query
+//        TypedQuery<Student> theQuery=entityManager.createQuery("from Student where secondName=:theData",Student.class);
+//
+//        //set query parameters
+//        theQuery.setParameter("theData",secondName);
+
+        System.out.println("name charge "+nameCharge);
+        //get list results
+        //create a query
+        TypedQuery<Charges> theQuery=entityManager.createQuery("from Charges where name=:theData", Charges.class);
+
+        //set query parameters
+        theQuery.setParameter("theData",nameCharge);
+
+        System.out.println("The query "+theQuery.getResultList());
+
+        return theQuery.getResultList();
     }
 
     @Override

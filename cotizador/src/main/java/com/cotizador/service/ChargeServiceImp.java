@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-
 public class ChargeServiceImp implements ChargeService{
     ChargesDAO chargesDAO;
     @Autowired
@@ -24,6 +23,7 @@ public class ChargeServiceImp implements ChargeService{
     }
     @Override
     public List<Charges> findByName(String nameCharge) {
+
         return chargesDAO.findByName(nameCharge);
     }
     @Override

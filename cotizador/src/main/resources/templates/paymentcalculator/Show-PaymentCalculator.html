@@ -20,9 +20,10 @@
     Modelo: <p th:text=${thePaymentCalculator.yearVehicle}></p>
     Pago Inicial: <p th:text=${thePaymentCalculator.vehiclePrice}></p>
     Enganche: <p th:text=${thePaymentCalculator.downPayment}></p>
-    Credito a financiar: <p th:text=${thePaymentCalculator.getAmountFinanced()}></p>
+    Credito a financiar: <p th:text=${thePaymentCalculator.calculateAmountCredit()}></p>
 
-    Comisión por apertura: <p th:text=${thePaymentCalculator.getAmountFinanced()}></p>
+    Comisión por apertura: <p th:text=${thePaymentCalculator.comisionXApertura()}></p>
+
     <hr>
     <a th:href="@{/individuals/list}">Back to Individuals List</a>
 

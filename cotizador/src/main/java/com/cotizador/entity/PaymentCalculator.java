@@ -1,12 +1,13 @@
 package com.cotizador.entity;
 
+import com.cotizador.util.CalculationValue;
 import jakarta.persistence.*;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "paymentcalculator")
-public class PaymentCalculator {
+public class PaymentCalculator  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PaymentCalculatorId")
@@ -38,8 +39,8 @@ public class PaymentCalculator {
     @Column(name = "Version")
     private int version;
 
-    public PaymentCalculator( Date fechaCotizacion, int yearVehicle, double vehiclePrice,
-                             double downPayment,int brandId, int modelId, int loanTerm,int version) {
+    public PaymentCalculator(Date fechaCotizacion, int yearVehicle, double vehiclePrice,
+                             double downPayment, int brandId, int modelId, int loanTerm, int version) {
 
         this.fechaCotizacion = fechaCotizacion;
         this.yearVehicle = yearVehicle;
@@ -169,18 +170,27 @@ public class PaymentCalculator {
                 ", version=" + version +
                 '}';
     }
-    public double calculateInterestAmount(){
+    public double calculateAmountCredit(){
         double interestAmount=vehiclePrice-downPayment;
-        interestAmount=interestAmount+(interestAmount*0.75);
+
         return interestAmount;
 
     }
-    public double calculateInterestPeriod(){
+    public double comisionXApertura(){
+        CalculationValue calculationValue=new CalculationValue();
+        System.out.println("comisionXApertura");
+        double importeComisionXApertura= calculationValue.getCalculationValue("COMISION POR APERTURA");
         double interestAmount=vehiclePrice-downPayment;
-        interestAmount=interestAmount+(interestAmount*0.75);
+        interestAmount=interestAmount+(interestAmount*importeComisionXApertura);
         return interestAmount;
 
     }
+
+    public double getAmountFinanced(){
+        return vehiclePrice-downPayment;
+    }
+
+
 }
 
 

@@ -3,9 +3,11 @@ package com.cotizador.dao;
 import com.cotizador.entity.PaymentCalculator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class PaymentcalculatorDAOImp implements  PaymentcalculatorDAO{
     EntityManager entityManager;
 

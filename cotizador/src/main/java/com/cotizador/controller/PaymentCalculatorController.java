@@ -3,6 +3,7 @@ package com.cotizador.controller;
 import com.cotizador.entity.Individual;
 import com.cotizador.entity.PaymentCalculator;
 import com.cotizador.service.IndividualService;
+import com.cotizador.service.PaymentCalculatorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -20,9 +21,11 @@ import java.util.List;
 @RequestMapping("/creditos/auto")
 public class PaymentCalculatorController {
     IndividualService individualService;
+    PaymentCalculatorService paymentCalculatorService;
 
-    public PaymentCalculatorController(IndividualService individualService) {
+    public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService) {
         this.individualService = individualService;
+        this.paymentCalculatorService = paymentCalculatorService;
     }
 
     // add an initbinder ... to convert trim input string
@@ -43,8 +46,30 @@ public class PaymentCalculatorController {
 
         return "paymentcalculator/Add-PaymentCalculator";
     }
+
+
+    @GetMapping("/showFormForPaymentCalculator")
+    public String showFormForPaymentCalculator(@RequestParam("individualId") int theId, Model theModel){
+
+        System.out.println("The Id "+theId);
+
+        Individual individual=individualService.findById(theId);
+        PaymentCalculator paymentCalculator=paymentCalculatorService.findById(theId);
+
+
+        theModel.addAttribute("individual", individual);
+        theModel.addAttribute("paymentCalculator",paymentCalculator);
+
+      //  System.out.println(individual.getFirstLastName());
+        System.out.println("paymentCalculator.getYearVehicle()) "+paymentCalculator.getYearVehicle());
+        return "paymentcalculator/Show-PaymentCalculator";
+    }
+
+
+
     @PostMapping("/save")
-    public String saveIndividual(@Valid @ModelAttribute("individual") Individual theIndividual, BindingResult theBindingResult){
+    public String saveIndividual(@Valid @ModelAttribute("individual") Individual theIndividual,
+                                 BindingResult theBindingResult,Model theModel){
 
         if( theBindingResult.hasErrors()){
             return "paymentcalculator/Add-PaymentCalculator";
@@ -55,11 +80,11 @@ public class PaymentCalculatorController {
             theIndividual.setMaritalStatus("Unknoww");
             theIndividual.setNumberOfDependents(0);
             theIndividual.setHiringType("Normalpayroll");
-            System.out.println(theIndividual.getPaymentCalculadors().get(0).getYearVehicle());
+           // System.out.println(theIndividual.getPaymentCalculadors().get(0).getYearVehicle());
 
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date date = new Date();
-            System.out.println(formatter.format(date));
+            //System.out.println(formatter.format(date));
 
             List<PaymentCalculator> paymentCalculatorList=new ArrayList<>();
 
@@ -74,11 +99,17 @@ public class PaymentCalculatorController {
                     theIndividual.getPaymentCalculadors().get(0).getLoanTerm(),
                     0);
             paymentCalculatorList.add(paymentCalculator);
-            System.out.println("getCurrentMonthlyIncome "+theIndividual.getCurrentMonthlyIncome());
             // save the individual
             theIndividual.setPaymentCalculadors(paymentCalculatorList);
             individualService.save(theIndividual);
-            return "redirect:/individuals/list";
+
+//            CalculationValue calculationValue=new CalculationValue();
+//           double importeComisionXApertura= calculationValue.getCalculationValue("COMISION POR APERTURA");
+//
+            //add models to view
+//            theModel.addAttribute("theCalculationValue", calculationValue);
+            theModel.addAttribute("thePaymentCalculator",paymentCalculator);
+            return "paymentcalculator/Show-PaymentCalculator";
         }
 
     }

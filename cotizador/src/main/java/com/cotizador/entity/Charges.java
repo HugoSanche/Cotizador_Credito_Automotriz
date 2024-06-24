@@ -2,11 +2,12 @@ package com.cotizador.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
-@Table
 @Entity
-public class Charges {
+@Table(name = "charges")
+public class Charges implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ChargesId")
@@ -113,6 +114,20 @@ public class Charges {
         this.register = register;
     }
 
+    @Override
+    public String toString() {
+        return "Charges{" +
+                "chargesId=" + chargesId +
+                ", name='" + name + '\'' +
+                ", calculationMethod='" + calculationMethod + '\'' +
+                ", calculationValue=" + calculationValue +
+                ", transactionType='" + transactionType + '\'' +
+                ", chargeType='" + chargeType + '\'' +
+                ", status='" + status + '\'' +
+                ", lastUpdate=" + lastUpdate +
+                ", register=" + register +
+                '}';
+    }
 }
 
 
