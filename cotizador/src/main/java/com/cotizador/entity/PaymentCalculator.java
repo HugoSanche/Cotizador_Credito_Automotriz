@@ -42,7 +42,7 @@ public class PaymentCalculator  {
     private int version;
 
     public PaymentCalculator(Date fechaCotizacion, int yearVehicle, double vehiclePrice,
-                             double downPayment, int brandId, int modelId, int rateId, double rateValue,int loanTerm, int version) {
+                             double downPayment, int brandId, int modelId,int loanTerm, int rateId, double rateValue, int version) {
 
         this.fechaCotizacion = fechaCotizacion;
         this.yearVehicle = yearVehicle;
@@ -122,6 +122,14 @@ public class PaymentCalculator  {
         return individual;
     }
 
+    public int getRateId() {
+        return rateId;
+    }
+
+    public double getRateValue() {
+        return rateValue;
+    }
+
     public void setIndividual(Individual individual) {
         this.individual = individual;
     }
@@ -156,6 +164,14 @@ public class PaymentCalculator  {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public void setRateId(int rateId) {
+        this.rateId = rateId;
+    }
+
+    public void setRateValue(double rateValue) {
+        this.rateValue = rateValue;
     }
 
     @Override
