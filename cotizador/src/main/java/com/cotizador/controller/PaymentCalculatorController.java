@@ -1,7 +1,9 @@
 package com.cotizador.controller;
 
+import com.cotizador.entity.Charges;
 import com.cotizador.entity.Individual;
 import com.cotizador.entity.PaymentCalculator;
+import com.cotizador.service.ChargeService;
 import com.cotizador.service.IndividualService;
 import com.cotizador.service.PaymentCalculatorService;
 import jakarta.validation.Valid;
@@ -17,15 +19,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 @Controller
 @RequestMapping("/creditos/auto")
 public class PaymentCalculatorController {
     IndividualService individualService;
     PaymentCalculatorService paymentCalculatorService;
+    ChargeService chargeService;
 
-    public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService) {
+    public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService, ChargeService chargeService) {
         this.individualService = individualService;
         this.paymentCalculatorService = paymentCalculatorService;
+        this.chargeService = chargeService;
     }
 
     // add an initbinder ... to convert trim input string
@@ -57,10 +62,12 @@ public class PaymentCalculatorController {
         PaymentCalculator paymentCalculator=paymentCalculatorService.findById(theId);
 
 
+
         theModel.addAttribute("individual", individual);
         theModel.addAttribute("paymentCalculator",paymentCalculator);
 
-      //  System.out.println(individual.getFirstLastName());
+
+
         System.out.println("paymentCalculator.getYearVehicle()) "+paymentCalculator.getYearVehicle());
         return "paymentcalculator/Show-PaymentCalculator";
     }
@@ -80,35 +87,37 @@ public class PaymentCalculatorController {
             theIndividual.setMaritalStatus("Unknoww");
             theIndividual.setNumberOfDependents(0);
             theIndividual.setHiringType("Normalpayroll");
-           // System.out.println(theIndividual.getPaymentCalculadors().get(0).getYearVehicle());
-
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date date = new Date();
-            //System.out.println(formatter.format(date));
 
             List<PaymentCalculator> paymentCalculatorList=new ArrayList<>();
 
+            //fill entity paymentCalculator
             PaymentCalculator paymentCalculator=new PaymentCalculator(
                     date,
                     theIndividual.getPaymentCalculadors().get(0).getYearVehicle(),
                     theIndividual.getPaymentCalculadors().get(0).getVehiclePrice(),
                     theIndividual.getPaymentCalculadors().get(0).getDownPayment(),
-                    //theIndividual.getPersonId(),
                     0,
                     0,
                     theIndividual.getPaymentCalculadors().get(0).getLoanTerm(),
+                    1,
+                    15,
                     0);
+            //fill individual paymentCalculator and add paymentCalculator;
             paymentCalculatorList.add(paymentCalculator);
             // save the individual
             theIndividual.setPaymentCalculadors(paymentCalculatorList);
             individualService.save(theIndividual);
 
-//            CalculationValue calculationValue=new CalculationValue();
-//           double importeComisionXApertura= calculationValue.getCalculationValue("COMISION POR APERTURA");
-//
+            //Get calculation Value for "Comision por apertura"
+            List<Charges> charges=chargeService.findByName("COMISION POR APERTURA");
+            System.out.println("Charges "+charges.get(0).getCalculationValue());
+
             //add models to view
-//            theModel.addAttribute("theCalculationValue", calculationValue);
             theModel.addAttribute("thePaymentCalculator",paymentCalculator);
+            theModel.addAttribute("theCharges",charges);
+
             return "paymentcalculator/Show-PaymentCalculator";
         }
 

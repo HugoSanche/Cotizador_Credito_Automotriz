@@ -29,6 +29,9 @@ public class Charges implements Serializable {
     @Column(name = "Register")
     private Date register;
 
+    public Charges() {
+    }
+
     public Charges(int chargesId, String name, String calculationMethod, double calculationValue, String transactionType,
                    String chargeType, String status, Date lastUpdate, Date register) {
         this.chargesId = chargesId;

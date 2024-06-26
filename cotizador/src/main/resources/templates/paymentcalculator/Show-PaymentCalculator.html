@@ -22,7 +22,12 @@
     Enganche: <p th:text=${thePaymentCalculator.downPayment}></p>
     Credito a financiar: <p th:text=${thePaymentCalculator.calculateAmountCredit()}></p>
 
-    Comisión por apertura: <p th:text=${thePaymentCalculator.comisionXApertura()}></p>
+    Comisión por apertura: <th:block th:with="var = ${(thePaymentCalculator.calculateAmountCredit()
+     * theCharges.get(0).getCalculationValue())/100}">
+                           <p th:text="${var}"></p>
+                           </th:block>
+
+    Tasa: <p th:text=${thePaymentCalculator.getRateValue()}></p>
 
     <hr>
     <a th:href="@{/individuals/list}">Back to Individuals List</a>

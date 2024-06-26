@@ -33,21 +33,12 @@ public class ChargesDAOImp implements ChargesDAO{
     @Override
     public List<Charges> findByName(String nameCharge) {
 
-//        //create a query
-//        TypedQuery<Student> theQuery=entityManager.createQuery("from Student where secondName=:theData",Student.class);
-//
-//        //set query parameters
-//        theQuery.setParameter("theData",secondName);
-
-        System.out.println("name charge "+nameCharge);
         //get list results
         //create a query
         TypedQuery<Charges> theQuery=entityManager.createQuery("from Charges where name=:theData", Charges.class);
 
         //set query parameters
         theQuery.setParameter("theData",nameCharge);
-
-        System.out.println("The query "+theQuery.getResultList());
 
         return theQuery.getResultList();
     }
