@@ -31,6 +31,9 @@ public class PaymentDay {
         this.register = register;
     }
 
+    public PaymentDay() {
+    }
+
     public int getPaymentDayId() {
         return paymentDayId;
     }

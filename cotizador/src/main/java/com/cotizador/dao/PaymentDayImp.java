@@ -34,7 +34,7 @@ public class PaymentDayImp implements PaymentDayDAO{
     public List<PaymentDay> findByDay(int day) {
         //get list results
         //create a query
-        TypedQuery<PaymentDay> theQuery=entityManager.createQuery("from Charges where name=:theData", PaymentDay.class);
+        TypedQuery<PaymentDay> theQuery=entityManager.createQuery("from PaymentDay where paymentDay=:theData", PaymentDay.class);
 
         //set query parameters
         theQuery.setParameter("theData",day);
