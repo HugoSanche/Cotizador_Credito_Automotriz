@@ -3,10 +3,13 @@ package com.cotizador.controller;
 import com.cotizador.entity.Charges;
 import com.cotizador.entity.Individual;
 import com.cotizador.entity.PaymentCalculator;
+import com.cotizador.entity.PaymentDay;
 import com.cotizador.service.ChargeService;
 import com.cotizador.service.IndividualService;
 import com.cotizador.service.PaymentCalculatorService;
+import com.cotizador.service.PaymentDayService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,10 +30,19 @@ public class PaymentCalculatorController {
     PaymentCalculatorService paymentCalculatorService;
     ChargeService chargeService;
 
-    public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService, ChargeService chargeService) {
+    PaymentDayService paymentDayService;
+
+    @Value("${dayOfPayment}")
+      int DAYPAYMENT;
+
+    public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService,
+                                       ChargeService chargeService, PaymentDayService paymentDayService,
+                                       int dayOfPayment) {
         this.individualService = individualService;
         this.paymentCalculatorService = paymentCalculatorService;
         this.chargeService = chargeService;
+        this.paymentDayService = paymentDayService;
+        this.DAYPAYMENT = dayOfPayment;
     }
 
     // add an initbinder ... to convert trim input string
@@ -114,6 +126,12 @@ public class PaymentCalculatorController {
             List<Charges> charges=chargeService.findByName("COMISION POR APERTURA");
             System.out.println("Charges "+charges.get(0).getCalculationValue());
 
+
+            //Get Day of payment
+
+            System.out.println("DayPayment "+DAYPAYMENT);
+           List<PaymentDay> paymentDay=paymentDayService.findByDay(DAYPAYMENT);
+            System.out.println(paymentDay.get(0).getPaymentDay());
             //add models to view
             theModel.addAttribute("thePaymentCalculator",paymentCalculator);
             theModel.addAttribute("theCharges",charges);

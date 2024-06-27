@@ -31,6 +31,18 @@ public class PaymentDayImp implements PaymentDayDAO{
     }
 
     @Override
+    public List<PaymentDay> findByDay(int day) {
+        //get list results
+        //create a query
+        TypedQuery<PaymentDay> theQuery=entityManager.createQuery("from Charges where name=:theData", PaymentDay.class);
+
+        //set query parameters
+        theQuery.setParameter("theData",day);
+
+        return theQuery.getResultList();
+    }
+
+    @Override
     public void update(PaymentDay paymentDay) {
         entityManager.merge(paymentDay);
     }
