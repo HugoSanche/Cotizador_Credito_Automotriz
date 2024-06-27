@@ -32,17 +32,15 @@ public class PaymentCalculatorController {
 
     PaymentDayService paymentDayService;
 
-    @Value("${dayOfPayment}")
-      int DAYPAYMENT;
+    @Value("${day.payment}")
+      private int DAYPAYMENT;
 
     public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService,
-                                       ChargeService chargeService, PaymentDayService paymentDayService,
-                                       int dayOfPayment) {
+                                       ChargeService chargeService, PaymentDayService paymentDayService) {
         this.individualService = individualService;
         this.paymentCalculatorService = paymentCalculatorService;
         this.chargeService = chargeService;
         this.paymentDayService = paymentDayService;
-        this.DAYPAYMENT = dayOfPayment;
     }
 
     // add an initbinder ... to convert trim input string
