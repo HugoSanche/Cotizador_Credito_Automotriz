@@ -18,6 +18,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,8 +35,8 @@ public class PaymentCalculatorController {
 
     PaymentDayService paymentDayService;
 
-    @Value("${day.payment}")
-      private int DAYPAYMENT;
+    @Value("${fixed.rate}")
+    int rateFixed=0;
 
     public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService,
                                        ChargeService chargeService, PaymentDayService paymentDayService) {
@@ -88,6 +91,8 @@ public class PaymentCalculatorController {
     public String saveIndividual(@Valid @ModelAttribute("individual") Individual theIndividual,
                                  BindingResult theBindingResult,Model theModel){
 
+
+
         if( theBindingResult.hasErrors()){
             return "paymentcalculator/Add-PaymentCalculator";
         }
@@ -112,7 +117,7 @@ public class PaymentCalculatorController {
                     0,
                     theIndividual.getPaymentCalculadors().get(0).getLoanTerm(),
                     1,
-                    15,
+                    rateFixed,
                     0);
             //fill individual paymentCalculator and add paymentCalculator;
             paymentCalculatorList.add(paymentCalculator);
@@ -126,10 +131,13 @@ public class PaymentCalculatorController {
 
 
             //Get Day of payment
-
-            System.out.println("DayPayment "+DAYPAYMENT);
            List<PaymentDay> paymentDay=paymentDayService.findByDayToExecute(true);
-            System.out.println(paymentDay.get(0).getPaymentDay());
+           // System.out.println(paymentDay.get(0).getPaymentDay());
+
+            //get days
+            long daysToCalculateInterest=getDays( paymentDay.get(0).getPaymentDay());
+
+
             //add models to view
             theModel.addAttribute("thePaymentCalculator",paymentCalculator);
             theModel.addAttribute("theCharges",charges);
@@ -139,4 +147,35 @@ public class PaymentCalculatorController {
 
     }
 
+    //get number of days to calculate interest of period
+    public long getDays(int day){
+
+        //validate day
+        if (day <1){
+            return 0;
+        }
+
+        // get a reference to today
+        LocalDateTime today = LocalDateTime.now();
+
+        // having today,
+        LocalDateTime firstOfNextMonth = today
+                // add one to the month
+                .withMonth(today.getMonthValue() + 1)
+                // and take the first day of that month
+                .withDayOfMonth(day);
+
+        //System.out.println( (firstOfNextMonth.format(DateTimeFormatter.ISO_LOCAL_DATE)));
+
+        //get differences between today and paymentday from nex month
+        long daysBetween=0;
+        try {
+             daysBetween = Duration.between(today, firstOfNextMonth).toDays();
+            return daysBetween;
+        }
+        catch (DateTimeParseException e){
+            System.out.println(e.getParsedString());
+        }
+        return daysBetween;
+    }
 }
