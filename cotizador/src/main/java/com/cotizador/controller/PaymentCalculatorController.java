@@ -91,7 +91,7 @@ public class PaymentCalculatorController {
     public String saveIndividual(@Valid @ModelAttribute("individual") Individual theIndividual,
                                  BindingResult theBindingResult,Model theModel){
 
-
+        double interestPeriod=0;
 
         if( theBindingResult.hasErrors()){
             return "paymentcalculator/Add-PaymentCalculator";
@@ -137,10 +137,14 @@ public class PaymentCalculatorController {
             //get days
             long daysToCalculateInterest=getDays( paymentDay.get(0).getPaymentDay());
 
+            //calculate interest of period from the initial charges
+           interestPeriod= calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(),daysToCalculateInterest);
 
+            System.out.println("interestPeriod :"+interestPeriod);
             //add models to view
             theModel.addAttribute("thePaymentCalculator",paymentCalculator);
             theModel.addAttribute("theCharges",charges);
+            theModel.addAttribute("theinterestPeriod",interestPeriod);
 
             return "paymentcalculator/Show-PaymentCalculator";
         }
@@ -178,4 +182,21 @@ public class PaymentCalculatorController {
         }
         return daysBetween;
     }
+    public double calculateInterest(double amountCredit, double rateFixed, long daysOfInteres){
+        double interestPeriod=amountCredit*rateFixed/360*daysOfInteres;
+        return interestPeriod;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
