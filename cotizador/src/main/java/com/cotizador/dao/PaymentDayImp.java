@@ -31,6 +31,18 @@ public class PaymentDayImp implements PaymentDayDAO{
     }
 
     @Override
+    public List<PaymentDay> findByDayToExecute(boolean value) {
+
+        //In DB table paymentday the field 'status' is active and execute=1 is the day to use
+        TypedQuery<PaymentDay> query=entityManager.createQuery("from PaymentDay where execute=:theData and status=:status", PaymentDay.class);
+
+        //set parameter
+        query.setParameter("theData",value);
+        query.setParameter("status","Active");
+        return query.getResultList();
+    }
+
+    @Override
     public List<PaymentDay> findByDay(int day) {
         //get list results
         //create a query

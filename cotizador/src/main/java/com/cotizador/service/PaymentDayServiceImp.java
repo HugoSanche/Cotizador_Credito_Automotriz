@@ -28,6 +28,11 @@ PaymentDayDAO paymentDayDAO;
     }
 
     @Override
+    public List<PaymentDay> findByDayToExecute(boolean value) {
+        return paymentDayDAO.findByDayToExecute(value);
+    }
+
+    @Override
     public List<PaymentDay> findByDay(int day) {
         List<PaymentDay>listPaymentDay= paymentDayDAO.findByDay(day);
         return listPaymentDay;

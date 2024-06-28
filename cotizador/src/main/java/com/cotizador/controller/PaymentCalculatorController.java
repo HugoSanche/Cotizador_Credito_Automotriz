@@ -128,7 +128,7 @@ public class PaymentCalculatorController {
             //Get Day of payment
 
             System.out.println("DayPayment "+DAYPAYMENT);
-           List<PaymentDay> paymentDay=paymentDayService.findByDay(DAYPAYMENT);
+           List<PaymentDay> paymentDay=paymentDayService.findByDayToExecute(true);
             System.out.println(paymentDay.get(0).getPaymentDay());
             //add models to view
             theModel.addAttribute("thePaymentCalculator",paymentCalculator);
