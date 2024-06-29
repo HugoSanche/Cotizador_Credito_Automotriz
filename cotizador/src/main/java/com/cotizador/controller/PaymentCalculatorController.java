@@ -37,6 +37,8 @@ public class PaymentCalculatorController {
 
     @Value("${fixed.rate}")
     int rateFixed=0;
+    @Value("${year.car}")
+    int totalYears=0;
 
     public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService,
                                        ChargeService chargeService, PaymentDayService paymentDayService) {
@@ -58,8 +60,14 @@ public class PaymentCalculatorController {
 
     @GetMapping("/simulador-credito-automotriz")
     public String addPaymentCalculator(Model theModel){
+        List<Integer> yearsVehicle;
         Individual individual=new Individual();
 
+        //get years of vehicle
+        yearsVehicle=getYear(totalYears);
+
+
+        theModel.addAttribute("theYearsVehicle",yearsVehicle);
         theModel.addAttribute("individual", individual);
 
         return "paymentcalculator/Add-PaymentCalculator";
@@ -92,6 +100,7 @@ public class PaymentCalculatorController {
                                  BindingResult theBindingResult,Model theModel){
 
         double interestPeriod=0;
+
 
         if( theBindingResult.hasErrors()){
             return "paymentcalculator/Add-PaymentCalculator";
@@ -130,6 +139,7 @@ public class PaymentCalculatorController {
             System.out.println("Charges "+charges.get(0).getCalculationValue());
 
 
+
             //Get Day of payment
            List<PaymentDay> paymentDay=paymentDayService.findByDayToExecute(true);
            // System.out.println(paymentDay.get(0).getPaymentDay());
@@ -140,8 +150,8 @@ public class PaymentCalculatorController {
             //calculate interest of period from the initial charges
            interestPeriod= calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(),daysToCalculateInterest);
 
-            System.out.println("interestPeriod :"+interestPeriod);
             //add models to view
+
             theModel.addAttribute("thePaymentCalculator",paymentCalculator);
             theModel.addAttribute("theCharges",charges);
             theModel.addAttribute("theinterestPeriod",interestPeriod);
@@ -185,6 +195,18 @@ public class PaymentCalculatorController {
     public double calculateInterest(double amountCredit, double rateFixed, long daysOfInteres){
         double interestPeriod=amountCredit*rateFixed/360*daysOfInteres;
         return interestPeriod;
+    }
+
+    //get years of vehicle
+    public List<Integer> getYear(int totalYears){
+        LocalDateTime beforeOfNextMonth = LocalDateTime.now();
+        List<Integer> years=new ArrayList<>();
+        for (int i=totalYears-1; i>=0;i--){
+            years.add(beforeOfNextMonth.minusYears(i).getYear());
+            beforeOfNextMonth.minusYears(i);
+            //System.out.println( beforeOfNextMonth.minusYears(i).getYear());
+        }
+    return years;
     }
 }
 
