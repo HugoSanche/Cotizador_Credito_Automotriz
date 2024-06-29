@@ -30,20 +30,22 @@ public class PaymentCalculatorController {
     PaymentDayService paymentDayService;
 
     BrandService brandService;
+    ModelService modelService;
 
     @Value("${fixed.rate}")
     int rateFixed=0;
     @Value("${year.car}")
     int totalYears=0;
 
-    public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService,
-                                       ChargeService chargeService, PaymentDayService paymentDayService,
-                                       BrandService brandService) {
+    public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService, ChargeService chargeService,
+                                       PaymentDayService paymentDayService, BrandService brandService,
+                                       ModelService modelService) {
         this.individualService = individualService;
         this.paymentCalculatorService = paymentCalculatorService;
         this.chargeService = chargeService;
         this.paymentDayService = paymentDayService;
         this.brandService = brandService;
+        this.modelService = modelService;
     }
 
     // add an initbinder ... to convert trim input string
@@ -62,18 +64,20 @@ public class PaymentCalculatorController {
         Individual individual=new Individual();
         Brands brands =new Brands();
 
-        //get all brands from DB and fill to List
+        //Get all brands from DB and fill to List
         List<Brands> listOfBrands=brandService.findAll();
-//        listOfBrands.get(0).getName();
-        System.out.println(listOfBrands.get(0).getBrandId());
-       // List<Brands> listOfBrands=new ArrayList<>();
+
+        //Get all models from DB and fill to list
+        List<Models> listOfModels=modelService.findAll();
 
         //get years of vehicle
         yearsVehicle=getYear(totalYears);
 
+        //Add models to view
         theModel.addAttribute("individual", individual);
         theModel.addAttribute("theYearsVehicle",yearsVehicle);
         theModel.addAttribute("theBrands",listOfBrands);
+        theModel.addAttribute("theModels",listOfModels);
 
         return "paymentcalculator/Add-PaymentCalculator";
     }
@@ -88,7 +92,7 @@ public class PaymentCalculatorController {
         PaymentCalculator paymentCalculator=paymentCalculatorService.findById(theId);
 
 
-
+        //add models to view
         theModel.addAttribute("individual", individual);
         theModel.addAttribute("paymentCalculator",paymentCalculator);
 
@@ -155,7 +159,6 @@ public class PaymentCalculatorController {
            interestPeriod= calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(),daysToCalculateInterest);
 
             //add models to view
-
             theModel.addAttribute("thePaymentCalculator",paymentCalculator);
             theModel.addAttribute("theCharges",charges);
             theModel.addAttribute("theinterestPeriod",interestPeriod);

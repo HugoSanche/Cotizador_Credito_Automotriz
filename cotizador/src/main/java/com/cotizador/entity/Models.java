@@ -17,4 +17,63 @@ public class Models {
     private String description;
     @Column(name = "Status")
     private String status;
+
+    public Models(int modelId, int brandId, String name, String description, String status) {
+        this.modelId = modelId;
+        this.brandId = brandId;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+    }
+
+    public int getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(int modelId) {
+        this.modelId = modelId;
+    }
+
+    public int getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(int brandId) {
+        this.brandId = brandId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Models{" +
+                "modelId=" + modelId +
+                ", brandId=" + brandId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

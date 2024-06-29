@@ -91,6 +91,17 @@
             </select>
         </div>
 
+        <div class="col-md-4">
+            <label class="form-label">Modelo</label>
+            <select class="form-select form-select-sm" th:field="*{paymentCalculadors[0].modelId}">
+                <option th:each="model:${theModels}"
+                        th:text="${model.getName()}"
+                        th:value="${model.getModelId()}">Marca
+                </option>
+            </select>
+        </div>
+
+
 
         <div class="col-md-4">
         <label class="form-label">vehiclePrice</label>

@@ -1,0 +1,37 @@
+package com.cotizador.service;
+
+import com.cotizador.dao.ModelsDAO;
+import com.cotizador.entity.Models;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ModelServiceImp implements ModelService{
+
+    ModelsDAO modelsDAO;
+    @Override
+    public List<Models> findAll() {
+        return modelsDAO.findAll();
+    }
+
+    @Override
+    public Models findById(int theId) {
+        return modelsDAO.findById(theId);
+    }
+
+    @Override
+    public void update(Models models) {
+        modelsDAO.update(models);
+    }
+
+    @Override
+    public void save(Models models) {
+        modelsDAO.save(models);
+    }
+
+    @Override
+    public void delete(int theId) {
+        modelsDAO.delete(theId);
+    }
+}
