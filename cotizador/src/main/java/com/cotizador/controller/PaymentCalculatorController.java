@@ -1,13 +1,7 @@
 package com.cotizador.controller;
 
-import com.cotizador.entity.Charges;
-import com.cotizador.entity.Individual;
-import com.cotizador.entity.PaymentCalculator;
-import com.cotizador.entity.PaymentDay;
-import com.cotizador.service.ChargeService;
-import com.cotizador.service.IndividualService;
-import com.cotizador.service.PaymentCalculatorService;
-import com.cotizador.service.PaymentDayService;
+import com.cotizador.entity.*;
+import com.cotizador.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -35,17 +29,21 @@ public class PaymentCalculatorController {
 
     PaymentDayService paymentDayService;
 
+    BrandService brandService;
+
     @Value("${fixed.rate}")
     int rateFixed=0;
     @Value("${year.car}")
     int totalYears=0;
 
     public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService,
-                                       ChargeService chargeService, PaymentDayService paymentDayService) {
+                                       ChargeService chargeService, PaymentDayService paymentDayService,
+                                       BrandService brandService) {
         this.individualService = individualService;
         this.paymentCalculatorService = paymentCalculatorService;
         this.chargeService = chargeService;
         this.paymentDayService = paymentDayService;
+        this.brandService = brandService;
     }
 
     // add an initbinder ... to convert trim input string
@@ -62,13 +60,20 @@ public class PaymentCalculatorController {
     public String addPaymentCalculator(Model theModel){
         List<Integer> yearsVehicle;
         Individual individual=new Individual();
+        Brands brands =new Brands();
+
+        //get all brands from DB and fill to List
+        List<Brands> listOfBrands=brandService.findAll();
+//        listOfBrands.get(0).getName();
+        System.out.println(listOfBrands.get(0).getBrandId());
+       // List<Brands> listOfBrands=new ArrayList<>();
 
         //get years of vehicle
         yearsVehicle=getYear(totalYears);
 
-
-        theModel.addAttribute("theYearsVehicle",yearsVehicle);
         theModel.addAttribute("individual", individual);
+        theModel.addAttribute("theYearsVehicle",yearsVehicle);
+        theModel.addAttribute("theBrands",listOfBrands);
 
         return "paymentcalculator/Add-PaymentCalculator";
     }
@@ -86,7 +91,6 @@ public class PaymentCalculatorController {
 
         theModel.addAttribute("individual", individual);
         theModel.addAttribute("paymentCalculator",paymentCalculator);
-
 
 
         System.out.println("paymentCalculator.getYearVehicle()) "+paymentCalculator.getYearVehicle());
@@ -122,7 +126,7 @@ public class PaymentCalculatorController {
                     theIndividual.getPaymentCalculadors().get(0).getYearVehicle(),
                     theIndividual.getPaymentCalculadors().get(0).getVehiclePrice(),
                     theIndividual.getPaymentCalculadors().get(0).getDownPayment(),
-                    0,
+                    theIndividual.getPaymentCalculadors().get(0).getBrandId(),
                     0,
                     theIndividual.getPaymentCalculadors().get(0).getLoanTerm(),
                     1,
@@ -208,6 +212,9 @@ public class PaymentCalculatorController {
         }
     return years;
     }
+
+
+
 }
 
 

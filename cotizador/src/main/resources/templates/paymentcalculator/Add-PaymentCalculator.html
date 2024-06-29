@@ -71,12 +71,6 @@
         <br>
         <hr>
         <h5>Datos del Vehiculo</h5>
-<!--        <div class="col-md-4">-->
-<!--            <label class="form-label">Year Vehicle</label>-->
-<!--            <input type="text" th:field="*{paymentCalculadors[0].yearVehicle}"-->
-<!--                   class="form-control form-control-sm" placeholder="yearVehicle">-->
-<!--        </div>-->
-
         <div class="col-md-4">
             <label class="form-label">Year Vehicle</label>
             <select class="form-select form-select-sm" th:field="*{paymentCalculadors[0].yearVehicle}">
@@ -86,6 +80,17 @@
                 </option>
             </select>
         </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Marca</label>
+            <select class="form-select form-select-sm" th:field="*{paymentCalculadors[0].brandId}">
+                <option th:each="brand:${theBrands}"
+                        th:text="${brand.getName()}"
+                        th:value="${brand.getBrandId()}">Marca
+                </option>
+            </select>
+        </div>
+
 
         <div class="col-md-4">
         <label class="form-label">vehiclePrice</label>

@@ -3,6 +3,7 @@ package com.cotizador.dao;
 import com.cotizador.entity.Brands;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 public class BrandsDAOImp implements  BrandsDAO{
     EntityManager entityManager;
 
+    @Autowired
     public BrandsDAOImp(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
