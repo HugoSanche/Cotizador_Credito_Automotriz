@@ -26,6 +26,9 @@ public class Models {
         this.status = status;
     }
 
+    public Models() {
+    }
+
     public int getModelId() {
         return modelId;
     }

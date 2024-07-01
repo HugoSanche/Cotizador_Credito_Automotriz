@@ -2,6 +2,7 @@ package com.cotizador.service;
 
 import com.cotizador.dao.ModelsDAO;
 import com.cotizador.entity.Models;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,12 @@ import java.util.List;
 public class ModelServiceImp implements ModelService{
 
     ModelsDAO modelsDAO;
+
+    @Autowired
+    public ModelServiceImp(ModelsDAO modelsDAO) {
+        this.modelsDAO = modelsDAO;
+    }
+
     @Override
     public List<Models> findAll() {
         return modelsDAO.findAll();

@@ -59,7 +59,7 @@ public class PaymentCalculatorController {
 
 
     @GetMapping("/simulador-credito-automotriz")
-    public String addPaymentCalculator(Model theModel){
+    public String addPaymentCalculator(@ModelAttribute("brand") Brands theBrand,Model theModel){
         List<Integer> yearsVehicle;
         Individual individual=new Individual();
         Brands brands =new Brands();
