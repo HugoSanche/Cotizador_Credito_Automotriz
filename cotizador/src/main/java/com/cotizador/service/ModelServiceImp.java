@@ -23,7 +23,7 @@ public class ModelServiceImp implements ModelService{
     }
 
     @Override
-    public Models findById(int theId) {
+    public List<Models> findById(int theId) {
         return modelsDAO.findById(theId);
     }
 

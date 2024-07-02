@@ -24,9 +24,11 @@ public class ModelsDAOImp implements  ModelsDAO{
     }
 
     @Override
-    public Models findById(int theId) {
-        Models models =entityManager.find(Models.class,theId);
-        return models;
+    public List<Models> findById(int theId) {
+        TypedQuery<Models> theQuery =entityManager.createQuery("from Models where brandId=:theData", Models.class);
+        //set query parameters
+        theQuery.setParameter("theData",theId);
+        return theQuery.getResultList();
     }
 
     @Override

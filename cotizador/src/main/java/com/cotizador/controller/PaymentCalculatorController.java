@@ -59,7 +59,7 @@ public class PaymentCalculatorController {
 
 
     @GetMapping("/simulador-credito-automotriz")
-    public String addPaymentCalculator(@ModelAttribute("brand") Brands theBrand,Model theModel){
+    public String addPaymentCalculator(Model theModel){
         List<Integer> yearsVehicle;
         Individual individual=new Individual();
         Brands brands =new Brands();
@@ -68,8 +68,9 @@ public class PaymentCalculatorController {
         List<Brands> listOfBrands=brandService.findAll();
 
         //Get all models from DB and fill to list
-        List<Models> listOfModels=modelService.findAll();
+        List<Models> models=modelService.findAll();
 
+        System.out.println(individual.getPaymentCalculadors().get(0).getBrandId());
         //get years of vehicle
         yearsVehicle=getYear(totalYears);
 
@@ -77,7 +78,7 @@ public class PaymentCalculatorController {
         theModel.addAttribute("individual", individual);
         theModel.addAttribute("theYearsVehicle",yearsVehicle);
         theModel.addAttribute("theBrands",listOfBrands);
-        theModel.addAttribute("theModels",listOfModels);
+        theModel.addAttribute("theModels",models);
 
         return "paymentcalculator/Add-PaymentCalculator";
     }
