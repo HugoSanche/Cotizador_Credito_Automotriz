@@ -32,6 +32,8 @@ public class PaymentCalculatorController {
     BrandService brandService;
     ModelService modelService;
 
+
+
     @Value("${fixed.rate}")
     int rateFixed=0;
     @Value("${year.car}")
@@ -70,7 +72,7 @@ public class PaymentCalculatorController {
         //Get all models from DB and fill to list
         List<Models> models=modelService.findAll();
 
-        System.out.println(individual.getPaymentCalculadors().get(0).getBrandId());
+      //  System.out.println(individual.getPaymentCalculadors().get(0).getBrandId());
         //get years of vehicle
         yearsVehicle=getYear(totalYears);
 
@@ -82,7 +84,17 @@ public class PaymentCalculatorController {
 
         return "paymentcalculator/Add-PaymentCalculator";
     }
+    @GetMapping("/modelos")
+    public @ResponseBody List<Models> getModelsForBrand(@RequestParam int brandId) {
 
+        System.out.println("BrandId "+brandId);
+        Brands brands = brandService.findById(brandId);
+
+        if (brands==null || brands.getBrandId()!=0){
+            System.out.println("Marca de auto no encontrada");
+        }
+        return modelService.findById(brandId);
+    }
 
     @GetMapping("/showFormForPaymentCalculator")
     public String showFormForPaymentCalculator(@RequestParam("individualId") int theId, Model theModel){

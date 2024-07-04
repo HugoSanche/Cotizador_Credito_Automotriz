@@ -16,9 +16,9 @@
 <div class="container">
     <h3>Simulador de Crédito</h3>
     <hr>
-
-    <form action="#" th:action="@{/creditos/auto/save}"
-          th:object="${individual}" method="POST" class="row g-3">
+<!--    th:action="@{/creditos/auto/save}"-->
+    <form action="#"
+          th:object="${individual}" method="POST" id="form-individuo" class="row g-3">
 
         <!-- Add hidden form filed to handle the update-->
         <input type="hidden" th:field="*{personId}">
@@ -68,50 +68,82 @@
         </select>
         </div>
 
+    </form>
+
         <br>
         <hr>
         <h5>Datos del Vehiculo</h5>
+
+    <form action="#"
+          th:object="${individual}" method="POST"  class="row g-3">
         <div class="col-md-4">
             <label class="form-label">Year Vehicle</label>
             <select class="form-select form-select-sm" th:field="*{paymentCalculadors[0].yearVehicle}">
                 <option th:each="year:${theYearsVehicle}"
-                    th:text="${year}"
-                    th:value="${year}">Years
+                        th:text="${year}"
+                        th:value="${year}">Years
                 </option>
             </select>
         </div>
+    </form>
 
+    <form action="#" th:object="${individual}" method="POST" class="row g-3">
         <div class="col-md-4">
             <label class="form-label">Marca</label>
-            <select class="form-select form-select-sm" th:field="*{paymentCalculadors[0].brandId}">
+            <select id="brand" name="brand" class="form-select form-select-sm" th:field="*{paymentCalculadors[0].brandId}">
                 <option th:each="brand:${theBrands}"
                         th:text="${brand.getName()}"
                         th:value="${brand.getBrandId()}">Marca
                 </option>
             </select>
         </div>
+    </form>
 
+    <form action="#" th:object="${individual}" method="POST" class="row g-3">
         <div class="col-md-4">
             <label class="form-label">Modelo</label>
-            <select class="form-select form-select-sm" th:field="*{paymentCalculadors[0].modelId}">
+            <select id="model" name="model" class="form-select form-select-sm" th:field="*{paymentCalculadors[0].modelId}">
                 <option th:each="model:${theModels}"
                         th:text="${model.getName()}"
                         th:value="${model.getModelId()}">Marca
                 </option>
             </select>
         </div>
+    </form>
 
+        <script th:inline="javascript">
+            document.getElementById('brand').addEventListener('change', function() {
+                var brandId = this.value;
+                var url = /*[[@{/modelos(brandId=${brandId})}]]*/ '';
 
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        var modeloDropdown = document.getElementById('model');
+                        modeloDropdown.innerHTML = '';
 
+                        data.forEach(model => {
+                            var option = document.createElement('option');
+                            option.value = model.modelId;
+                            option.innerText = model.name;
+                            modelDropdown.appendChild(option);
+                        });
+                    });
+            });
+        </script>
+    <form action="#" th:object="${individual}" method="POST" class="row g-3">
         <div class="col-md-4">
-        <label class="form-label">vehiclePrice</label>
-        <input type="text" th:field="*{paymentCalculadors[0].vehiclePrice}"
-               class="form-control form-control-sm" placeholder="vehiclePrice">
+            <label class="form-label">vehiclePrice</label>
+            <input type="text" th:field="*{paymentCalculadors[0].vehiclePrice}"
+                   class="form-control form-control-sm" placeholder="vehiclePrice">
         </div>
+    </form>
 
         <br>
         <hr>
         <h5>Datos del Credito</h5>
+
+    <form action="#" th:object="${individual}" method="POST" class="row g-3">
         <div class="col-md-4">
             <label class="form-label">Down Payment</label>
             <input type="text" th:field="*{paymentCalculadors[0].downPayment}"
@@ -133,12 +165,13 @@
 
         <br>
         <br>
-        <div>
 
+        <div>
             <button type="submit" class="btn btn-info col-2">Solicitar</button>
         </div>
+    </form>
 
-    </form>.
+
 
     <hr>
     <a th:href="@{/individuals/list}">Back to Individuals List</a>

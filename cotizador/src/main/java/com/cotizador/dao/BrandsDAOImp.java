@@ -35,8 +35,9 @@ public class BrandsDAOImp implements  BrandsDAO{
     }
 
     @Override
-    public void save(Brands brands) {
+    public Brands save(Brands brands) {
         entityManager.persist(brands);
+        return brands;
     }
 
     @Override
