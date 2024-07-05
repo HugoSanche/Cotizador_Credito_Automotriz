@@ -51,7 +51,7 @@ public class exampleController {
 
         return "test/dropdown";
     }
-    @GetMapping("/modelos/{brandId}")
+    @GetMapping("/modelos2/{brandId}")
     @ResponseBody
     public List<Models> obtenerProductosPorCategoria(@PathVariable int brandId) {
         System.out.println("BrandId "+brandId);

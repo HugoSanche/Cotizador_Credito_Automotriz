@@ -68,10 +68,15 @@ public class PaymentCalculatorController {
 
         //Get all brands from DB and fill to List
         List<Brands> listOfBrands=brandService.findAll();
+        theModel.addAttribute("theBrands",listOfBrands);
 
         //Get all models from DB and fill to list
-        List<Models> models=modelService.findAll();
-
+        // Inicialmente, cargar los productos de la primera categoría (si existe)
+        if (!listOfBrands.isEmpty()) {
+            Brands firstBrand = listOfBrands.get(0); // seleccionar la primera categoría por defecto
+            List<Models> listOfModels = modelService.findById(firstBrand.getBrandId());
+            theModel.addAttribute("theModels", listOfModels);
+        }
       //  System.out.println(individual.getPaymentCalculadors().get(0).getBrandId());
         //get years of vehicle
         yearsVehicle=getYear(totalYears);
@@ -79,21 +84,24 @@ public class PaymentCalculatorController {
         //Add models to view
         theModel.addAttribute("individual", individual);
         theModel.addAttribute("theYearsVehicle",yearsVehicle);
-        theModel.addAttribute("theBrands",listOfBrands);
-        theModel.addAttribute("theModels",models);
+
+        //theModel.addAttribute("theModels",models);
 
         return "paymentcalculator/Add-PaymentCalculator";
     }
-    @GetMapping("/modelos")
-    public @ResponseBody List<Models> getModelsForBrand(@RequestParam int brandId) {
-
+    @GetMapping("/modelos/{brandId}")
+    @ResponseBody
+    public List<Models> obtenerProductosPorCategoria(@PathVariable int brandId) {
         System.out.println("BrandId "+brandId);
         Brands brands = brandService.findById(brandId);
 
-        if (brands==null || brands.getBrandId()!=0){
+        if (brands==null || brands.getBrandId()==0){
             System.out.println("Marca de auto no encontrada");
         }
-        return modelService.findById(brandId);
+        List<Models> theModels=modelService.findById(brandId);
+        System.out.println("id "+theModels.get(0).getModelId()+" name "+theModels.get(0).getName());
+        return theModels;
+
     }
 
     @GetMapping("/showFormForPaymentCalculator")

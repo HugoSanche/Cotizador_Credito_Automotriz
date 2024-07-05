@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Dropdown dinámico con Spring Boot y Thymeleaf</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
 </head>
 <body>
 
@@ -40,10 +42,10 @@
 
         $.ajax({
             type: "GET",
-            url: "/creditos/auto/modelos/" + categoriaId,
+            url: "/creditos/auto/modelos2/" + categoriaId,
             dataType: 'json',
             success: function(data) {
-                console.log(data);
+
                 $('#dropdownModel').empty();
 
                 $.each(data, function(index, model) {
