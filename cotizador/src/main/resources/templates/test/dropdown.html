@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dropdown dinámico con Spring Boot y Thymeleaf</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+
+<h2>Selecciona una Marca:</h2>
+<select id="dropdownBrand" onchange="cargarProductos()" >
+    <option th:each="brand:${theBrands}"
+            th:text="${brand.getName()}"
+            th:value="${brand.getBrandId()}">Marca</option>
+</select>
+
+<h2>Selecciona un Modelo:</h2>
+<select id="dropdownModel">
+    <option th:each="model : ${theModels}" th:value="${model.getModelId()}" th:text="${model.getName()}"></option>
+</select>
+
+
+
+<script  th:inline="javascript">
+    function greetWorld() {
+        alert("hello world")
+    }
+
+    function salute(name) {
+        alert("hello: " )
+    }
+
+
+</script>
+
+<script type="text/javascript">
+    function cargarProductos() {
+        var categoriaId = $("#dropdownBrand").val();
+
+        $.ajax({
+            type: "GET",
+            url: "/creditos/auto/modelos/" + categoriaId,
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+                $('#dropdownModel').empty();
+
+                $.each(data, function(index, model) {
+                    $('#dropdownModel').append('<option id=' + JSON.stringify(model.id) + '>' + JSON.stringify(model.name) + '</option>');
+                });
+            },
+            error: function(err) {
+                console.error('Error al obtener productos:', err);
+            }
+        });
+    }
+
+    // Llamar a cargarProductos al cargar la página
+    $(document).ready(function() {
+        cargarProductos();
+    });
+</script>
+
+<button th:onclick="greetWorld()">using no variable</button>
+
+
+</body>
+</html>
