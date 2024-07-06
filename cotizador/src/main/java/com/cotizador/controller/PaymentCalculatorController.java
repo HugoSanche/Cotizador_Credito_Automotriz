@@ -4,11 +4,8 @@ import com.cotizador.entity.*;
 import com.cotizador.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -53,11 +50,6 @@ public class PaymentCalculatorController {
     // add an initbinder ... to convert trim input string
     //remove leading and training white spaces
     //resolve issue for our validation
-    @InitBinder
-    public void initBinder(WebDataBinder dataBinder){
-        StringTrimmerEditor stringTrimmesrEditor=new StringTrimmerEditor(true);
-        dataBinder.registerCustomEditor(String.class, stringTrimmesrEditor);
-    }
 
 
     @GetMapping("/simulador-credito-automotriz")
@@ -99,6 +91,7 @@ public class PaymentCalculatorController {
             System.out.println("Marca de auto no encontrada");
         }
         List<Models> theModels=modelService.findById(brandId);
+
         System.out.println("id "+theModels.get(0).getModelId()+" name "+theModels.get(0).getName());
         return theModels;
 
@@ -126,15 +119,11 @@ public class PaymentCalculatorController {
 
     @PostMapping("/save")
     public String saveIndividual(@Valid @ModelAttribute("individual") Individual theIndividual,
-                                 BindingResult theBindingResult,Model theModel){
+                                 Model theModel){
 
         double interestPeriod=0;
 
 
-        if( theBindingResult.hasErrors()){
-            return "paymentcalculator/Add-PaymentCalculator";
-        }
-        else{
             //fill null values
             theIndividual.setDwellingType("NotApplies");
             theIndividual.setMaritalStatus("Unknoww");
@@ -152,7 +141,7 @@ public class PaymentCalculatorController {
                     theIndividual.getPaymentCalculadors().get(0).getVehiclePrice(),
                     theIndividual.getPaymentCalculadors().get(0).getDownPayment(),
                     theIndividual.getPaymentCalculadors().get(0).getBrandId(),
-                    0,
+                    theIndividual.getPaymentCalculadors().get(0).getModelId(),
                     theIndividual.getPaymentCalculadors().get(0).getLoanTerm(),
                     1,
                     rateFixed,
@@ -166,7 +155,6 @@ public class PaymentCalculatorController {
             //Get calculation Value for "Comision por apertura"
             List<Charges> charges=chargeService.findByName("COMISION POR APERTURA");
             System.out.println("Charges "+charges.get(0).getCalculationValue());
-
 
 
             //Get Day of payment
@@ -186,8 +174,6 @@ public class PaymentCalculatorController {
 
             return "paymentcalculator/Show-PaymentCalculator";
         }
-
-    }
 
     //get number of days to calculate interest of period
     public long getDays(int day){

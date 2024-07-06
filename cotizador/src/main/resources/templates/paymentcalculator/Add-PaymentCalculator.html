@@ -69,11 +69,9 @@
         </select>
         </div>
 
-
         <br>
         <hr>
         <h5>Datos del Vehiculo</h5>
-
 
         <div class="col-md-4">
             <label class="form-label">Year Vehicle</label>
@@ -85,36 +83,33 @@
             </select>
         </div>
 
-
         <div class="col-md-4">
             <label class="form-label">Marca</label>
 
-            <select id="dropdownBrand" onchange="cargarProductos()" class="form-select form-select-sm" th:field="*{paymentCalculadors[0].brandId}">
+            <select path="${theBrands.listOfBrands}" id="dropdownBrand" onchange="cargarProductos()" class="form-select form-select-sm" th:field="*{paymentCalculadors[0].brandId}">
                 <option th:each="brand:${theBrands}"
                         th:text="${brand.getName()}"
                         th:value="${brand.getBrandId()}">Marca</option>
             </select>
 
-
         </div>
-
 
 
         <div class="col-md-4">
             <label class="form-label">Modelo</label>
 
-            <select id="dropdownModel" class="form-select form-select-sm" th:field="*{paymentCalculadors[0].modelId}">
-                <option th:each="model : ${theModels}" th:value="${model.getModelId()}" th:text="${model.getName()}"></option>
+            <select path="${theModels.listOfModels}" id="dropdownModel" class="form-select form-select-sm" th:field="*{paymentCalculadors[0].modelId}">
+                <option th:each="model:${theModels}"
+                        th:text="${model.getName()}"
+                        th:value="${model.getModelId()}">Modelo</option>
             </select>
         </div>
 
-
         <div class="col-md-4">
-            <label class="form-label">vehiclePrice</label>
+            <label  class="form-label">vehiclePrice</label>
             <input type="text" th:field="*{paymentCalculadors[0].vehiclePrice}"
                    class="form-control form-control-sm" placeholder="vehiclePrice">
         </div>
-
 
         <br>
         <hr>
@@ -129,7 +124,7 @@
         <div class="col-md-4">
             <label class="form-label">Loan Term</label>
 
-            <select class="form-select form-select-sm" th:field="*{paymentCalculadors[0].loanTerm}">
+            <select  class="form-select form-select-sm" th:field="*{paymentCalculadors[0].loanTerm}">
                 <option th:value=12>12</option>
                 <option th:value=24>24</option>
                 <option th:value=36>36</option>
@@ -166,13 +161,25 @@
                 type: "GET",
                 url: "/creditos/auto/modelos/" + categoriaId,
                 dataType: 'json',
+
+
                 success: function(data) {
 
                     $('#dropdownModel').empty();
 
+
                     $.each(data, function(index, model) {
-                        $('#dropdownModel').append('<option id=' + JSON.stringify(model.id) + '>' + JSON.stringify(model.name) + '</option>');
+                        console.error('model.modelId ', model.modelId);
+                        console.error('model.name ', model.name);
+                                                      
+                        $('#dropdownModel').append('<option value=' + JSON.stringify(model.modelId) + '>'
+                                                 +  JSON.stringify(model.name).replace(/\"/g, "") + '</option>');
                     });
+
+           
+                    slctSubcat.append(option);
+
+
                 },
                 error: function(err) {
                     console.error('Error al obtener productos:', err);

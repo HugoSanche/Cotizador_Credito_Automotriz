@@ -1,6 +1,7 @@
 package com.cotizador.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
@@ -14,10 +15,13 @@ public class PaymentCalculator  {
     @Column(name = "Date")
     private Date fechaCotizacion;
     @Column(name = "YearVehicle")
+    @NotNull
     private int yearVehicle;
     @Column(name = "VehiclePrice")
+    @NotNull
     private double vehiclePrice;
     @Column(name = "DownPayment")
+    @NotNull
     private double downPayment;
 
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
@@ -25,11 +29,14 @@ public class PaymentCalculator  {
     private Individual individual;
 
     @Column(name = "BrandId")
+    @NotNull
     private int brandId;
+    @NotNull
     @Column(name = "ModelId")
     private int modelId;
 
     @Column(name = "LoanTerm")
+    @NotNull
     private int loanTerm;
 
     @Column(name = "RateId")
