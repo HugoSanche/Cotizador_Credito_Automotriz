@@ -3,6 +3,7 @@ package com.cotizador.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -15,14 +16,17 @@ public class PaymentCalculator  {
     @Column(name = "Date")
     private Date fechaCotizacion;
     @Column(name = "YearVehicle")
-    @NotNull
+    @NotNull(message = "is required")
+
     private int yearVehicle;
     @Column(name = "VehiclePrice")
-    @NotNull
-    private double vehiclePrice;
+
+
+    private BigDecimal vehiclePrice;
     @Column(name = "DownPayment")
-    @NotNull
-    private double downPayment;
+
+
+    private BigDecimal downPayment;
 
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name ="personId" )
@@ -48,8 +52,8 @@ public class PaymentCalculator  {
     @Column(name = "Version")
     private int version;
 
-    public PaymentCalculator(Date fechaCotizacion, int yearVehicle, double vehiclePrice,
-                             double downPayment, int brandId, int modelId,int loanTerm, int rateId, double rateValue, int version) {
+    public PaymentCalculator(Date fechaCotizacion, int yearVehicle, BigDecimal vehiclePrice,
+                             BigDecimal downPayment, int brandId, int modelId,int loanTerm, int rateId, double rateValue, int version) {
 
         this.fechaCotizacion = fechaCotizacion;
         this.yearVehicle = yearVehicle;
@@ -64,8 +68,8 @@ public class PaymentCalculator  {
         this.version = version;
     }
 
-    public PaymentCalculator(int paymentCalculatorId, Date fechaCotizacion, int yearVehicle, double vehiclePrice,
-                             double downPayment, int personId, Individual individual, int brandId, int modelId,
+    public PaymentCalculator(int paymentCalculatorId, Date fechaCotizacion, int yearVehicle, BigDecimal vehiclePrice,
+                             BigDecimal downPayment, int personId, Individual individual, int brandId, int modelId,
                              int loanTerm, int version) {
         this.paymentCalculatorId = paymentCalculatorId;
         this.fechaCotizacion = fechaCotizacion;
@@ -108,19 +112,19 @@ public class PaymentCalculator  {
         this.yearVehicle = yearVehicle;
     }
 
-    public double getVehiclePrice() {
+    public BigDecimal getVehiclePrice() {
         return vehiclePrice;
     }
 
-    public void setVehiclePrice(double vehiclePrice) {
+    public void setVehiclePrice(BigDecimal vehiclePrice) {
         this.vehiclePrice = vehiclePrice;
     }
 
-    public double getDownPayment() {
+    public BigDecimal getDownPayment() {
         return downPayment;
     }
 
-    public void setDownPayment(double downPayment) {
+    public void setDownPayment(BigDecimal downPayment) {
         this.downPayment = downPayment;
     }
 
@@ -197,15 +201,15 @@ public class PaymentCalculator  {
                 ", version=" + version +
                 '}';
     }
-    public double calculateAmountCredit(){
-        double interestAmount=vehiclePrice-downPayment;
+    public BigDecimal calculateAmountCredit(){
+        BigDecimal interestAmount=vehiclePrice.subtract(downPayment);
 
         return interestAmount;
 
     }
 
-    public double getAmountFinanced(){
-        return vehiclePrice-downPayment;
+    public BigDecimal getAmountFinanced(){
+        return vehiclePrice.subtract(downPayment);
     }
 
 

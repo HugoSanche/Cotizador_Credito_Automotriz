@@ -18,8 +18,7 @@
 <div class="container">
     <h3>Simulador de Crédito</h3>
     <hr>
-    <form action="#" th:action="@{/creditos/auto/save}"
-          th:object="${individual}" method="POST" class="row g-3">
+    <form action="#" th:action="@{/creditos/auto/save}" th:object="${individual}" method="POST" class="row g-3">
 
         <!-- Add hidden form filed to handle the update-->
         <input type="hidden" th:field="*{personId}">
@@ -68,10 +67,13 @@
 
         </select>
         </div>
+    
+    
 
         <br>
         <hr>
         <h5>Datos del Vehiculo</h5>
+
 
         <div class="col-md-4">
             <label class="form-label">Year Vehicle</label>
@@ -82,62 +84,25 @@
                 </option>
             </select>
         </div>
+  
 
-        <div class="col-md-4">
-            <label class="form-label">Marca</label>
-
-            <select path="${theBrands.listOfBrands}" id="dropdownBrand" onchange="cargarProductos()" class="form-select form-select-sm" th:field="*{paymentCalculadors[0].brandId}">
-                <option th:each="brand:${theBrands}"
-                        th:text="${brand.getName()}"
-                        th:value="${brand.getBrandId()}">Marca</option>
-            </select>
-
-        </div>
-
-
-        <div class="col-md-4">
-            <label class="form-label">Modelo</label>
-
-            <select path="${theModels.listOfModels}" id="dropdownModel" class="form-select form-select-sm" th:field="*{paymentCalculadors[0].modelId}">
-                <option th:each="model:${theModels}"
-                        th:text="${model.getName()}"
-                        th:value="${model.getModelId()}">Modelo</option>
-            </select>
-        </div>
-
+   
         <div class="col-md-4">
             <label  class="form-label">vehiclePrice</label>
             <input type="text" th:field="*{paymentCalculadors[0].vehiclePrice}"
                    class="form-control form-control-sm" placeholder="vehiclePrice">
         </div>
-
-        <br>
-        <hr>
-        <h5>Datos del Credito</h5>
-
         <div class="col-md-4">
             <label class="form-label">Down Payment</label>
             <input type="text" th:field="*{paymentCalculadors[0].downPayment}"
                    class="form-control form-control-sm" placeholder="downPayment">
         </div>
-
-        <div class="col-md-4">
-            <label class="form-label">Loan Term</label>
-
-            <select  class="form-select form-select-sm" th:field="*{paymentCalculadors[0].loanTerm}">
-                <option th:value=12>12</option>
-                <option th:value=24>24</option>
-                <option th:value=36>36</option>
-                <option th:value=48>48</option>
-                <option th:value=60>60</option>
-            </select>
-
-        </div>
+   
 
         <br>
         <br>
         <div>
-            <button type="submit" class="btn btn-info col-2">Solicitar</button>
+            <button  type="submit" class="btn btn-info col-2">Solicitar</button>
         </div>
     </form>
 

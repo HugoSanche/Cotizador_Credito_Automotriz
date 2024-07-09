@@ -4,10 +4,15 @@ import com.cotizador.entity.*;
 import com.cotizador.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -32,29 +37,55 @@ public class PaymentCalculatorController {
 
 
     @Value("${fixed.rate}")
-    int rateFixed=0;
+    double rateFixed=0;
     @Value("${year.car}")
     int totalYears=0;
+    List<Integer> yearsVehicle;
+
+
 
     public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService, ChargeService chargeService,
                                        PaymentDayService paymentDayService, BrandService brandService,
-                                       ModelService modelService) {
+                                       ModelService modelService,List<Integer> yearsVehicle
+
+                                       ) {
         this.individualService = individualService;
         this.paymentCalculatorService = paymentCalculatorService;
         this.chargeService = chargeService;
         this.paymentDayService = paymentDayService;
         this.brandService = brandService;
         this.modelService = modelService;
+        this.yearsVehicle = yearsVehicle;
     }
+
 
     // add an initbinder ... to convert trim input string
     //remove leading and training white spaces
     //resolve issue for our validation
+    @InitBinder
+    protected void initBinder(WebDataBinder dataBinder){
+        StringTrimmerEditor stringTrimmesrEditor=new StringTrimmerEditor(true);
+        dataBinder.registerCustomEditor(String.class, stringTrimmesrEditor);
 
+    }
+    @GetMapping("/modelos/{brandId}")
+    @ResponseBody
+    public List<Models> obtenerProductosPorCategoria(@PathVariable int brandId) {
+        System.out.println("BrandId "+brandId);
+        Brands brands = brandService.findById(brandId);
 
+        if (brands==null || brands.getBrandId()==0){
+            System.out.println("Marca de auto no encontrada");
+        }
+        List<Models> theModels=modelService.findById(brandId);
+
+        System.out.println("id "+theModels.get(0).getModelId()+" name "+theModels.get(0).getName());
+        return theModels;
+
+    }
     @GetMapping("/simulador-credito-automotriz")
     public String addPaymentCalculator(Model theModel){
-        List<Integer> yearsVehicle;
+
         Individual individual=new Individual();
         Brands brands =new Brands();
 
@@ -81,49 +112,50 @@ public class PaymentCalculatorController {
 
         return "paymentcalculator/Add-PaymentCalculator";
     }
-    @GetMapping("/modelos/{brandId}")
-    @ResponseBody
-    public List<Models> obtenerProductosPorCategoria(@PathVariable int brandId) {
-        System.out.println("BrandId "+brandId);
-        Brands brands = brandService.findById(brandId);
 
-        if (brands==null || brands.getBrandId()==0){
-            System.out.println("Marca de auto no encontrada");
-        }
-        List<Models> theModels=modelService.findById(brandId);
-
-        System.out.println("id "+theModels.get(0).getModelId()+" name "+theModels.get(0).getName());
-        return theModels;
-
-    }
-
-    @GetMapping("/showFormForPaymentCalculator")
-    public String showFormForPaymentCalculator(@RequestParam("individualId") int theId, Model theModel){
-
-        System.out.println("The Id "+theId);
-
-        Individual individual=individualService.findById(theId);
-        PaymentCalculator paymentCalculator=paymentCalculatorService.findById(theId);
-
-
-        //add models to view
-        theModel.addAttribute("individual", individual);
-        theModel.addAttribute("paymentCalculator",paymentCalculator);
-
-
-        System.out.println("paymentCalculator.getYearVehicle()) "+paymentCalculator.getYearVehicle());
-        return "paymentcalculator/Show-PaymentCalculator";
-    }
-
-
+//    @PostMapping("/save2")
+//    public ModelAndView saveIndividual2(@Valid @ModelAttribute("individual") Individual theIndividual,
+//                                        BindingResult theBindingResult, Model theModel){
+//        BigDecimal interestPeriod=new BigDecimal(0);
+//
+//        if( theBindingResult.hasErrors()){
+//            yearsVehicle=getYear(totalYears);
+//            System.out.println("Error ");
+//
+//            //  redirectAttributes.addFlashAttribute("theYearsVehicle",yearsVehicle);
+//            // return "redirect:/paymentcalculator/Add-PaymentCalculator";
+//
+//            theModel.addAttribute("attribute", "redirectWithRedirectPrefix");
+//
+//            return new ModelAndView("redirect:/redirectedUrl", theModel);
+//           // return "paymentcalculator/Add-PaymentCalculator";
+//        }
+//        else {
+//          //  return new RedirectView("paymentcalculator/Add-PaymentCalculator");
+//            }
+//    }
 
     @PostMapping("/save")
     public String saveIndividual(@Valid @ModelAttribute("individual") Individual theIndividual,
-                                 Model theModel){
+                                 @Valid @ModelAttribute("theYearsVehicle") int theYearsVehicle,
+                                 BindingResult theBindingResult, Model theModel){
 
-        double interestPeriod=0;
+        BigDecimal interestPeriod=new BigDecimal(0);
+
+     
 
 
+    
+
+        if( theBindingResult.hasErrors()){
+           yearsVehicle=getYear(totalYears);
+            System.out.println("Error ");
+
+          //  redirectAttributes.addFlashAttribute("theYearsVehicle",yearsVehicle);
+           // return "redirect:/paymentcalculator/Add-PaymentCalculator";
+            return "paymentcalculator/Add-PaymentCalculator";
+        }
+        else {
             //fill null values
             theIndividual.setDwellingType("NotApplies");
             theIndividual.setMaritalStatus("Unknoww");
@@ -132,10 +164,10 @@ public class PaymentCalculatorController {
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date date = new Date();
 
-            List<PaymentCalculator> paymentCalculatorList=new ArrayList<>();
+            List<PaymentCalculator> paymentCalculatorList = new ArrayList<>();
 
             //fill entity paymentCalculator
-            PaymentCalculator paymentCalculator=new PaymentCalculator(
+            PaymentCalculator paymentCalculator = new PaymentCalculator(
                     date,
                     theIndividual.getPaymentCalculadors().get(0).getYearVehicle(),
                     theIndividual.getPaymentCalculadors().get(0).getVehiclePrice(),
@@ -153,27 +185,28 @@ public class PaymentCalculatorController {
             individualService.save(theIndividual);
 
             //Get calculation Value for "Comision por apertura"
-            List<Charges> charges=chargeService.findByName("COMISION POR APERTURA");
-            System.out.println("Charges "+charges.get(0).getCalculationValue());
+            List<Charges> charges = chargeService.findByName("COMISION POR APERTURA");
+            System.out.println("Charges " + charges.get(0).getCalculationValue());
 
 
             //Get Day of payment
-           List<PaymentDay> paymentDay=paymentDayService.findByDayToExecute(true);
-           // System.out.println(paymentDay.get(0).getPaymentDay());
+            List<PaymentDay> paymentDay = paymentDayService.findByDayToExecute(true);
+            // System.out.println(paymentDay.get(0).getPaymentDay());
 
             //get days
-            long daysToCalculateInterest=getDays( paymentDay.get(0).getPaymentDay());
+            long daysToCalculateInterest = getDays(paymentDay.get(0).getPaymentDay());
 
             //calculate interest of period from the initial charges
-           interestPeriod= calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(),daysToCalculateInterest);
+            interestPeriod = calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(), daysToCalculateInterest);
 
             //add models to view
-            theModel.addAttribute("thePaymentCalculator",paymentCalculator);
-            theModel.addAttribute("theCharges",charges);
-            theModel.addAttribute("theinterestPeriod",interestPeriod);
+            theModel.addAttribute("thePaymentCalculator", paymentCalculator);
+            theModel.addAttribute("theCharges", charges);
+            theModel.addAttribute("theinterestPeriod", interestPeriod);
 
             return "paymentcalculator/Show-PaymentCalculator";
         }
+    }
 
     //get number of days to calculate interest of period
     public long getDays(int day){
@@ -206,8 +239,11 @@ public class PaymentCalculatorController {
         }
         return daysBetween;
     }
-    public double calculateInterest(double amountCredit, double rateFixed, long daysOfInteres){
-        double interestPeriod=amountCredit*rateFixed/360*daysOfInteres;
+    public BigDecimal calculateInterest(BigDecimal amountCredit, double rateFixed, long daysOfInteres){
+        BigDecimal rate = new BigDecimal(rateFixed);
+        BigDecimal daysOfYears = new BigDecimal(360);
+        BigDecimal daysOfInt = new BigDecimal(daysOfInteres);
+        BigDecimal interestPeriod=amountCredit.multiply(rate).divide(daysOfYears, RoundingMode.HALF_UP ).multiply(daysOfInt);
         return interestPeriod;
     }
 
@@ -222,8 +258,6 @@ public class PaymentCalculatorController {
         }
     return years;
     }
-
-
 
 }
 
