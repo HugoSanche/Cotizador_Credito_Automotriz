@@ -18,58 +18,7 @@
 <div class="container">
     <h3>Simulador de Crédito</h3>
     <hr>
-    <form action="#" th:action="@{/creditos/auto/save}" th:object="${individual}" method="POST" class="row g-3">
-
-        <!-- Add hidden form filed to handle the update-->
-        <input type="hidden" th:field="*{personId}">
-
-        <h5>Datos Personales</h5>
-        <div class="col-md-4">
-            <label class="form-label">First name</label>
-            <input type="text" th:field="*{firstName}"  class="form-control form-control-sm"  placeholder="First name"  >
-            <span  th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="error"></span>
-        </div>
-
-        <div class="col-md-4">
-            <label  class="form-label">Middle Name</label>
-            <input type="text" th:field="*{middleName}" class="form-control form-control-sm" placeholder="Middle Name" >
-        </div>
-        <div class="col-md-4">
-            <label  class="form-label">Last name</label>
-            <input type="text" th:field="*{firstLastName}" class="form-control form-control-sm" placeholder="First LastName">
-            <span  th:if="${#fields.hasErrors('firstLastName')}" th:errors="*{firstLastName}" class="error"></span>
-        </div>
-        <div class="col-md-4">
-            <label class="form-label">Second Last Name</label>
-            <input type="text" th:field="*{secondLastName}" class="form-control form-control-sm" placeholder="Second Last Name">
-            <span  th:if="${#fields.hasErrors('secondLastName')}" th:errors="*{secondLastName}" class="error"></span>
-        </div>
-
-        <div class="col-md-4">
-            <label class="form-label">Email</label>
-            <input type="text" th:field="*{email}" class="form-control form-control-sm" placeholder="Email">
-            <span  th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></span>
-        </div>
-
-        <div class="col-md-4">
-            <label class="form-label">Phone Number</label>
-            <input type="text" th:field="*{phoneNumber}" class="form-control form-control-sm" placeholder="Phone Number, 10 digits">
-            <span  th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="error"></span>
-        </div>
-
-        <div class="col-md-4">
-        <label class="form-label">Does Biz Activities</label>
-        <select class="form-select form-select-sm" th:field="*{doesBizActivities}">
-
-            <option th:value=1>Fisica</option>
-            <option th:value=2>Fisica con Actividad Empresarial</option>
-            <option th:value=3>Moral</option>
-
-        </select>
-        </div>
-    
-    
-
+    <form action="#" th:action="@{/creditos/auto/savePaymentCalculator}" th:object="${thePaymentCalculator}" method="POST" class="row g-3">
         <br>
         <hr>
         <h5>Datos del Vehiculo</h5>
@@ -77,25 +26,29 @@
 
         <div class="col-md-4">
             <label class="form-label">Year Vehicle</label>
-            <select class="form-select form-select-sm" th:field="*{paymentCalculadors[0].yearVehicle}">
+            <select class="form-select form-select-sm" th:field="*{yearVehicle}">
                 <option th:each="year:${theYearsVehicle}"
                         th:text="${year}"
                         th:value="${year}">Years
                 </option>
             </select>
+            <span  th:if="${#fields.hasErrors('yearVehicle')}" th:errors="*{yearVehicle}" class="error"></span>
         </div>
-  
 
-   
+
         <div class="col-md-4">
             <label  class="form-label">vehiclePrice</label>
-            <input type="text" th:field="*{paymentCalculadors[0].vehiclePrice}"
+            <input type="text" th:field="*{vehiclePrice}"
                    class="form-control form-control-sm" placeholder="vehiclePrice">
+            <span  th:if="${#fields.hasErrors('vehiclePrice')}" th:errors="*{vehiclePrice}" class="error"></span>
         </div>
+
+
         <div class="col-md-4">
             <label class="form-label">Down Payment</label>
-            <input type="text" th:field="*{paymentCalculadors[0].downPayment}"
+            <input type="text" th:field="*{downPayment}"
                    class="form-control form-control-sm" placeholder="downPayment">
+            <span  th:if="${#fields.hasErrors('downPayment')}" th:errors="*{downPayment}" class="error"></span>
         </div>
    
 

@@ -17,15 +17,12 @@ public class PaymentCalculator  {
     private Date fechaCotizacion;
     @Column(name = "YearVehicle")
     @NotNull(message = "is required")
-
     private int yearVehicle;
+
     @Column(name = "VehiclePrice")
-
-
     private BigDecimal vehiclePrice;
+
     @Column(name = "DownPayment")
-
-
     private BigDecimal downPayment;
 
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
@@ -52,40 +49,59 @@ public class PaymentCalculator  {
     @Column(name = "Version")
     private int version;
 
-    public PaymentCalculator(Date fechaCotizacion, int yearVehicle, BigDecimal vehiclePrice,
-                             BigDecimal downPayment, int brandId, int modelId,int loanTerm, int rateId, double rateValue, int version) {
 
-        this.fechaCotizacion = fechaCotizacion;
-        this.yearVehicle = yearVehicle;
-        this.vehiclePrice = vehiclePrice;
-        this.downPayment = downPayment;
-
-        this.brandId = brandId;
-        this.modelId = modelId;
-        this.loanTerm = loanTerm;
-        this.rateId=rateId;
-        this.rateValue=rateValue;
-        this.version = version;
+    public PaymentCalculator() {
     }
 
     public PaymentCalculator(int paymentCalculatorId, Date fechaCotizacion, int yearVehicle, BigDecimal vehiclePrice,
-                             BigDecimal downPayment, int personId, Individual individual, int brandId, int modelId,
-                             int loanTerm, int version) {
+                             BigDecimal downPayment,  int brandId, int modelId, int loanTerm, int rateId,
+                             double rateValue, int version) {
         this.paymentCalculatorId = paymentCalculatorId;
         this.fechaCotizacion = fechaCotizacion;
         this.yearVehicle = yearVehicle;
         this.vehiclePrice = vehiclePrice;
         this.downPayment = downPayment;
 
-        this.individual = individual;
         this.brandId = brandId;
         this.modelId = modelId;
         this.loanTerm = loanTerm;
+        this.rateId = rateId;
+        this.rateValue = rateValue;
         this.version = version;
     }
 
 
-    public PaymentCalculator() {
+    public PaymentCalculator(Date fechaCotizacion, int yearVehicle, BigDecimal vehiclePrice,
+                             BigDecimal downPayment,  int brandId, int modelId, int loanTerm, int rateId,
+                             double rateValue, int version) {
+        this.paymentCalculatorId = paymentCalculatorId;
+        this.fechaCotizacion = fechaCotizacion;
+        this.yearVehicle = yearVehicle;
+        this.vehiclePrice = vehiclePrice;
+        this.downPayment = downPayment;
+
+        this.brandId = brandId;
+        this.modelId = modelId;
+        this.loanTerm = loanTerm;
+        this.rateId = rateId;
+        this.rateValue = rateValue;
+        this.version = version;
+    }
+    @Override
+    public String toString() {
+        return "PaymentCalculator{" +
+                "paymentCalculatorId=" + paymentCalculatorId +
+                ", fechaCotizacion=" + fechaCotizacion +
+                ", yearVehicle=" + yearVehicle +
+                ", vehiclePrice=" + vehiclePrice +
+                ", downPayment=" + downPayment +
+
+                ", individual=" + individual +
+                ", brandId=" + brandId +
+                ", modelId=" + modelId +
+                ", loanTerm=" + loanTerm +
+                ", version=" + version +
+                '}';
     }
 
     public int getPaymentCalculatorId() {
@@ -128,17 +144,8 @@ public class PaymentCalculator  {
         this.downPayment = downPayment;
     }
 
-
     public Individual getIndividual() {
         return individual;
-    }
-
-    public int getRateId() {
-        return rateId;
-    }
-
-    public double getRateValue() {
-        return rateValue;
     }
 
     public void setIndividual(Individual individual) {
@@ -169,6 +176,22 @@ public class PaymentCalculator  {
         this.loanTerm = loanTerm;
     }
 
+    public int getRateId() {
+        return rateId;
+    }
+
+    public void setRateId(int rateId) {
+        this.rateId = rateId;
+    }
+
+    public double getRateValue() {
+        return rateValue;
+    }
+
+    public void setRateValue(double rateValue) {
+        this.rateValue = rateValue;
+    }
+
     public int getVersion() {
         return version;
     }
@@ -177,30 +200,6 @@ public class PaymentCalculator  {
         this.version = version;
     }
 
-    public void setRateId(int rateId) {
-        this.rateId = rateId;
-    }
-
-    public void setRateValue(double rateValue) {
-        this.rateValue = rateValue;
-    }
-
-    @Override
-    public String toString() {
-        return "PaymentCalculator{" +
-                "paymentCalculatorId=" + paymentCalculatorId +
-                ", fechaCotizacion=" + fechaCotizacion +
-                ", yearVehicle=" + yearVehicle +
-                ", vehiclePrice=" + vehiclePrice +
-                ", downPayment=" + downPayment +
-
-                ", individual=" + individual +
-                ", brandId=" + brandId +
-                ", modelId=" + modelId +
-                ", loanTerm=" + loanTerm +
-                ", version=" + version +
-                '}';
-    }
     public BigDecimal calculateAmountCredit(){
         BigDecimal interestAmount=vehiclePrice.subtract(downPayment);
 

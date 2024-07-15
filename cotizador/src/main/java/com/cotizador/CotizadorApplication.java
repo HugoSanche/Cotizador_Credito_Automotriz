@@ -9,5 +9,4 @@ public class CotizadorApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CotizadorApplication.class, args);
 	}
-
 }
