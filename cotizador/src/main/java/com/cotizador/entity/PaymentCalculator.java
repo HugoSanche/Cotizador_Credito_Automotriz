@@ -20,9 +20,11 @@ public class PaymentCalculator  {
     private int yearVehicle;
 
     @Column(name = "VehiclePrice")
+    @NotNull(message = "is required")
     private BigDecimal vehiclePrice;
 
     @Column(name = "DownPayment")
+    @NotNull(message = "is required")
     private BigDecimal downPayment;
 
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
@@ -87,6 +89,8 @@ public class PaymentCalculator  {
         this.rateValue = rateValue;
         this.version = version;
     }
+
+
     @Override
     public String toString() {
         return "PaymentCalculator{" +

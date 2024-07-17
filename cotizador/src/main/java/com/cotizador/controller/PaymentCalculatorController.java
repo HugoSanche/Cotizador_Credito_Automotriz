@@ -201,17 +201,12 @@ public class PaymentCalculatorController {
 
     @PostMapping("/savePaymentCalculator")
     public String saveIndividual2(@Valid @ModelAttribute("thePaymentCalculator") PaymentCalculator thePaymentCalculator,
-                                  @Valid @ModelAttribute("theYearsVehicle") int theYearsVehicle,
                                   BindingResult theBindingResult, Model theModel){
 
         BigDecimal interestPeriod=new BigDecimal(0);
 
         if( theBindingResult.hasErrors()){
-            yearsVehicle=getYear(totalYears);
-            System.out.println("Error ");
-
-            //  redirectAttributes.addFlashAttribute("theYearsVehicle",yearsVehicle);
-            // return "redirect:/paymentcalculator/Add-PaymentCalculator";
+            theModel.addAttribute("theYearsVehicle",yearsVehicle);
             return "paymentcalculator/Add-PaymentCalculator";
         }
         else {
@@ -228,9 +223,12 @@ public class PaymentCalculatorController {
                     thePaymentCalculator.getYearVehicle(),
                     thePaymentCalculator.getVehiclePrice(),
                     thePaymentCalculator.getDownPayment(),
-                    thePaymentCalculator.getBrandId(),
-                    thePaymentCalculator.getModelId(),
-                    thePaymentCalculator.getLoanTerm(),
+                   // thePaymentCalculator.getBrandId(),
+                    220,
+                    1078,
+                    //thePaymentCalculator.getModelId(),
+                    //thePaymentCalculator.getLoanTerm(),
+                    12,
                     1,
                     rateFixed,
                     0);
