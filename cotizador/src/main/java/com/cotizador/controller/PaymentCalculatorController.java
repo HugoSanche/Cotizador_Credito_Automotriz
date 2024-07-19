@@ -34,8 +34,6 @@ public class PaymentCalculatorController {
     BrandService brandService;
     ModelService modelService;
 
-
-
     @Value("${fixed.rate}")
     double rateFixed=0;
     @Value("${year.car}")
@@ -139,7 +137,6 @@ public class PaymentCalculatorController {
 //            }
 //    }
 
-
     @PostMapping("/saveIndividual")
     public String saveIndividual(@Valid @ModelAttribute("individual") Individual theIndividual,
 
@@ -181,21 +178,27 @@ public class PaymentCalculatorController {
                 listOfModels = modelService.findById(firstBrand.getBrandId());
 
                 //Add models to view
-                theModel.addAttribute("theModels", listOfModels);
+
+            }else{
+                listOfModels=modelService.findById(listOfBrands.get(0).getBrandId());
             }
             //  System.out.println(individual.getPaymentCalculadors().get(0).getBrandId());
             //get years of vehicle
             yearsVehicle=getYear(totalYears);
 
             PaymentCalculator paymentCalculator =new PaymentCalculator();
-
-
+           // theIndividual.getEmail()
+            theIndividual.getDoesBizActivities();
+            System.out.println(theIndividual.getFirstName()+' '+theIndividual.getMiddleName()+' '+theIndividual.getFirstLastName()+' '+theIndividual.getSecondLastName());
             //Add models to view
+            theModel.addAttribute("theIndividual",theIndividual);
+
             theModel.addAttribute("thePaymentCalculator",paymentCalculator);
             theModel.addAttribute("theBrands",listOfBrands);
             theModel.addAttribute("theYearsVehicle",yearsVehicle);
-
+            theModel.addAttribute("theModels", listOfModels);
             return "paymentcalculator/Add-PaymentCalculator";
+            //return "test/test.html";
         }
     }
 
