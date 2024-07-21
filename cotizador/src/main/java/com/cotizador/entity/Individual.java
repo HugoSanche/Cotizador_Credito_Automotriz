@@ -388,6 +388,7 @@ public class Individual implements Serializable {
         this.register = register;
     }
 
+
     @Override
     public String toString() {
         return "Individual{" +
@@ -415,5 +416,20 @@ public class Individual implements Serializable {
 
                 /* ",currenci2='"+currenci2+'\''+*/
                 '}';
+    }
+    public String getCompleteName(){
+        return getFirstName()+' '+getMiddleName()+' '+getFirstLastName()+' '+getSecondLastName();
+    }
+    public String getNameDoesBizActivities(){
+        if (getDoesBizActivities()==0){
+            return "Fisica";
+        } else if (getDoesBizActivities()==1) {
+            return "Fisica con Actividad Empresarial";
+        } else if (getDoesBizActivities()==2) {
+            return "Moral";
+        }
+        else {
+            return "Error";
+        }
     }
 }

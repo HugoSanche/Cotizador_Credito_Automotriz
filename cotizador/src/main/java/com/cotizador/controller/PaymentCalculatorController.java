@@ -40,8 +40,6 @@ public class PaymentCalculatorController {
     int totalYears=0;
     List<Integer> yearsVehicle;
 
-
-
     public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService, ChargeService chargeService,
                                        PaymentDayService paymentDayService, BrandService brandService,
                                        ModelService modelService,List<Integer> yearsVehicle
@@ -69,7 +67,7 @@ public class PaymentCalculatorController {
     @GetMapping("/modelos/{brandId}")
     @ResponseBody
     public List<Models> obtenerProductosPorCategoria(@PathVariable int brandId) {
-        System.out.println("BrandId "+brandId);
+
         Brands brands = brandService.findById(brandId);
 
         if (brands==null || brands.getBrandId()==0){
@@ -77,7 +75,6 @@ public class PaymentCalculatorController {
         }
         List<Models> theModels=modelService.findById(brandId);
 
-        System.out.println("id "+theModels.get(0).getModelId()+" name "+theModels.get(0).getName());
         return theModels;
 
     }
@@ -139,9 +136,7 @@ public class PaymentCalculatorController {
 
     @PostMapping("/saveIndividual")
     public String saveIndividual(@Valid @ModelAttribute("individual") Individual theIndividual,
-
                                  BindingResult theBindingResult, Model theModel){
-
         BigDecimal interestPeriod=new BigDecimal(0);
 
         if( theBindingResult.hasErrors()){
@@ -159,7 +154,9 @@ public class PaymentCalculatorController {
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date date = new Date();
 
-           // List<PaymentCalculator> paymentCalculatorList = new ArrayList<>();
+            if(theIndividual.getMiddleName()==null){
+                theIndividual.setMiddleName("");
+            }
 
             //Save individual in BD
             individualService.save(theIndividual);
@@ -189,10 +186,9 @@ public class PaymentCalculatorController {
             PaymentCalculator paymentCalculator =new PaymentCalculator();
            // theIndividual.getEmail()
             theIndividual.getDoesBizActivities();
-            System.out.println(theIndividual.getFirstName()+' '+theIndividual.getMiddleName()+' '+theIndividual.getFirstLastName()+' '+theIndividual.getSecondLastName());
+
             //Add models to view
             theModel.addAttribute("theIndividual",theIndividual);
-
             theModel.addAttribute("thePaymentCalculator",paymentCalculator);
             theModel.addAttribute("theBrands",listOfBrands);
             theModel.addAttribute("theYearsVehicle",yearsVehicle);
@@ -209,6 +205,12 @@ public class PaymentCalculatorController {
         BigDecimal interestPeriod=new BigDecimal(0);
 
         if( theBindingResult.hasErrors()){
+            Individual individual;
+            individual=individualService.findById(thePaymentCalculator.getPersonId());
+
+            System.out.println("Nombre completo: "+individual.getCompleteName());
+            //Add models to view to return
+            theModel.addAttribute("theIndividual",individual);
             theModel.addAttribute("theYearsVehicle",yearsVehicle);
             return "paymentcalculator/Add-PaymentCalculator";
         }
@@ -226,6 +228,7 @@ public class PaymentCalculatorController {
                     thePaymentCalculator.getYearVehicle(),
                     thePaymentCalculator.getVehiclePrice(),
                     thePaymentCalculator.getDownPayment(),
+                    thePaymentCalculator.getPersonId(),
                    // thePaymentCalculator.getBrandId(),
                     220,
                     1078,
@@ -243,7 +246,6 @@ public class PaymentCalculatorController {
 
             //Get calculation Value for "Comision por apertura"
             List<Charges> charges = chargeService.findByName("COMISION POR APERTURA");
-            System.out.println("Charges " + charges.get(0).getCalculationValue());
 
 
             //Get Day of payment
@@ -299,6 +301,7 @@ public class PaymentCalculatorController {
                     theIndividual.getPaymentCalculadors().get(0).getYearVehicle(),
                     theIndividual.getPaymentCalculadors().get(0).getVehiclePrice(),
                     theIndividual.getPaymentCalculadors().get(0).getDownPayment(),
+                    theIndividual.getPaymentCalculadors().get(0).getPersonId(),
                     theIndividual.getPaymentCalculadors().get(0).getBrandId(),
                     theIndividual.getPaymentCalculadors().get(0).getModelId(),
                     theIndividual.getPaymentCalculadors().get(0).getLoanTerm(),

@@ -27,6 +27,10 @@ public class PaymentCalculator  {
     @NotNull(message = "is required")
     private BigDecimal downPayment;
 
+    @Column(name = "PersonId")
+    @NotNull
+    private int personId;
+
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name ="personId" )
     private Individual individual;
@@ -56,14 +60,14 @@ public class PaymentCalculator  {
     }
 
     public PaymentCalculator(int paymentCalculatorId, Date fechaCotizacion, int yearVehicle, BigDecimal vehiclePrice,
-                             BigDecimal downPayment,  int brandId, int modelId, int loanTerm, int rateId,
+                             BigDecimal downPayment, int personId,  int brandId, int modelId, int loanTerm, int rateId,
                              double rateValue, int version) {
         this.paymentCalculatorId = paymentCalculatorId;
         this.fechaCotizacion = fechaCotizacion;
         this.yearVehicle = yearVehicle;
         this.vehiclePrice = vehiclePrice;
         this.downPayment = downPayment;
-
+        this.personId=personId;
         this.brandId = brandId;
         this.modelId = modelId;
         this.loanTerm = loanTerm;
@@ -74,14 +78,14 @@ public class PaymentCalculator  {
 
 
     public PaymentCalculator(Date fechaCotizacion, int yearVehicle, BigDecimal vehiclePrice,
-                             BigDecimal downPayment,  int brandId, int modelId, int loanTerm, int rateId,
+                             BigDecimal downPayment,  int personId, int brandId, int modelId, int loanTerm, int rateId,
                              double rateValue, int version) {
         this.paymentCalculatorId = paymentCalculatorId;
         this.fechaCotizacion = fechaCotizacion;
         this.yearVehicle = yearVehicle;
         this.vehiclePrice = vehiclePrice;
         this.downPayment = downPayment;
-
+        this.personId=personId;
         this.brandId = brandId;
         this.modelId = modelId;
         this.loanTerm = loanTerm;
@@ -106,6 +110,14 @@ public class PaymentCalculator  {
                 ", loanTerm=" + loanTerm +
                 ", version=" + version +
                 '}';
+    }
+
+    public int getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(int personId) {
+        this.personId = personId;
     }
 
     public int getPaymentCalculatorId() {
