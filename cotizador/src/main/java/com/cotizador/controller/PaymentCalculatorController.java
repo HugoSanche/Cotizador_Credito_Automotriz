@@ -34,17 +34,21 @@ public class PaymentCalculatorController {
     BrandService brandService;
     ModelService modelService;
 
+
+
     @Value("${fixed.rate}")
     double rateFixed=0;
     @Value("${year.car}")
     int totalYears=0;
     List<Integer> yearsVehicle;
 
+
+
     public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService, ChargeService chargeService,
                                        PaymentDayService paymentDayService, BrandService brandService,
                                        ModelService modelService,List<Integer> yearsVehicle
 
-                                       ) {
+    ) {
         this.individualService = individualService;
         this.paymentCalculatorService = paymentCalculatorService;
         this.chargeService = chargeService;
@@ -67,7 +71,7 @@ public class PaymentCalculatorController {
     @GetMapping("/modelos/{brandId}")
     @ResponseBody
     public List<Models> obtenerProductosPorCategoria(@PathVariable int brandId) {
-
+        System.out.println("BrandId "+brandId);
         Brands brands = brandService.findById(brandId);
 
         if (brands==null || brands.getBrandId()==0){
@@ -75,6 +79,7 @@ public class PaymentCalculatorController {
         }
         List<Models> theModels=modelService.findById(brandId);
 
+        System.out.println("id "+theModels.get(0).getModelId()+" name "+theModels.get(0).getName());
         return theModels;
 
     }
@@ -84,8 +89,6 @@ public class PaymentCalculatorController {
         Individual individual=new Individual();
         Brands brands =new Brands();
 
-        List<Models> listOfModels;
-
         //Get all brands from DB and fill to List
         List<Brands> listOfBrands=brandService.findAll();
 
@@ -94,11 +97,10 @@ public class PaymentCalculatorController {
         // Inicialmente, cargar los productos de la primera categoría (si existe)
         if (!listOfBrands.isEmpty()) {
             Brands firstBrand = listOfBrands.get(0); // seleccionar la primera categoría por defecto
-            listOfModels = modelService.findById(firstBrand.getBrandId());
+            List<Models> listOfModels = modelService.findById(firstBrand.getBrandId());
             theModel.addAttribute("theModels", listOfModels);
-
         }
-      //  System.out.println(individual.getPaymentCalculadors().get(0).getBrandId());
+        //  System.out.println(individual.getPaymentCalculadors().get(0).getBrandId());
         //get years of vehicle
         yearsVehicle=getYear(totalYears);
 
@@ -109,7 +111,7 @@ public class PaymentCalculatorController {
 
         //theModel.addAttribute("theModels",models);
 
-        return "paymentcalculator/Add-Individual";
+        return "paymentcalculator/Add-PaymentCalculator";
     }
 
 //    @PostMapping("/save2")
@@ -134,154 +136,24 @@ public class PaymentCalculatorController {
 //            }
 //    }
 
-    @PostMapping("/saveIndividual")
+    @PostMapping("/save")
     public String saveIndividual(@Valid @ModelAttribute("individual") Individual theIndividual,
                                  BindingResult theBindingResult, Model theModel){
+
         BigDecimal interestPeriod=new BigDecimal(0);
 
+
         if( theBindingResult.hasErrors()){
-
-            //  redirectAttributes.addFlashAttribute("theYearsVehicle",yearsVehicle);
-            // return "redirect:/paymentcalculator/Add-PaymentCalculator";
-            return "paymentcalculator/Add-Individual";
-        }
-        else {
-            //fill null values
-            theIndividual.setDwellingType("NotApplies");
-            theIndividual.setMaritalStatus("Unknoww");
-            theIndividual.setNumberOfDependents(0);
-            theIndividual.setHiringType("Normalpayroll");
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Date date = new Date();
-
-            if(theIndividual.getMiddleName()==null){
-                theIndividual.setMiddleName("");
-            }
-
-            //Save individual in BD
-            individualService.save(theIndividual);
-            Brands brands =new Brands();
-
-            List<Models> listOfModels;
-
-            //Get all brands from DB and fill to List
-            List<Brands> listOfBrands=brandService.findAll();
-
-
-            //Get all models from DB and fill to list
-            // Inicialmente, cargar los productos de la primera categoría (si existe)
-            if (!listOfBrands.isEmpty()) {
-                Brands firstBrand = listOfBrands.get(0); // seleccionar la primera categoría por defecto
-                listOfModels = modelService.findById(firstBrand.getBrandId());
-
-                //Add models to view
-
-            }else{
-                listOfModels=modelService.findById(listOfBrands.get(0).getBrandId());
-            }
-            //  System.out.println(individual.getPaymentCalculadors().get(0).getBrandId());
-            //get years of vehicle
             yearsVehicle=getYear(totalYears);
-
-            PaymentCalculator paymentCalculator =new PaymentCalculator();
-           // theIndividual.getEmail()
-            theIndividual.getDoesBizActivities();
-
-            //Add models to view
-            theModel.addAttribute("theIndividual",theIndividual);
-            theModel.addAttribute("thePaymentCalculator",paymentCalculator);
-            theModel.addAttribute("theBrands",listOfBrands);
-            theModel.addAttribute("theYearsVehicle",yearsVehicle);
-            theModel.addAttribute("theModels", listOfModels);
-            return "paymentcalculator/Add-PaymentCalculator";
-            //return "test/test.html";
-        }
-    }
-
-    @PostMapping("/savePaymentCalculator")
-    public String saveIndividual2(@Valid @ModelAttribute("thePaymentCalculator") PaymentCalculator thePaymentCalculator,
-                                  BindingResult theBindingResult, Model theModel){
-
-        BigDecimal interestPeriod=new BigDecimal(0);
-
-        if( theBindingResult.hasErrors()){
-            Individual individual;
-            individual=individualService.findById(thePaymentCalculator.getPersonId());
-
-            System.out.println("Nombre completo: "+individual.getCompleteName());
-            //Add models to view to return
-            theModel.addAttribute("theIndividual",individual);
-            theModel.addAttribute("theYearsVehicle",yearsVehicle);
-            return "paymentcalculator/Add-PaymentCalculator";
-        }
-        else {
-            //fill null values
-
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Date date = new Date();
-
-            List<PaymentCalculator> paymentCalculatorList = new ArrayList<>();
-
-            //fill entity paymentCalculator
-            PaymentCalculator paymentCalculator = new PaymentCalculator(
-                    date,
-                    thePaymentCalculator.getYearVehicle(),
-                    thePaymentCalculator.getVehiclePrice(),
-                    thePaymentCalculator.getDownPayment(),
-                    thePaymentCalculator.getPersonId(),
-                   // thePaymentCalculator.getBrandId(),
-                    220,
-                    1078,
-                    //thePaymentCalculator.getModelId(),
-                    //thePaymentCalculator.getLoanTerm(),
-                    12,
-                    1,
-                    rateFixed,
-                    0);
-            //fill individual paymentCalculator and add paymentCalculator;
-            paymentCalculatorList.add(paymentCalculator);
-            // save the individual
-
-            paymentCalculatorService.save(paymentCalculator);
-
-            //Get calculation Value for "Comision por apertura"
-            List<Charges> charges = chargeService.findByName("COMISION POR APERTURA");
-
-
-            //Get Day of payment
-            List<PaymentDay> paymentDay = paymentDayService.findByDayToExecute(true);
-            // System.out.println(paymentDay.get(0).getPaymentDay());
-
-            //get days
-            long daysToCalculateInterest = getDays(paymentDay.get(0).getPaymentDay());
-
-            //calculate interest of period from the initial charges
-            interestPeriod = calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(), daysToCalculateInterest);
-
-            //add models to view
-            theModel.addAttribute("thePaymentCalculator", paymentCalculator);
-            theModel.addAttribute("theCharges", charges);
-            theModel.addAttribute("theinterestPeriod", interestPeriod);
-
-            return "paymentcalculator/Show-PaymentCalculator";
-        }
-    }
-
-
-
-    @PostMapping("/save")
-    public String saveIndividual2(@Valid @ModelAttribute("individual") Individual theIndividual,
-                                 @Valid @ModelAttribute("theYearsVehicle") int theYearsVehicle,
-                                 BindingResult theBindingResult, Model theModel){
-
-        BigDecimal interestPeriod=new BigDecimal(0);
-
-        if( theBindingResult.hasErrors()){
-           yearsVehicle=getYear(totalYears);
             System.out.println("Error ");
 
-          //  redirectAttributes.addFlashAttribute("theYearsVehicle",yearsVehicle);
-           // return "redirect:/paymentcalculator/Add-PaymentCalculator";
+            List<Brands> listOfBrands=brandService.findAll();
+            List<Models> listOfModels = modelService.findById(theIndividual.getPaymentCalculadors().get(0).getBrandId());
+
+            theModel.addAttribute("theBrands",listOfBrands);
+            theModel.addAttribute("theModels", listOfModels);
+            theModel.addAttribute("theYearsVehicle",yearsVehicle);
+
             return "paymentcalculator/Add-PaymentCalculator";
         }
         else {
@@ -361,7 +233,7 @@ public class PaymentCalculatorController {
         //get differences between today and paymentday from nex month
         long daysBetween=0;
         try {
-             daysBetween = Duration.between(today, firstOfNextMonth).toDays();
+            daysBetween = Duration.between(today, firstOfNextMonth).toDays();
             return daysBetween;
         }
         catch (DateTimeParseException e){
@@ -386,20 +258,8 @@ public class PaymentCalculatorController {
             beforeOfNextMonth.minusYears(i);
             //System.out.println( beforeOfNextMonth.minusYears(i).getYear());
         }
-    return years;
+        return years;
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
