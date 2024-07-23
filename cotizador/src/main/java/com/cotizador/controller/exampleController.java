@@ -42,7 +42,7 @@ public class exampleController {
         // Inicialmente, cargar los productos de la primera categoría (si existe)
         if (!listOfBrands.isEmpty()) {
             Brands firstBrand = listOfBrands.get(0); // seleccionar la primera categoría por defecto
-            List<Models> listOfModels = modelService.findById(firstBrand.getBrandId());
+            List<Models> listOfModels = modelService.findByModelId(firstBrand.getBrandId());
             theModel.addAttribute("theModels", listOfModels);
         }
 
@@ -60,7 +60,7 @@ public class exampleController {
         if (brands==null || brands.getBrandId()==0){
             System.out.println("Marca de auto no encontrada");
         }
-        List<Models> theModels=modelService.findById(brandId);
+        List<Models> theModels=modelService.findByModelId(brandId);
         System.out.println("id "+theModels.get(0).getModelId()+" name "+theModels.get(0).getName());
         return theModels;
 

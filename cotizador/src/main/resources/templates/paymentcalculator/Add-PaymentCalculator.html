@@ -125,8 +125,9 @@
             <br>
             <select id="dropdownModel" class="form-select form-select-sm" th:field="*{paymentCalculadors[0].modelId}">
                 <option th:each="model : ${theModels}"
-                        th:value="${model.getModelId()}"
-                        th:text="${model.getName()}">
+                        th:text="${model.getName()}"
+                        th:value="${model.getModelId()}">Modelo</option>
+
                 </option>
             </select>
         </div>
@@ -185,9 +186,9 @@
         }
 
         // Llamar a cargarProductos al cargar la página
-        $(document).ready(function() {
-            cargarProductos();
-        });
+<!--        $(document).ready(function() {-->
+<!--            cargarProductos();-->
+<!--        });-->
     </script>
 
 

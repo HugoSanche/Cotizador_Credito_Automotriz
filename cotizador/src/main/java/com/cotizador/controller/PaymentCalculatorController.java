@@ -77,7 +77,7 @@ public class PaymentCalculatorController {
         if (brands==null || brands.getBrandId()==0){
             System.out.println("Marca de auto no encontrada");
         }
-        List<Models> theModels=modelService.findById(brandId);
+        List<Models> theModels=modelService.findByBrandId(brandId);
 
         System.out.println("id "+theModels.get(0).getModelId()+" name "+theModels.get(0).getName());
         return theModels;
@@ -97,7 +97,7 @@ public class PaymentCalculatorController {
         // Inicialmente, cargar los productos de la primera categoría (si existe)
         if (!listOfBrands.isEmpty()) {
             Brands firstBrand = listOfBrands.get(0); // seleccionar la primera categoría por defecto
-            List<Models> listOfModels = modelService.findById(firstBrand.getBrandId());
+            List<Models> listOfModels = modelService.findByBrandId(firstBrand.getBrandId());
             theModel.addAttribute("theModels", listOfModels);
         }
         //  System.out.println(individual.getPaymentCalculadors().get(0).getBrandId());
@@ -148,8 +148,12 @@ public class PaymentCalculatorController {
             System.out.println("Error ");
 
             List<Brands> listOfBrands=brandService.findAll();
-            List<Models> listOfModels = modelService.findById(theIndividual.getPaymentCalculadors().get(0).getBrandId());
+            System.out.println("brand ID = "+theIndividual.getPaymentCalculadors().get(0).getBrandId());
+            System.out.println("model ID = "+theIndividual.getPaymentCalculadors().get(0).getModelId());
 
+          //  List<Models> listOfModels = modelService.findById(theIndividual.getPaymentCalculadors().get(0).getBrandId());
+
+            List<Models> listOfModels =modelService.findByModelId(theIndividual.getPaymentCalculadors().get(0).getModelId());
             theModel.addAttribute("theBrands",listOfBrands);
             theModel.addAttribute("theModels", listOfModels);
             theModel.addAttribute("theYearsVehicle",yearsVehicle);
@@ -173,7 +177,7 @@ public class PaymentCalculatorController {
                     theIndividual.getPaymentCalculadors().get(0).getYearVehicle(),
                     theIndividual.getPaymentCalculadors().get(0).getVehiclePrice(),
                     theIndividual.getPaymentCalculadors().get(0).getDownPayment(),
-                    theIndividual.getPaymentCalculadors().get(0).getPersonId(),
+                    //theIndividual.getPaymentCalculadors().get(0).getPersonId(),
                     theIndividual.getPaymentCalculadors().get(0).getBrandId(),
                     theIndividual.getPaymentCalculadors().get(0).getModelId(),
                     theIndividual.getPaymentCalculadors().get(0).getLoanTerm(),
@@ -183,8 +187,8 @@ public class PaymentCalculatorController {
             //fill individual paymentCalculator and add paymentCalculator;
             paymentCalculatorList.add(paymentCalculator);
             // save the individual
-            theIndividual.setPaymentCalculadors(paymentCalculatorList);
-            individualService.save(theIndividual);
+           theIndividual.setPaymentCalculadors(paymentCalculatorList);
+           individualService.save(theIndividual);
 
             //Get calculation Value for "Comision por apertura"
             List<Charges> charges = chargeService.findByName("COMISION POR APERTURA");

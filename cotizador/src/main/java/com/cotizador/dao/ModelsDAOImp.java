@@ -24,13 +24,20 @@ public class ModelsDAOImp implements  ModelsDAO{
     }
 
     @Override
-    public List<Models> findById(int theId) {
+    public List<Models> findByBrandId(int theId) {
         TypedQuery<Models> theQuery =entityManager.createQuery("from Models where brandId=:theData", Models.class);
         //set query parameters
         theQuery.setParameter("theData",theId);
         return theQuery.getResultList();
     }
 
+    @Override
+    public List<Models> findByModelId(int theId) {
+        TypedQuery<Models> theQuery =entityManager.createQuery("from Models where modelId=:theData", Models.class);
+        //set query parameters
+        theQuery.setParameter("theData",theId);
+        return theQuery.getResultList();
+    }
     @Override
     public void update(Models models) {
         entityManager.merge(models);
