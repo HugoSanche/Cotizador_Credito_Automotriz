@@ -202,6 +202,11 @@ public class PaymentCalculatorController {
             //get days
             long daysToCalculateInterest = getDays(paymentDay.get(0).getPaymentDay());
 
+
+            System.out.println("calculateAmountCredit: "+paymentCalculator.calculateAmountCredit());
+            System.out.println("getRateValue: "+paymentCalculator.getRateValue());
+            daysToCalculateInterest=20;
+            System.out.println("daysToCalculateInterest: "+daysToCalculateInterest);
             //calculate interest of period from the initial charges
             interestPeriod = calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(), daysToCalculateInterest);
 
@@ -246,10 +251,16 @@ public class PaymentCalculatorController {
         return daysBetween;
     }
     public BigDecimal calculateInterest(BigDecimal amountCredit, double rateFixed, long daysOfInteres){
+
+        //para calcular en porcentajes
+        rateFixed=rateFixed/100;
         BigDecimal rate = new BigDecimal(rateFixed);
+
         BigDecimal daysOfYears = new BigDecimal(360);
         BigDecimal daysOfInt = new BigDecimal(daysOfInteres);
         BigDecimal interestPeriod=amountCredit.multiply(rate).divide(daysOfYears, RoundingMode.HALF_UP ).multiply(daysOfInt);
+
+        interestPeriod = interestPeriod.setScale(2, RoundingMode.CEILING);
         return interestPeriod;
     }
 
