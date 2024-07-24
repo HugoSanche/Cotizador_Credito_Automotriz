@@ -22,7 +22,7 @@ public class ChargeServiceImp implements ChargeService{
         return chargesDAO.findById(theId);
     }
     @Override
-    public List<Charges> findByName(String nameCharge) {
+    public Charges findByName(String nameCharge) {
 
         return chargesDAO.findByName(nameCharge);
     }

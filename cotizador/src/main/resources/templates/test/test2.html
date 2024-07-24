@@ -15,13 +15,37 @@
 
 </head>
 <body>
-<div class="container">
-    <h3>Simulador de Crédito</h3>
-    <hr>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">Concepto</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col">Importe</th>
+        <th scope="col">Iva</th>
+        <th scope="col">Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th scope="row">Comision por Apertura</th>
+        <td>Mark</td>
+        <td>Otto</td>
+        <td>@mdo</td>
+    </tr>
+    <tr>
+        <th scope="row">Intereses del Periodo</th>
+        <td></td>
+        <td><p th:text=${theCharges.get(0).getCalculationValue()}></p></td>
+        <td>@fat</td>
+    </tr>
+    <tr>
+        <th scope="row">Totales</th>
+        <td colspan="2">Larry the Bird</td>
+        <td>@twitter</td>
+    </tr>
+    </tbody>
+</table>
 
-    <hr>
-    <a th:href="@{/individuals/list}">Back to Individuals List</a>
-
-</div>
 </body>
 </html>

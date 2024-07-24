@@ -142,6 +142,10 @@ public class PaymentCalculatorController {
 
         BigDecimal interestPeriod=new BigDecimal(0);
 
+        // get a date
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime dateNextMonth ;
+        BigDecimal  commisionForOpening; //comision por apertura
 
         if( theBindingResult.hasErrors()){
             yearsVehicle=getYear(totalYears);
@@ -191,8 +195,7 @@ public class PaymentCalculatorController {
            individualService.save(theIndividual);
 
             //Get calculation Value for "Comision por apertura"
-            List<Charges> charges = chargeService.findByName("COMISION POR APERTURA");
-            System.out.println("Charges " + charges.get(0).getCalculationValue());
+            Charges charges = chargeService.findByName("COMISION POR APERTURA");
 
 
             //Get Day of payment
@@ -202,20 +205,26 @@ public class PaymentCalculatorController {
             //get days
             long daysToCalculateInterest = getDays(paymentDay.get(0).getPaymentDay());
 
+            dateNextMonth=getPaymentNextMonth(paymentDay.get(0).getPaymentDay());
 
-            System.out.println("calculateAmountCredit: "+paymentCalculator.calculateAmountCredit());
-            System.out.println("getRateValue: "+paymentCalculator.getRateValue());
-            daysToCalculateInterest=20;
-            System.out.println("daysToCalculateInterest: "+daysToCalculateInterest);
+            System.out.println("Fecha de hoy: "+today);
+            System.out.println("Fecha siguiente mes: "+dateNextMonth);
+           daysToCalculateInterest=20;
+
             //calculate interest of period from the initial charges
             interestPeriod = calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(), daysToCalculateInterest);
+
+            commisionForOpening=charges.getComisionXApertura(paymentCalculator.calculateAmountCredit());
+            System.out.println("comision:"+commisionForOpening);
 
             //add models to view
             theModel.addAttribute("thePaymentCalculator", paymentCalculator);
             theModel.addAttribute("theCharges", charges);
             theModel.addAttribute("theinterestPeriod", interestPeriod);
+            theModel.addAttribute("theCommisionForOpening", commisionForOpening);
 
             return "paymentcalculator/Show-PaymentCalculator";
+           // return "test/test2";
         }
     }
 
@@ -237,8 +246,6 @@ public class PaymentCalculatorController {
                 // and take the first day of that month
                 .withDayOfMonth(day);
 
-        //System.out.println( (firstOfNextMonth.format(DateTimeFormatter.ISO_LOCAL_DATE)));
-
         //get differences between today and paymentday from nex month
         long daysBetween=0;
         try {
@@ -250,6 +257,30 @@ public class PaymentCalculatorController {
         }
         return daysBetween;
     }
+
+
+    //get date of payment of next month
+    public LocalDateTime getPaymentNextMonth(int day){
+
+        //validate day
+        if (day <1){
+            //regresa la fecha de hoy
+            return LocalDateTime.now();
+        }
+
+        // get a reference to today
+        LocalDateTime today = LocalDateTime.now();
+
+        // having today,
+        LocalDateTime dateOfNextMonth = today
+                // add one to the month
+                .withMonth(today.getMonthValue() + 1)
+                // and take the first day of that month
+                .withDayOfMonth(day);
+
+        return dateOfNextMonth;
+    }
+
     public BigDecimal calculateInterest(BigDecimal amountCredit, double rateFixed, long daysOfInteres){
 
         //para calcular en porcentajes

@@ -3,6 +3,8 @@ package com.cotizador.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 @Entity
@@ -17,7 +19,7 @@ public class Charges implements Serializable {
     @Column(name = "CalculationMethod")
     private String calculationMethod;
     @Column(name = "CalculationValue")
-    private double calculationValue;
+    private BigDecimal calculationValue;
     @Column(name = "TransactionType")
     private String transactionType;
     @Column(name = "ChargeType")
@@ -32,7 +34,7 @@ public class Charges implements Serializable {
     public Charges() {
     }
 
-    public Charges(int chargesId, String name, String calculationMethod, double calculationValue, String transactionType,
+    public Charges(int chargesId, String name, String calculationMethod, BigDecimal calculationValue, String transactionType,
                    String chargeType, String status, Date lastUpdate, Date register) {
         this.chargesId = chargesId;
         this.name = name;
@@ -69,11 +71,11 @@ public class Charges implements Serializable {
         this.calculationMethod = calculationMethod;
     }
 
-    public double getCalculationValue() {
+    public BigDecimal getCalculationValue() {
         return calculationValue;
     }
 
-    public void setCalculationValue(double calculationValue) {
+    public void setCalculationValue(BigDecimal calculationValue) {
         this.calculationValue = calculationValue;
     }
 
@@ -117,6 +119,12 @@ public class Charges implements Serializable {
         this.register = register;
     }
 
+    //calcula el monto de la comision por apertura
+    public BigDecimal getComisionXApertura(BigDecimal amountOfCredit){
+        BigDecimal value = new BigDecimal(100);
+
+        return amountOfCredit.multiply(getCalculationValue()).divide(value, RoundingMode.HALF_UP);
+    }
     @Override
     public String toString() {
         return "Charges{" +

@@ -31,7 +31,7 @@ public class ChargesDAOImp implements ChargesDAO{
     }
 
     @Override
-    public List<Charges> findByName(String nameCharge) {
+    public Charges findByName(String nameCharge) {
 
         //get list results
         //create a query
@@ -40,7 +40,8 @@ public class ChargesDAOImp implements ChargesDAO{
         //set query parameters
         theQuery.setParameter("theData",nameCharge);
 
-        return theQuery.getResultList();
+        //retorna solamente 1
+        return theQuery.getResultList().get(0);
     }
 
     @Override
