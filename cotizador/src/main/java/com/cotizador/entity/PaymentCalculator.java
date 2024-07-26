@@ -52,6 +52,15 @@ public class PaymentCalculator  {
     @Column(name = "Version")
     private int version;
 
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name ="ChargesReceivableId" )
+    private ChargesReceivable chargesReceivable;
+
+    @Column(name = "LastUpdate")
+    private Date lastUpdate;
+    @Column(name = "Register")
+    private Date register;
+
 
     public PaymentCalculator() {
     }
