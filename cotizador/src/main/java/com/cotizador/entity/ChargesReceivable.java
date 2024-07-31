@@ -3,7 +3,9 @@ package com.cotizador.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name ="chargesreceivable" )
@@ -42,6 +44,16 @@ public class ChargesReceivable {
     private String comments;
     @Column(name = "LastUpdate")
     private Date lastUpdate;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "payment_charges",
+            joinColumns = @JoinColumn(name = "ChargesReceivableId"),
+            inverseJoinColumns = @JoinColumn(name="PaymentCalculatorId")
+    )
+    List<PaymentCalculator> paymentCalculators;
+
     @Column(name = "Register")
     private Date register;
     @Column(name = "Status")
@@ -70,7 +82,13 @@ public class ChargesReceivable {
         this.status = status;
     }
 
+    private void addPaymentCalculator(PaymentCalculator thePaymentCalculators){
+        if (paymentCalculators==null){
+            paymentCalculators=new ArrayList<>();
+        }
+        paymentCalculators.add(thePaymentCalculators);
 
+    }
 
     public int getChargesReceivableId() {
         return chargesReceivableId;

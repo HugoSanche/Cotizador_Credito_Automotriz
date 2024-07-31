@@ -123,6 +123,7 @@ public class Charges implements Serializable {
     public BigDecimal getComisionXApertura(BigDecimal amountOfCredit){
         BigDecimal value = new BigDecimal(100);
 
+        System.out.println("amountOfCredit "+amountOfCredit);
         return amountOfCredit.multiply(getCalculationValue()).divide(value, RoundingMode.HALF_UP);
     }
     @Override

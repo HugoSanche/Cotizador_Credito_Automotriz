@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "paymentcalculator")
@@ -52,9 +54,16 @@ public class PaymentCalculator  {
     @Column(name = "Version")
     private int version;
 
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name ="ChargesReceivableId" )
-    private ChargesReceivable chargesReceivable;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "payment_charges",
+            joinColumns = @JoinColumn(name = "PaymentCalculatorId"),
+            inverseJoinColumns = @JoinColumn(name="ChargesReceivableId")
+    )
+    private List<ChargesReceivable> chargesReceivable;
+
 
     @Column(name = "LastUpdate")
     private Date lastUpdate;
@@ -100,6 +109,13 @@ public class PaymentCalculator  {
         this.version = version;
     }
 
+public void addChargesReceivable(ChargesReceivable theChargesReceivable){
+        if(chargesReceivable==null){
+            chargesReceivable=new ArrayList<>();
+        }
+        chargesReceivable.add(theChargesReceivable);
+
+}
 
     @Override
     public String toString() {
@@ -118,7 +134,21 @@ public class PaymentCalculator  {
                 '}';
     }
 
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
 
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public Date getRegister() {
+        return register;
+    }
+
+    public void setRegister(Date register) {
+        this.register = register;
+    }
 
     public int getPaymentCalculatorId() {
         return paymentCalculatorId;

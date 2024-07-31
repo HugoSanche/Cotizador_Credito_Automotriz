@@ -31,13 +31,16 @@
         <th scope="row">Comision por Apertura</th>
         <td>Mark</td>
         <td>Otto</td>
-        <td>@mdo</td>
+        <td><p th:text=*{theCommisionForOpening}></p></td>
+        <td><p th:text=*{theIvaCommisionForOpening}></p></td>
+        <td></td>
     </tr>
     <tr>
         <th scope="row">Intereses del Periodo</th>
-        <td></td>
-        <td><p th:text=${theCharges.get(0).getCalculationValue()}></p></td>
-        <td>@fat</td>
+        <td>Mark</td>
+        <td>Otto</td>
+        <td><p th:text=${theInterestPeriod}></p></td>
+        <td><p th:text=${theIvaInterestPeriod}></p></td>
     </tr>
     <tr>
         <th scope="row">Totales</th>
