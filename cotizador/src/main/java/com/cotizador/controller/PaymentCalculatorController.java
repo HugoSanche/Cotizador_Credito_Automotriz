@@ -102,7 +102,7 @@ public class PaymentCalculatorController {
             List<Models> listOfModels = modelService.findByBrandId(firstBrand.getBrandId());
             theModel.addAttribute("theModels", listOfModels);
         }
-        //  System.out.println(individual.getPaymentCalculadors().get(0).getBrandId());
+
         //get years of vehicle
         yearsVehicle=getYear(totalYears);
 
@@ -171,7 +171,7 @@ public class PaymentCalculatorController {
 
 //***********************************************************************************************************************************
             //Get calculation Value for "Comision por apertura"
-            Charges charges = chargeService.findByName("COMISION POR APERTURA");
+
 
             //To get the actual value of IVA
             Taxes taxes=taxesService.findByName("IVA");
@@ -181,7 +181,6 @@ public class PaymentCalculatorController {
 //**************************************************  interestPeriod  ******************************************************************
             //Get Day of payment
             List<PaymentDay> paymentDay = paymentDayService.findByDayToExecute(true);
-            // System.out.println(paymentDay.get(0).getPaymentDay());
 
             //get days
             long daysToCalculateInterest = getDays(paymentDay.get(0).getPaymentDay());
@@ -191,20 +190,14 @@ public class PaymentCalculatorController {
             interestPeriod = calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(), daysToCalculateInterest);
             ivaInterestPeriod=interestPeriod.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_UP);
 
-//******************************************  commision For Openning  ************************************************************
-            //calculate commision For Openning
-            commisionForOpening=charges.getComisionXApertura(paymentCalculator.calculateAmountCredit());
-            System.out.println("comision:"+commisionForOpening);
 
-            ivaCommisionForOpening=commisionForOpening.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_UP);
-            System.out.println("comision IVA :"+ivaCommisionForOpening);
 
 //*********************************************************************************************************************************
-
+            Charges chargeInterestPeriod = chargeService.findByName("Intereses del Periodo");
 
             //Ad charge commision For Openning
             ChargesReceivable chargesReceivable=new ChargesReceivable(
-                    charges.getChargesId(),
+                    chargeInterestPeriod.getChargesId(),
                   date,
                   date,
                     interestPeriod,
@@ -221,10 +214,47 @@ public class PaymentCalculatorController {
                     date,
                     "Active"
             );
+            paymentCalculator.addChargesReceivable(chargesReceivable);
 
-            //add idChargeReceivable to paymentCalculator
-            paymentCalculator.setPaymentCalculatorId(chargesReceivable.getChargesReceivableId());
+//******************************************  commision For Openning  ************************************************************
+            Charges charges = chargeService.findByName("COMISION POR APERTURA");
 
+            //calculate commision For Openning
+            commisionForOpening=charges.getComisionXApertura(paymentCalculator.calculateAmountCredit());
+            System.out.println("comision:"+commisionForOpening);
+
+            //calculate IVA commision For Openning
+            ivaCommisionForOpening=commisionForOpening.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_UP);
+            System.out.println("comision IVA :"+ivaCommisionForOpening);
+
+//*********************************************************************************************************************************
+
+
+            Charges chargeCommisionForOpening = chargeService.findByName("COMISION POR APERTURA");
+
+            //Ad charge commision For Openning
+            ChargesReceivable chargesReceivable2=new ChargesReceivable(
+                    chargeCommisionForOpening.getChargesId(),
+                    date,
+                    date,
+                    commisionForOpening,
+                    commisionForOpening,
+                    ivaCommisionForOpening,
+                    ivaCommisionForOpening,
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    "",
+                    date,
+                    date,
+                    "Active"
+            );
+            paymentCalculator.addChargesReceivable(chargesReceivable);
+            paymentCalculator.addChargesReceivable(chargesReceivable2);
+
+            
 //*************************************  SAVE INDIVIDUAL AND PAYMENT CALCULATOR   *******************************************************
             //fill individual paymentCalculator and add paymentCalculator;
             paymentCalculatorList.add(paymentCalculator);
