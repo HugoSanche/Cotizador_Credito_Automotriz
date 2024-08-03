@@ -43,6 +43,7 @@ public class PaymentCalculatorController {
     int totalYears=0;
     List<Integer> yearsVehicle;
 
+    BigDecimal value = new BigDecimal(100);//porcentaje 100% pass to BigDecimal
 
 
     public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService, ChargeService chargeService,
@@ -120,7 +121,6 @@ public class PaymentCalculatorController {
     @PostMapping("/save")
     public String saveIndividual(@Valid @ModelAttribute("individual") Individual theIndividual,
                                  BindingResult theBindingResult, Model theModel){
-
         // get a date
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime dateNextMonth ;
@@ -130,6 +130,7 @@ public class PaymentCalculatorController {
 
         BigDecimal  commisionForOpening; //comision por apertura
         BigDecimal ivaCommisionForOpening;
+
 
         if( theBindingResult.hasErrors()){
             yearsVehicle=getYear(totalYears);
@@ -170,12 +171,10 @@ public class PaymentCalculatorController {
                     0);
 
 //***********************************************************************************************************************************
-            //Get calculation Value for "Comision por apertura"
 
 
             //To get the actual value of IVA
             Taxes taxes=taxesService.findByName("IVA");
-            BigDecimal value = new BigDecimal(100);//porcentaje 100% pass to BigDecimal
 
 
 //**************************************************  interestPeriod  ******************************************************************
@@ -186,16 +185,14 @@ public class PaymentCalculatorController {
             long daysToCalculateInterest = getDays(paymentDay.get(0).getPaymentDay());
 
             daysToCalculateInterest=20;
+
             //calculate interest of period for the initial charges
             interestPeriod = calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(), daysToCalculateInterest);
-            ivaInterestPeriod=interestPeriod.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_UP);
-
+            ivaInterestPeriod=calculateIvaInterest(interestPeriod, taxes);
 
 
 //*********************************************************************************************************************************
             Charges chargeInterestPeriod = chargeService.findByName("Intereses del Periodo");
-
-            System.out.println("Intereses del Periodo "+chargeInterestPeriod.getChargesId()+" "+chargeInterestPeriod.getName());
 
             //Ad charge commision For Openning
             ChargesReceivable chargesReceivable=new ChargesReceivable(
@@ -218,24 +215,17 @@ public class PaymentCalculatorController {
             );
             paymentCalculator.addChargesReceivable(chargesReceivable);
 
-//******************************************  commision For Openning  ************************************************************
+//******************************************  Comision por apertura  ************************************************************
+            //Get calculation Value for "Comision por apertura"
             Charges chargeCommisionForOpening = chargeService.findByName("COMISION POR APERTURA");
 
-            System.out.println("comision por apertura "+chargeCommisionForOpening.getChargesId()+" "+chargeCommisionForOpening.getName());
-
-
             //calculate commision For Openning
-            commisionForOpening=chargeCommisionForOpening.getComisionXApertura(paymentCalculator.calculateAmountCredit());
-            System.out.println("comision:"+commisionForOpening);
+            commisionForOpening=calculateCommisionForOpening(paymentCalculator.calculateAmountCredit(),chargeCommisionForOpening);
 
             //calculate IVA commision For Openning
-            ivaCommisionForOpening=commisionForOpening.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_UP);
-            System.out.println("comision IVA :"+ivaCommisionForOpening);
+            ivaCommisionForOpening=calculateIvaCommisionForOpening(commisionForOpening, taxes);
 
 //*********************************************************************************************************************************
-
-
-
 
             //Ad charge commision For Openning
             ChargesReceivable chargesReceivable2=new ChargesReceivable(
@@ -257,17 +247,16 @@ public class PaymentCalculatorController {
                     "Active"
             );
 
-
-           // paymentCalculator.addChargesReceivable(chargesReceivable);
             paymentCalculator.addChargesReceivable(chargesReceivable2);
 
-          //  paymentCalculatorService.save(paymentCalculator);
 //*************************************  SAVE INDIVIDUAL AND PAYMENT CALCULATOR   *******************************************************
             //fill individual paymentCalculator and add paymentCalculator;
             paymentCalculatorList.add(paymentCalculator);
-            // save the individual
+
+            //add paymentcalculator to individual
            theIndividual.setPaymentCalculadors(paymentCalculatorList);
-            System.out.println("getPaymentCalculatorId() "+theIndividual.getPaymentCalculadors().get(0).getPaymentCalculatorId());
+
+            // save the individual
            individualService.save(theIndividual);
 //***********************************************************************************************************************************
 
@@ -345,6 +334,31 @@ public class PaymentCalculatorController {
         return dateOfNextMonth;
     }
 
+
+
+    //get years of vehicle
+    public List<Integer> getYear(int totalYears){
+        LocalDateTime beforeOfNextMonth = LocalDateTime.now();
+        List<Integer> years=new ArrayList<>();
+        for (int i=totalYears-1; i>=0;i--){
+            years.add(beforeOfNextMonth.minusYears(i).getYear());
+            beforeOfNextMonth.minusYears(i);
+            //System.out.println( beforeOfNextMonth.minusYears(i).getYear());
+        }
+        return years;
+    }
+    public BigDecimal calculateCommisionForOpening(BigDecimal amountOfCredit, Charges  chargeCommisionForOpening){
+        BigDecimal value = new BigDecimal(100);
+
+
+        System.out.println("amountOfCredit "+amountOfCredit);
+        return amountOfCredit.multiply(chargeCommisionForOpening.getCalculationValue()).divide(value, RoundingMode.HALF_UP);
+    }
+    public  BigDecimal calculateIvaCommisionForOpening(BigDecimal commisionForOpening, Taxes taxes){
+        BigDecimal ivaCommisionForOpening;
+        ivaCommisionForOpening=commisionForOpening.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_UP);
+        return ivaCommisionForOpening;
+    }
     public BigDecimal calculateInterest(BigDecimal amountCredit, double rateFixed, long daysOfInteres){
 
         //para calcular en porcentajes
@@ -358,18 +372,12 @@ public class PaymentCalculatorController {
         interestPeriod = interestPeriod.setScale(2, RoundingMode.CEILING);
         return interestPeriod;
     }
+    public BigDecimal calculateIvaInterest(BigDecimal interestPeriod, Taxes taxes){
+        BigDecimal ivainterestPeriod;
+        //Get IVA and divide 100
+        ivainterestPeriod=interestPeriod.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_UP);
 
-    //get years of vehicle
-    public List<Integer> getYear(int totalYears){
-        LocalDateTime beforeOfNextMonth = LocalDateTime.now();
-        List<Integer> years=new ArrayList<>();
-        for (int i=totalYears-1; i>=0;i--){
-            years.add(beforeOfNextMonth.minusYears(i).getYear());
-            beforeOfNextMonth.minusYears(i);
-            //System.out.println( beforeOfNextMonth.minusYears(i).getYear());
-        }
-        return years;
+        return ivainterestPeriod;
     }
-
 }
 
