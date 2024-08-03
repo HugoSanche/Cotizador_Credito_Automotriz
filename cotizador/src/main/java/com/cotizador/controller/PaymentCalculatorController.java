@@ -195,6 +195,8 @@ public class PaymentCalculatorController {
 //*********************************************************************************************************************************
             Charges chargeInterestPeriod = chargeService.findByName("Intereses del Periodo");
 
+            System.out.println("Intereses del Periodo "+chargeInterestPeriod.getChargesId()+" "+chargeInterestPeriod.getName());
+
             //Ad charge commision For Openning
             ChargesReceivable chargesReceivable=new ChargesReceivable(
                     chargeInterestPeriod.getChargesId(),
@@ -217,10 +219,13 @@ public class PaymentCalculatorController {
             paymentCalculator.addChargesReceivable(chargesReceivable);
 
 //******************************************  commision For Openning  ************************************************************
-            Charges charges = chargeService.findByName("COMISION POR APERTURA");
+            Charges chargeCommisionForOpening = chargeService.findByName("COMISION POR APERTURA");
+
+            System.out.println("comision por apertura "+chargeCommisionForOpening.getChargesId()+" "+chargeCommisionForOpening.getName());
+
 
             //calculate commision For Openning
-            commisionForOpening=charges.getComisionXApertura(paymentCalculator.calculateAmountCredit());
+            commisionForOpening=chargeCommisionForOpening.getComisionXApertura(paymentCalculator.calculateAmountCredit());
             System.out.println("comision:"+commisionForOpening);
 
             //calculate IVA commision For Openning
@@ -230,7 +235,7 @@ public class PaymentCalculatorController {
 //*********************************************************************************************************************************
 
 
-            Charges chargeCommisionForOpening = chargeService.findByName("COMISION POR APERTURA");
+
 
             //Ad charge commision For Openning
             ChargesReceivable chargesReceivable2=new ChargesReceivable(
@@ -251,15 +256,18 @@ public class PaymentCalculatorController {
                     date,
                     "Active"
             );
-            paymentCalculator.addChargesReceivable(chargesReceivable);
+
+
+           // paymentCalculator.addChargesReceivable(chargesReceivable);
             paymentCalculator.addChargesReceivable(chargesReceivable2);
 
-            
+          //  paymentCalculatorService.save(paymentCalculator);
 //*************************************  SAVE INDIVIDUAL AND PAYMENT CALCULATOR   *******************************************************
             //fill individual paymentCalculator and add paymentCalculator;
             paymentCalculatorList.add(paymentCalculator);
             // save the individual
            theIndividual.setPaymentCalculadors(paymentCalculatorList);
+            System.out.println("getPaymentCalculatorId() "+theIndividual.getPaymentCalculadors().get(0).getPaymentCalculatorId());
            individualService.save(theIndividual);
 //***********************************************************************************************************************************
 
@@ -273,7 +281,7 @@ public class PaymentCalculatorController {
 
             //add models to view
             theModel.addAttribute("thePaymentCalculator", paymentCalculator);
-            theModel.addAttribute("theCharges", charges);
+            theModel.addAttribute("theCharges", chargeCommisionForOpening);
             theModel.addAttribute("theInterestPeriod", interestPeriod);
             theModel.addAttribute("theIvaInterestPeriod", ivaInterestPeriod);
             theModel.addAttribute("theCommisionForOpening", commisionForOpening);

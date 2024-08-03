@@ -117,6 +117,14 @@ public void addChargesReceivable(ChargesReceivable theChargesReceivable){
 
 }
 
+    public List<ChargesReceivable> getChargesReceivable() {
+        return chargesReceivable;
+    }
+
+    public void setChargesReceivable(List<ChargesReceivable> chargesReceivable) {
+        this.chargesReceivable = chargesReceivable;
+    }
+
     @Override
     public String toString() {
         return "PaymentCalculator{" +
