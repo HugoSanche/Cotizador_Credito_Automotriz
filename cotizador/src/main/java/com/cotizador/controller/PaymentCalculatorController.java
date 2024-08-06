@@ -74,7 +74,6 @@ public class PaymentCalculatorController {
     @GetMapping("/modelos/{brandId}")
     @ResponseBody
     public List<Models> obtenerProductosPorCategoria(@PathVariable int brandId) {
-        System.out.println("BrandId "+brandId);
         Brands brands = brandService.findById(brandId);
 
         if (brands==null || brands.getBrandId()==0){
@@ -82,7 +81,6 @@ public class PaymentCalculatorController {
         }
         List<Models> theModels=modelService.findByBrandId(brandId);
 
-        System.out.println("id "+theModels.get(0).getModelId()+" name "+theModels.get(0).getName());
         return theModels;
 
     }
@@ -195,25 +193,13 @@ public class PaymentCalculatorController {
             Charges chargeInterestPeriod = chargeService.findByName("Intereses del Periodo");
 
             //Ad charge commision For Openning
-            ChargesReceivable chargesReceivable=new ChargesReceivable(
-                    chargeInterestPeriod.getChargesId(),
-                  date,
-                  date,
-                    interestPeriod,
-                    interestPeriod,
-                    ivaInterestPeriod,
-                    ivaInterestPeriod,
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    "",
-                    date,
-                    date,
-                    "Active"
-            );
-            paymentCalculator.addChargesReceivable(chargesReceivable);
+            ChargesReceivable interesesDelPeriodo;
+
+            //add to DB intereses del periodo
+            interesesDelPeriodo=createChargesReceivable(chargeInterestPeriod.getChargesId(),date, interestPeriod,ivaInterestPeriod);
+
+            paymentCalculator.addChargesReceivable(interesesDelPeriodo);
+
 
 //******************************************  Comision por apertura  ************************************************************
             //Get calculation Value for "Comision por apertura"
@@ -228,26 +214,12 @@ public class PaymentCalculatorController {
 //*********************************************************************************************************************************
 
             //Ad charge commision For Openning
-            ChargesReceivable chargesReceivable2=new ChargesReceivable(
-                    chargeCommisionForOpening.getChargesId(),
-                    date,
-                    date,
-                    commisionForOpening,
-                    commisionForOpening,
-                    ivaCommisionForOpening,
-                    ivaCommisionForOpening,
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    "",
-                    date,
-                    date,
-                    "Active"
-            );
+            ChargesReceivable comisionXApertura;
 
-            paymentCalculator.addChargesReceivable(chargesReceivable2);
+            //add to DB comission por apertura
+            comisionXApertura=createChargesReceivable(chargeCommisionForOpening.getChargesId(),date, commisionForOpening,ivaCommisionForOpening);
+
+            paymentCalculator.addChargesReceivable(comisionXApertura);
 
 //*************************************  SAVE INDIVIDUAL AND PAYMENT CALCULATOR   *******************************************************
             //fill individual paymentCalculator and add paymentCalculator;
@@ -265,10 +237,17 @@ public class PaymentCalculatorController {
             System.out.println("Fecha de hoy: "+today);
             System.out.println("Fecha siguiente mes: "+dateNextMonth);
 
+            System.out.println("getChargeAmount(): "+theIndividual.getPaymentCalculadors().get(0).getChargesReceivable().get(1).getChargeAmount());
+            System.out.println("getLateInterestAmount(): "+theIndividual.getPaymentCalculadors().get(0).getChargesReceivable().get(1).getvATAmount());
 
+            paymentCalculator.getChargesReceivable().get(0).getvATAmount();
+
+            System.out.println("getChargesId() "+ paymentCalculator.getChargesReceivable().get(0).getChargesId());
 
 
             //add models to view
+            theModel.addAttribute("theCharges2", paymentCalculator.getChargesReceivable());
+
             theModel.addAttribute("thePaymentCalculator", paymentCalculator);
             theModel.addAttribute("theCharges", chargeCommisionForOpening);
             theModel.addAttribute("theInterestPeriod", interestPeriod);
@@ -277,7 +256,7 @@ public class PaymentCalculatorController {
             theModel.addAttribute("theIvaCommisionForOpening", ivaCommisionForOpening);
 
             //return "paymentcalculator/Show-PaymentCalculator";
-           return "test/test2";
+           return "test/list-charges";
         }
     }
 
@@ -334,8 +313,6 @@ public class PaymentCalculatorController {
         return dateOfNextMonth;
     }
 
-
-
     //get years of vehicle
     public List<Integer> getYear(int totalYears){
         LocalDateTime beforeOfNextMonth = LocalDateTime.now();
@@ -350,8 +327,6 @@ public class PaymentCalculatorController {
     public BigDecimal calculateCommisionForOpening(BigDecimal amountOfCredit, Charges  chargeCommisionForOpening){
         BigDecimal value = new BigDecimal(100);
 
-
-        System.out.println("amountOfCredit "+amountOfCredit);
         return amountOfCredit.multiply(chargeCommisionForOpening.getCalculationValue()).divide(value, RoundingMode.HALF_UP);
     }
     public  BigDecimal calculateIvaCommisionForOpening(BigDecimal commisionForOpening, Taxes taxes){
@@ -378,6 +353,27 @@ public class PaymentCalculatorController {
         ivainterestPeriod=interestPeriod.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_UP);
 
         return ivainterestPeriod;
+    }
+    public ChargesReceivable createChargesReceivable(int ChargesId, Date date, BigDecimal chargeAmount, BigDecimal ivaChargeAmount){
+        ChargesReceivable chargesReceivable=new ChargesReceivable(
+                ChargesId,
+                date,
+                date,
+                chargeAmount,
+                chargeAmount,
+                ivaChargeAmount,
+                ivaChargeAmount,
+                BigDecimal.valueOf(0),
+                BigDecimal.valueOf(0),
+                BigDecimal.valueOf(0),
+                BigDecimal.valueOf(0),
+                BigDecimal.valueOf(0),
+                "",
+                date,
+                date,
+                "Active"
+        );
+        return chargesReceivable;
     }
 }
 

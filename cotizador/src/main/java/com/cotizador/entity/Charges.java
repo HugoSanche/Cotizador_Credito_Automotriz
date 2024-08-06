@@ -126,6 +126,8 @@ public class Charges implements Serializable {
         System.out.println("amountOfCredit "+amountOfCredit);
         return amountOfCredit.multiply(getCalculationValue()).divide(value, RoundingMode.HALF_UP);
     }
+
+//
     @Override
     public String toString() {
         return "Charges{" +

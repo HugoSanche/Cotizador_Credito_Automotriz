@@ -82,6 +82,14 @@ public class ChargesReceivable {
         this.status = status;
     }
 
+    public int getChargesId() {
+        return chargesId;
+    }
+
+    public void setChargesId(int chargesId) {
+        this.chargesId = chargesId;
+    }
+
     private void addPaymentCalculator(PaymentCalculator thePaymentCalculators){
         if (paymentCalculators==null){
             paymentCalculators=new ArrayList<>();
@@ -217,6 +225,16 @@ public class ChargesReceivable {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    //Suma el cargo y su iva
+    public  BigDecimal getSumAmountAndVATAmount(){
+        return chargeAmount.add(vATAmount);
+    }
+//    public String getCharge(){
+//        ChargeService chargeService=;
+//        Charges chargeInterestPeriod = chargeService.findByName("Intereses del Periodo");
+//
+//    }
 
     @Override
     public String toString() {
