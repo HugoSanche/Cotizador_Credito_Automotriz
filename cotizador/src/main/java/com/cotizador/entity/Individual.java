@@ -173,6 +173,8 @@ public class Individual implements Serializable {
     public Individual() {
     }
 
+
+
     public List<PaymentCalculator> getPaymentCalculadors() {
         return paymentCalculadors;
     }

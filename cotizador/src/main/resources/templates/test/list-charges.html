@@ -27,8 +27,8 @@
         <tbody>
             <tr th:each="charges : ${theCharges2}">
                 <td th:text="${charges.getChargesId()}"/>
-                <td th:text="${charges.getChargesId()}"/>
-                <td th:text="${charges.getChargesId()}"/>
+                <td th:text="${charges.getCharges().get(0).getName()}"/>
+                <td th:text="${charges.getCharges().get(0).getName()}"/>
                 <td th:text="${charges.getChargeAmount()}"/>
                 <td th:text="${charges.getvATAmount()}"/>
                 <td th:text="${charges.getSumAmountAndVATAmount()}"/>

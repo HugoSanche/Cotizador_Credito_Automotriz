@@ -198,6 +198,8 @@ public class PaymentCalculatorController {
             //add to DB intereses del periodo
             interesesDelPeriodo=createChargesReceivable(chargeInterestPeriod.getChargesId(),date, interestPeriod,ivaInterestPeriod);
 
+            System.out.println("charge "+chargeInterestPeriod.getName());
+            interesesDelPeriodo.addCharges(chargeInterestPeriod);
             paymentCalculator.addChargesReceivable(interesesDelPeriodo);
 
 
@@ -219,7 +221,11 @@ public class PaymentCalculatorController {
             //add to DB comission por apertura
             comisionXApertura=createChargesReceivable(chargeCommisionForOpening.getChargesId(),date, commisionForOpening,ivaCommisionForOpening);
 
-            paymentCalculator.addChargesReceivable(comisionXApertura);
+            System.out.println("Comision por apertura "+chargeCommisionForOpening.getName());
+            comisionXApertura.addCharges(chargeCommisionForOpening);
+           paymentCalculator.addChargesReceivable(comisionXApertura);
+            System.out.println("Hola ");
+
 
 //*************************************  SAVE INDIVIDUAL AND PAYMENT CALCULATOR   *******************************************************
             //fill individual paymentCalculator and add paymentCalculator;
@@ -227,9 +233,10 @@ public class PaymentCalculatorController {
 
             //add paymentcalculator to individual
            theIndividual.setPaymentCalculadors(paymentCalculatorList);
-
+            System.out.println("Hola 2");
             // save the individual
            individualService.save(theIndividual);
+            System.out.println("Hola 3");
 //***********************************************************************************************************************************
 
             dateNextMonth=getPaymentNextMonth(paymentDay.get(0).getPaymentDay());
@@ -237,12 +244,15 @@ public class PaymentCalculatorController {
             System.out.println("Fecha de hoy: "+today);
             System.out.println("Fecha siguiente mes: "+dateNextMonth);
 
-            System.out.println("getChargeAmount(): "+theIndividual.getPaymentCalculadors().get(0).getChargesReceivable().get(1).getChargeAmount());
-            System.out.println("getLateInterestAmount(): "+theIndividual.getPaymentCalculadors().get(0).getChargesReceivable().get(1).getvATAmount());
+            //System.out.println("getChargeAmount(): "+theIndividual.getPaymentCalculadors().get(0).getChargesReceivable().get(1).getChargeAmount());
+           // System.out.println("getLateInterestAmount(): "+theIndividual.getPaymentCalculadors().get(0).getChargesReceivable().get(1).getvATAmount());
 
-            paymentCalculator.getChargesReceivable().get(0).getvATAmount();
+           // paymentCalculator.getChargesReceivable().get(0).getvATAmount();
+
+
 
             System.out.println("getChargesId() "+ paymentCalculator.getChargesReceivable().get(0).getChargesId());
+            System.out.println("name "+ paymentCalculator.getChargesReceivable().get(0).getCharges());
 
 
             //add models to view

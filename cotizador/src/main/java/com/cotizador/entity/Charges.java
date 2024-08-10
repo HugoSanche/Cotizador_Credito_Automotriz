@@ -14,6 +14,11 @@ public class Charges implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ChargesId")
     private int chargesId;
+
+//    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
+//    @JoinColumn(name ="chargesId" )
+//    private ChargesReceivable chargesReceivable;
+
     @Column(name = "Name")
     private String name;
     @Column(name = "CalculationMethod")

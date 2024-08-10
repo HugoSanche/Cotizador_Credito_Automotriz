@@ -17,6 +17,11 @@ public class ChargesReceivable {
 
     @Column(name = "ChargesId")
     private int chargesId;
+
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @JoinColumn(name="chargesId")
+    private List<Charges> charges;
+
     @Column(name = "DueDate")
     private Date dueDate;
     @Column(name = "EnforceabilityDate")
@@ -54,6 +59,7 @@ public class ChargesReceivable {
     )
     List<PaymentCalculator> paymentCalculators;
 
+
     @Column(name = "Register")
     private Date register;
     @Column(name = "Status")
@@ -81,9 +87,31 @@ public class ChargesReceivable {
         this.register = register;
         this.status = status;
     }
+    public void addCharges(Charges theCharges){
+        if(charges==null){
+            charges=new ArrayList<>();
+        }
+        charges.add(theCharges);
 
+    }
     public int getChargesId() {
         return chargesId;
+    }
+
+    public List<Charges> getCharges() {
+        return charges;
+    }
+
+    public void setCharges(List<Charges> charges) {
+        this.charges = charges;
+    }
+
+    public List<PaymentCalculator> getPaymentCalculators() {
+        return paymentCalculators;
+    }
+
+    public void setPaymentCalculators(List<PaymentCalculator> paymentCalculators) {
+        this.paymentCalculators = paymentCalculators;
     }
 
     public void setChargesId(int chargesId) {
