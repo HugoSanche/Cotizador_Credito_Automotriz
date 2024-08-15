@@ -11,4 +11,5 @@ public interface ChargeService {
     void update(Charges charges);
     void save(Charges charges);
     void delete(int theId);
+    String getName(int theId);
 }

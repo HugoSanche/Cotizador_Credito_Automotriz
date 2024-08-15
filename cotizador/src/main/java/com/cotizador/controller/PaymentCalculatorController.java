@@ -199,7 +199,7 @@ public class PaymentCalculatorController {
             interesesDelPeriodo=createChargesReceivable(chargeInterestPeriod.getChargesId(),date, interestPeriod,ivaInterestPeriod);
 
             System.out.println("charge "+chargeInterestPeriod.getName());
-            interesesDelPeriodo.addCharges(chargeInterestPeriod);
+           // interesesDelPeriodo.addCharges(chargeInterestPeriod);
             paymentCalculator.addChargesReceivable(interesesDelPeriodo);
 
 
@@ -213,6 +213,7 @@ public class PaymentCalculatorController {
             //calculate IVA commision For Openning
             ivaCommisionForOpening=calculateIvaCommisionForOpening(commisionForOpening, taxes);
 
+
 //*********************************************************************************************************************************
 
             //Ad charge commision For Openning
@@ -222,7 +223,9 @@ public class PaymentCalculatorController {
             comisionXApertura=createChargesReceivable(chargeCommisionForOpening.getChargesId(),date, commisionForOpening,ivaCommisionForOpening);
 
             System.out.println("Comision por apertura "+chargeCommisionForOpening.getName());
-            comisionXApertura.addCharges(chargeCommisionForOpening);
+            //comisionXApertura.addCharges(chargeCommisionForOpening);
+
+
            paymentCalculator.addChargesReceivable(comisionXApertura);
             System.out.println("Hola ");
 
@@ -252,11 +255,12 @@ public class PaymentCalculatorController {
 
 
             System.out.println("getChargesId() "+ paymentCalculator.getChargesReceivable().get(0).getChargesId());
-            System.out.println("name "+ paymentCalculator.getChargesReceivable().get(0).getCharges());
+            //System.out.println("name "+ paymentCalculator.getChargesReceivable().get(0).getCharges());
 
 
             //add models to view
             theModel.addAttribute("theCharges2", paymentCalculator.getChargesReceivable());
+            theModel.addAttribute("theChargeService", chargeService);
 
             theModel.addAttribute("thePaymentCalculator", paymentCalculator);
             theModel.addAttribute("theCharges", chargeCommisionForOpening);
@@ -266,7 +270,7 @@ public class PaymentCalculatorController {
             theModel.addAttribute("theIvaCommisionForOpening", ivaCommisionForOpening);
 
             //return "paymentcalculator/Show-PaymentCalculator";
-           return "test/list-charges";
+           return "test/Show";
         }
     }
 
@@ -384,6 +388,9 @@ public class PaymentCalculatorController {
                 "Active"
         );
         return chargesReceivable;
+    }
+    public String getCharges(int chargesId ){
+        return chargeService.getName(chargesId);
     }
 }
 

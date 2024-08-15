@@ -60,4 +60,10 @@ public class ChargesDAOImp implements ChargesDAO{
         Charges charges=entityManager.find(Charges.class,theId);
         entityManager.remove(charges);
     }
+
+    @Override
+    public String getName(int theId) {
+        Charges charges=entityManager.find(Charges.class,theId);
+        return charges.getName();
+    }
 }

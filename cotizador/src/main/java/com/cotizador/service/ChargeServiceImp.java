@@ -38,4 +38,10 @@ public class ChargeServiceImp implements ChargeService{
     public void delete(int theId) {
         chargesDAO.delete(theId);
     }
+
+    @Override
+    public String getName(int theId) {
+        Charges charges= chargesDAO.findById(theId);
+        return charges.getName();
+    }
 }
