@@ -420,7 +420,9 @@ public class Individual implements Serializable {
                 '}';
     }
     public String getCompleteName(){
-        return getFirstName()+' '+getMiddleName()+' '+getFirstLastName()+' '+getSecondLastName();
+        String name=getFirstName()+' '+getMiddleName()+' '+getFirstLastName()+' '+getSecondLastName();
+        name=name.replace("null","");
+        return name;
     }
     public String getNameDoesBizActivities(){
         if (getDoesBizActivities()==0){

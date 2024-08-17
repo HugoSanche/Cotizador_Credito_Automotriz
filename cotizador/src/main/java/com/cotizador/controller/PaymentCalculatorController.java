@@ -253,21 +253,27 @@ public class PaymentCalculatorController {
            // paymentCalculator.getChargesReceivable().get(0).getvATAmount();
 
 
-
-            System.out.println("getChargesId() "+ paymentCalculator.getChargesReceivable().get(0).getChargesId());
-            //System.out.println("name "+ paymentCalculator.getChargesReceivable().get(0).getCharges());
+            System.out.println("Razon "+theIndividual.getNameDoesBizActivities());
 
 
             //add models to view
             theModel.addAttribute("theCharges2", paymentCalculator.getChargesReceivable());
             theModel.addAttribute("theChargeService", chargeService);
+            theModel.addAttribute("theIndividual", theIndividual);
+            theModel.addAttribute("theBrands",brandService);
+            theModel.addAttribute("theModels",modelService);
+
+
 
             theModel.addAttribute("thePaymentCalculator", paymentCalculator);
+
             theModel.addAttribute("theCharges", chargeCommisionForOpening);
             theModel.addAttribute("theInterestPeriod", interestPeriod);
             theModel.addAttribute("theIvaInterestPeriod", ivaInterestPeriod);
             theModel.addAttribute("theCommisionForOpening", commisionForOpening);
             theModel.addAttribute("theIvaCommisionForOpening", ivaCommisionForOpening);
+
+
 
             //return "paymentcalculator/Show-PaymentCalculator";
            return "test/Show";

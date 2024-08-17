@@ -12,4 +12,5 @@ public interface BrandsDAO  {
     void update(Brands brands);
     Brands save(Brands brands);
     void delete(int theId);
+    String getName(int theId);
 }

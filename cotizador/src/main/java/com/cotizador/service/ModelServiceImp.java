@@ -46,4 +46,9 @@ public class ModelServiceImp implements ModelService{
     public void delete(int theId) {
         modelsDAO.delete(theId);
     }
+
+    @Override
+    public String getName(int modelId, int brandId) {
+        return modelsDAO.getName(modelId,brandId);
+    }
 }

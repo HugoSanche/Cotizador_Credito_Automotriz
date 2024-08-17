@@ -53,4 +53,14 @@ public class ModelsDAOImp implements  ModelsDAO{
         Models models=entityManager.find(Models.class,theId);
         entityManager.remove(models);
     }
+
+    @Override
+    public String getName(int modelId, int brandId) {
+        TypedQuery<Models> theQuery =entityManager.createQuery("from Models where modelId=:theModelId and brandId=:theBrandId", Models.class);
+        //set query parameters
+        theQuery.setParameter("theModelId",modelId);
+        theQuery.setParameter("theBrandId",brandId);
+
+        return theQuery.getResultList().get(0).getName();
+    }
 }

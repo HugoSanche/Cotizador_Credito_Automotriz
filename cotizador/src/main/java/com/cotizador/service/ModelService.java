@@ -11,5 +11,6 @@ public interface ModelService {
     void update(Models models);
     void save(Models models);
     void delete(int theId);
+    String getName(int modelId,int brandId);
 
 }

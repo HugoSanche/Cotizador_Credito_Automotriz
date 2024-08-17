@@ -40,4 +40,9 @@ public class BrandServiceImp implements  BrandService{
     public void delete(int theId) {
         brandsDAO.delete(theId);
     }
+
+    @Override
+    public String getName(int theId) {
+        return brandsDAO.getName(theId);
+    }
 }

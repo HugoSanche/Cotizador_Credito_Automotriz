@@ -45,4 +45,10 @@ public class BrandsDAOImp implements  BrandsDAO{
         Brands brands=entityManager.find(Brands.class,theId);
         entityManager.remove(brands);
     }
+
+    @Override
+    public String getName(int theId) {
+        Brands nameOfBrand=entityManager.find(Brands.class,theId);
+        return nameOfBrand.getName();
+    }
 }

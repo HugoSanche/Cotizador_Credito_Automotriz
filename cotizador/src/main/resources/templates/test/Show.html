@@ -14,47 +14,65 @@
 <!-- Form 3 -->
 <div class="form-3-container section-container section-container-image-bg">
     <div class="container">
-        <div class="row">
-            <div class="col form-3 section-description wow fadeIn">
-                <h2>Form 3</h2>
-                <div class="divider-1 wow fadeInUp"><span></span></div>
-                <p>A form with 3 "fieldset"-s and 3 "legend"-s: "Current occupation", "Your address" and "Job preferences".</p>
-            </div>
-        </div>
+
         <div class="row">
             <div class="col-md-10 offset-md-1 form-3-box text-center wow fadeInUp">
 
                 <form action="" method="post">
                     <!-- Current Occupation  -->
                     <fieldset class="form-group p-3">
-                        <legend class="w-auto px-2">Current Occupation</legend>
-                        <div class="form-group text-left">
-                            <label for="job-title">Job title:</label>
-                            <input type="text" class="form-control job-title" id="job-title" placeholder="Job title..." name="job-title">
+                        <legend class="w-auto px-2">Datos del Cliente</legend>
+                        <div >
+                            <label>Nombre:</label> <p th:text=${theIndividual.getCompleteName()}></p>
                         </div>
                         <div class="form-group text-left">
-                            <label for="job-description">Job description:</label>
-                            <textarea class="form-control job-description" id="job-description" placeholder="Job description..." name="job-description"></textarea>
+                            <label>Correo:</label>
+                            <p th:text=${theIndividual.getEmail()}></p>
+
                         </div>
                         <div class="form-group text-left">
-                            <label for="salary">Salary:</label>
-                            <input type="text" class="form-control salary" id="salary" placeholder="Salary..." name="salary">
+                            <label>Tipo de Persona:</label><p th:text=${theIndividual.getNameDoesBizActivities()}></p>
                         </div>
                     </fieldset>
                     <!-- Your Address  -->
                     <fieldset class="form-group p-3">
-                        <legend class="w-auto px-2">Your Address</legend>
+                        <legend class="w-auto px-2">Descripción de la Cotización</legend>
                         <div class="form-group text-left">
-                            <label for="address">Address:</label>
-                            <input type="text" class="form-control address" id="address" placeholder="Address..." name="address">
+                            <label >Marca:</label>
+                            <p th:text=${theBrands.getName(thePaymentCalculator.getBrandId())}></p>
+                        </div>
+
+                        <div class="form-group text-left">
+                            <label >SubMarca:</label>
+                            <p th:text=${theModels.getName(thePaymentCalculator.getModelId(),thePaymentCalculator.getBrandId())}></p>
                         </div>
                         <div class="form-group text-left">
-                            <label for="zip-code">ZIP code:</label>
-                            <input type="text" class="form-control zip-code" id="zip-code" placeholder="ZIP code..." name="zip-code">
+                            <label >Modelo:</label>
+                            <p th:text=${thePaymentCalculator.getYearVehicle()}></p>
+                        </div>
+
+                        <div class="form-group text-left">
+                            <label >Tasa:</label>
+                            <p th:text=${thePaymentCalculator.getRateValue()}></p>
+                        </div>
+
+                        <div class="form-group text-left">
+                            <label >Plazo:</label>
+                            <p th:text=${thePaymentCalculator.getLoanTerm()}></p>
+                        </div>
+
+                        <div class="form-group text-left">
+                            <label >Precio del Vehiculo:</label>
+                            <p th:text=${thePaymentCalculator.getVehiclePrice()} ></p>
+                        </div>
+
+                        <div class="form-group text-left">
+                            <label >Enganche:</label>
+                            <p th:text=${thePaymentCalculator.getDownPayment()} ></p>
                         </div>
                         <div class="form-group text-left">
-                            <label for="city">City:</label>
-                            <input type="text" class="form-control city" id="city" placeholder="City..." name="city">
+                            <label>Monto a Financiar:</label>
+                            <p th:text=${thePaymentCalculator.calculateAmountCredit()} ></p>
                         </div>
                         <div class="form-group text-left">
                             <label for="state">State:</label>

@@ -11,4 +11,5 @@ public interface BrandService {
     void update(Brands brands);
     void save(Brands brands);
     void delete(int theId);
+    String getName(int theId);
 }
