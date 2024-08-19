@@ -36,6 +36,7 @@ public class PaymentCalculatorController {
 
     TaxesService taxesService;
 
+    ScheduledPaymentService scheduledPaymentService;
 
     @Value("${fixed.rate}")
     double rateFixed=0;
@@ -48,7 +49,7 @@ public class PaymentCalculatorController {
 
     public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService, ChargeService chargeService,
                                        PaymentDayService paymentDayService, BrandService brandService,
-                                       ModelService modelService,List<Integer> yearsVehicle, TaxesService taxesService
+                                       ModelService modelService,List<Integer> yearsVehicle, TaxesService taxesService, ScheduledPaymentService scheduledPaymentService
 
     ) {
         this.individualService = individualService;
@@ -59,6 +60,7 @@ public class PaymentCalculatorController {
         this.modelService = modelService;
         this.yearsVehicle = yearsVehicle;
         this.taxesService=taxesService;
+        this.scheduledPaymentService=scheduledPaymentService;
     }
 
 
@@ -222,8 +224,6 @@ public class PaymentCalculatorController {
             //add to DB comission por apertura
             comisionXApertura=createChargesReceivable(chargeCommisionForOpening.getChargesId(),date, commisionForOpening,ivaCommisionForOpening);
 
-            System.out.println("Comision por apertura "+chargeCommisionForOpening.getName());
-            //comisionXApertura.addCharges(chargeCommisionForOpening);
 
 
            paymentCalculator.addChargesReceivable(comisionXApertura);
@@ -247,14 +247,6 @@ public class PaymentCalculatorController {
             System.out.println("Fecha de hoy: "+today);
             System.out.println("Fecha siguiente mes: "+dateNextMonth);
 
-            //System.out.println("getChargeAmount(): "+theIndividual.getPaymentCalculadors().get(0).getChargesReceivable().get(1).getChargeAmount());
-           // System.out.println("getLateInterestAmount(): "+theIndividual.getPaymentCalculadors().get(0).getChargesReceivable().get(1).getvATAmount());
-
-           // paymentCalculator.getChargesReceivable().get(0).getvATAmount();
-
-
-            System.out.println("Razon "+theIndividual.getNameDoesBizActivities());
-
 
             //add models to view
             theModel.addAttribute("theCharges2", paymentCalculator.getChargesReceivable());
@@ -272,6 +264,10 @@ public class PaymentCalculatorController {
             theModel.addAttribute("theIvaInterestPeriod", ivaInterestPeriod);
             theModel.addAttribute("theCommisionForOpening", commisionForOpening);
             theModel.addAttribute("theIvaCommisionForOpening", ivaCommisionForOpening);
+
+           createScheduledPayment(paymentCalculator.calculateAmountCredit(),
+                    paymentCalculator.getRateValue(), daysToCalculateInterest,paymentCalculator.getLoanTerm(),
+                    date);
 
 
 
@@ -374,6 +370,9 @@ public class PaymentCalculatorController {
 
         return ivainterestPeriod;
     }
+
+
+
     public ChargesReceivable createChargesReceivable(int ChargesId, Date date, BigDecimal chargeAmount, BigDecimal ivaChargeAmount){
         ChargesReceivable chargesReceivable=new ChargesReceivable(
                 ChargesId,
@@ -394,6 +393,41 @@ public class PaymentCalculatorController {
                 "Active"
         );
         return chargesReceivable;
+    }
+
+    public void createScheduledPayment( BigDecimal amountCredit, double rateFixed, long daysOfInteres,
+                                                    int plazo,Date date)
+    {
+
+        for (int i=0;i<plazo;i++){
+            ScheduledPayment scheduledPayment=new ScheduledPayment(
+                    0,
+                    0,
+                    i,
+                    amountCredit,
+                    0,
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    date,
+                    "Activo",
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    BigDecimal.valueOf(0),
+                    date
+            );
+            scheduledPaymentService.save(scheduledPayment);
+        }
+
     }
     public String getCharges(int chargesId ){
         return chargeService.getName(chargesId);

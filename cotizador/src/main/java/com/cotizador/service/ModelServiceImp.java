@@ -4,6 +4,7 @@ import com.cotizador.dao.ModelsDAO;
 import com.cotizador.entity.Models;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,16 +33,18 @@ public class ModelServiceImp implements ModelService{
         return modelsDAO.findByModelId(theId);
     }
 
+    @Transactional
     @Override
     public void update(Models models) {
         modelsDAO.update(models);
     }
 
+    @Transactional
     @Override
     public void save(Models models) {
         modelsDAO.save(models);
     }
-
+    @Transactional
     @Override
     public void delete(int theId) {
         modelsDAO.delete(theId);

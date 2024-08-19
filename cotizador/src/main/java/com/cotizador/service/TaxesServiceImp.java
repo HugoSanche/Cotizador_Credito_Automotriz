@@ -4,6 +4,7 @@ import com.cotizador.dao.TaxesDAO;
 import com.cotizador.entity.Taxes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,16 +33,19 @@ public class TaxesServiceImp implements TaxesService{
         return taxesDAO.findByName(nameTaxe);
     }
 
+    @Transactional
     @Override
     public void update(Taxes taxes) {
         taxesDAO.update(taxes);
     }
 
+    @Transactional
     @Override
     public void save(Taxes taxes) {
         taxesDAO.save(taxes);
     }
 
+    @Transactional
     @Override
     public void delete(int theId) {
         taxesDAO.delete(theId);

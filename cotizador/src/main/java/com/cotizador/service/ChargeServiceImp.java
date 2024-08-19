@@ -4,6 +4,7 @@ import com.cotizador.dao.ChargesDAO;
 import com.cotizador.entity.Charges;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 @Service
@@ -26,14 +27,17 @@ public class ChargeServiceImp implements ChargeService{
 
         return chargesDAO.findByName(nameCharge);
     }
+    @Transactional
     @Override
     public void update(Charges charges) {
         chargesDAO.update(charges);
     }
+    @Transactional
     @Override
     public void save(Charges charges) {
         chargesDAO.save(charges);
     }
+    @Transactional
     @Override
     public void delete(int theId) {
         chargesDAO.delete(theId);

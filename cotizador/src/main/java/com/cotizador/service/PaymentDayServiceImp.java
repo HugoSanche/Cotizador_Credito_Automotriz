@@ -4,6 +4,7 @@ import com.cotizador.dao.PaymentDayDAO;
 import com.cotizador.entity.PaymentDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,16 +39,19 @@ PaymentDayDAO paymentDayDAO;
         return listPaymentDay;
     }
 
+    @Transactional
     @Override
     public void update(PaymentDay paymentDay) {
         paymentDayDAO.update(paymentDay);
     }
 
+    @Transactional
     @Override
     public void save(PaymentDay paymentDay) {
         paymentDayDAO.save(paymentDay);
     }
 
+    @Transactional
     @Override
     public void delete(int theId) {
         paymentDayDAO.delete(theId);
