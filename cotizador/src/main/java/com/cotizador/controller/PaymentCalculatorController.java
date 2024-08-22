@@ -401,8 +401,7 @@ public class PaymentCalculatorController {
 
         for (int i=0;i<plazo;i++){
             ScheduledPayment scheduledPayment=new ScheduledPayment(
-                    0,
-                    0,
+
                     i,
                     amountCredit,
                     0,

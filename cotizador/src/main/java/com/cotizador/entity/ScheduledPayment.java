@@ -15,11 +15,6 @@ public class ScheduledPayment {
     @Column(name = "ScheduledPaymentId")
     private BigInteger scheduledPaymentId;
 
-    @Column(name = "contrato")
-    private int contrato;
-
-    @Column(name = "anexo")
-    private int anexo;
 
     @Column(name = "PaymentNumber")
     private int paymentNumber;
@@ -68,7 +63,7 @@ public class ScheduledPayment {
     public ScheduledPayment() {
     }
 
-    public ScheduledPayment(int contrato, int anexo, int paymentNumber, BigDecimal capitalAmount,
+    public ScheduledPayment(int paymentNumber, BigDecimal capitalAmount,
                             int capitalQuantityOfDays, BigDecimal capitalBalance, BigDecimal interestAmount,
                             BigDecimal interestQuantityOfDays, BigDecimal interestBalance, BigDecimal vATAmountForCapital,
                             BigDecimal vATBalanceForCapital, BigDecimal paymentToDeferAmount, BigDecimal paymentToDeferBalance,
@@ -76,8 +71,7 @@ public class ScheduledPayment {
                             BigDecimal totalPaymentAmount, Date dueDate, String status, BigDecimal contractInitialBalance,
                             BigDecimal contractFinalBalance, BigDecimal vATAmountForInterest, BigDecimal vATBalanceForInterest,
                             Date cancellationDate) {
-        this.contrato = contrato;
-        this.anexo = anexo;
+
         this.paymentNumber = paymentNumber;
         this.capitalAmount = capitalAmount;
         this.capitalQuantityOfDays = capitalQuantityOfDays;
@@ -109,21 +103,7 @@ public class ScheduledPayment {
         this.scheduledPaymentId = scheduledPaymentId;
     }
 
-    public int getContrato() {
-        return contrato;
-    }
 
-    public void setContrato(int contrato) {
-        this.contrato = contrato;
-    }
-
-    public int getAnexo() {
-        return anexo;
-    }
-
-    public void setAnexo(int anexo) {
-        this.anexo = anexo;
-    }
 
     public int getPaymentNumber() {
         return paymentNumber;
