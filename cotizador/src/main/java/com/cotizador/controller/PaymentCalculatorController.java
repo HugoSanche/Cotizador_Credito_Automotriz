@@ -405,7 +405,9 @@ public class PaymentCalculatorController {
                     i,
                     amountCredit,
                     0,
+
                     BigDecimal.valueOf(0),
+
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
