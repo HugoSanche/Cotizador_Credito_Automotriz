@@ -404,11 +404,23 @@ public class PaymentCalculatorController {
         double periodicInterestRate=(rateFixed/100)/frequency;
         double totalNumberOfPaymentPeriods=years*frequency;
 
-        //Pago nivelado
-        BigDecimal levelPay=amountCredit.multiply(BigDecimal.valueOf(Math.pow(periodicInterestRate*(1+periodicInterestRate),totalNumberOfPaymentPeriods))).
-                divide((BigDecimal.valueOf(Math.pow(1+periodicInterestRate,totalNumberOfPaymentPeriods)-1)),2, RoundingMode.HALF_UP);
+        System.out.println("rateFixed: "+rateFixed);
+        System.out.println("amountCredit: "+amountCredit);
+        System.out.println("periodicInterestRate: "+periodicInterestRate);
+        System.out.println("totalNumberOfPaymentPeriods: "+totalNumberOfPaymentPeriods);
 
+        //Pago nivelado
+
+        double value=periodicInterestRate*(1+periodicInterestRate);
+
+        double test=Math.pow(value,totalNumberOfPaymentPeriods);
+        double levelPay=Math.pow((periodicInterestRate*(1+periodicInterestRate)),5);
+                       // .divide((BigDecimal.valueOf(Math.pow(1+periodicInterestRate,totalNumberOfPaymentPeriods)-1)),2, RoundingMode.HALF_UP);
+
+        System.out.println("test: "+test);
+        System.out.println("Value: "+value);
         System.out.println("pago nivelado  "+levelPay);
+
         for (int i=0;i<plazo;i++){
             ScheduledPayment scheduledPayment=new ScheduledPayment(
 
@@ -427,7 +439,7 @@ public class PaymentCalculatorController {
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
-                    levelPay,
+                    BigDecimal.valueOf(0),
                     date,
                     "Activo",
                     BigDecimal.valueOf(0),
