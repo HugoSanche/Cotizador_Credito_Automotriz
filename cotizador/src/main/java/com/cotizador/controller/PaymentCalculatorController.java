@@ -398,10 +398,17 @@ public class PaymentCalculatorController {
         return chargesReceivable;
     }
 
-    public void createScheduledPayment( BigDecimal amountCredit, double rateFixed, long daysOfInteres,
-                                                    int plazo,Date date)
+    public void createScheduledPayment( BigDecimal amountCredit, double rateFixed, long daysOfInteres, int plazo,Date date)
     {
+        double years=plazo/frequency;
+        double periodicInterestRate=(rateFixed/100)/frequency;
+        double totalNumberOfPaymentPeriods=years*frequency;
 
+        //Pago nivelado
+        BigDecimal levelPay=amountCredit.multiply(BigDecimal.valueOf(Math.pow(periodicInterestRate*(1+periodicInterestRate),totalNumberOfPaymentPeriods))).
+                divide((BigDecimal.valueOf(Math.pow(1+periodicInterestRate,totalNumberOfPaymentPeriods)-1)),2, RoundingMode.HALF_UP);
+
+        System.out.println("pago nivelado  "+levelPay);
         for (int i=0;i<plazo;i++){
             ScheduledPayment scheduledPayment=new ScheduledPayment(
 
@@ -420,7 +427,7 @@ public class PaymentCalculatorController {
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
+                    levelPay,
                     date,
                     "Activo",
                     BigDecimal.valueOf(0),
