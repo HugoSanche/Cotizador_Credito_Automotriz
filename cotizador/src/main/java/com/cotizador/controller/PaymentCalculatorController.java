@@ -44,6 +44,9 @@ public class PaymentCalculatorController {
     int totalYears=0;
     List<Integer> yearsVehicle;
 
+    @Value("${frequency}")
+    double frequency=0;
+
     BigDecimal value = new BigDecimal(100);//porcentaje 100% pass to BigDecimal
 
 
