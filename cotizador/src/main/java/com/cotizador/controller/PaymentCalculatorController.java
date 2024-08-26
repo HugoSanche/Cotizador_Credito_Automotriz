@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/creditos/auto")
 public class PaymentCalculatorController {
+    private static final DecimalFormat df = new DecimalFormat("0.00");
     IndividualService individualService;
     PaymentCalculatorService paymentCalculatorService;
     ChargeService chargeService;
@@ -398,28 +400,76 @@ public class PaymentCalculatorController {
         return chargesReceivable;
     }
 
-    public void createScheduledPayment( BigDecimal amountCredit, double rateFixed, long daysOfInteres, int plazo,Date date)
+    public void createScheduledPayment( BigDecimal amountCredit, Double rateFixed, long daysOfInteres, int plazo,Date date)
     {
-        double years=plazo/frequency;
-        double periodicInterestRate=(rateFixed/100)/frequency;
-        double totalNumberOfPaymentPeriods=years*frequency;
 
-        System.out.println("rateFixed: "+rateFixed);
-        System.out.println("amountCredit: "+amountCredit);
+        Double years=plazo/frequency;
+        Double periodicInterestRate=(rateFixed/100)/frequency;
+        Double totalNumberOfPaymentPeriods=years*frequency;
+
+
+        Double tasaInteresPeriodica=(rateFixed/100)/frequency;
+       // double numeroTotalPeriodosPago= plazo;
+        Double montoPrestamo=amountCredit.doubleValue();
+
+        System.out.println("years: "+years);
         System.out.println("periodicInterestRate: "+periodicInterestRate);
         System.out.println("totalNumberOfPaymentPeriods: "+totalNumberOfPaymentPeriods);
+        System.out.println("tasaInteresPeriodica: "+tasaInteresPeriodica);
+        System.out.println("plazo: "+plazo);
+        System.out.println("numeroTotalPeriodosPago: "+plazo);
+        System.out.println("rateFixed: "+rateFixed);
+        System.out.println("frequency: "+frequency);
+
+        System.out.println("amountCredit: "+amountCredit);
+
+
+        Double resultado=montoPrestamo*(Math.pow(tasaInteresPeriodica*(1+tasaInteresPeriodica),plazo) /Math.pow((1+tasaInteresPeriodica),plazo-1));
+
+        Double i2=tasaInteresPeriodica*(1+tasaInteresPeriodica);
+
+        Double i3=Math.pow((tasaInteresPeriodica*(1+tasaInteresPeriodica)),plazo);
+
+        Double i4=(tasaInteresPeriodica*(1+tasaInteresPeriodica))*(tasaInteresPeriodica*(1+tasaInteresPeriodica))*(tasaInteresPeriodica*(1+tasaInteresPeriodica))
+                *(tasaInteresPeriodica*(1+tasaInteresPeriodica))*(tasaInteresPeriodica*(1+tasaInteresPeriodica))*(tasaInteresPeriodica*(1+tasaInteresPeriodica))
+                *(tasaInteresPeriodica*(1+tasaInteresPeriodica))*(tasaInteresPeriodica*(1+tasaInteresPeriodica))*(tasaInteresPeriodica*(1+tasaInteresPeriodica))
+               *(tasaInteresPeriodica*(1+tasaInteresPeriodica));
+
+        System.out.println("i2: "+i2);
+        System.out.println("i3: "+i3);
+        System.out.println("i4:"+i4);
+
+        System.out.println("Resultado: " +resultado);
+
+        df.setRoundingMode(RoundingMode.DOWN);
+        System.out.println("\ndouble (RoundingMode.DOWN) : " + df.format(resultado));  //3.14
+
+        df.setRoundingMode(RoundingMode.UP);
+        System.out.println("double (RoundingMode.UP)  : " + df.format(resultado));    //3.15
+
+
+        System.out.println("i3 format " + df.format(i3));
+
 
         //Pago nivelado
 
-        double value=periodicInterestRate*(1+periodicInterestRate);
+        Double value=periodicInterestRate*(1+periodicInterestRate);
 
-        double test=Math.pow(value,totalNumberOfPaymentPeriods);
-        double levelPay=Math.pow((periodicInterestRate*(1+periodicInterestRate)),5);
+        Double test=Math.pow(value,totalNumberOfPaymentPeriods);
+
+        BigDecimal levelPay=amountCredit.multiply(BigDecimal.valueOf(Math.pow((periodicInterestRate*(1+periodicInterestRate)),totalNumberOfPaymentPeriods)));
                        // .divide((BigDecimal.valueOf(Math.pow(1+periodicInterestRate,totalNumberOfPaymentPeriods)-1)),2, RoundingMode.HALF_UP);
+
+        BigDecimal levelPay2=BigDecimal.valueOf(Math.pow(1+periodicInterestRate,totalNumberOfPaymentPeriods-1));
 
         System.out.println("test: "+test);
         System.out.println("Value: "+value);
         System.out.println("pago nivelado  "+levelPay);
+        System.out.println("pago nivelado 2 "+levelPay2);
+
+        BigDecimal total=levelPay.add(levelPay2);
+
+        System.out.println("Total: "+total);
 
         for (int i=0;i<plazo;i++){
             ScheduledPayment scheduledPayment=new ScheduledPayment(
