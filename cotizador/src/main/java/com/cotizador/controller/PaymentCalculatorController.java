@@ -403,82 +403,48 @@ public class PaymentCalculatorController {
     public void createScheduledPayment( BigDecimal amountCredit, Double rateFixed, long daysOfInteres, int plazo,Date date)
     {
 
-        Double years=plazo/frequency;
-        Double periodicInterestRate=(rateFixed/100)/frequency;
-        Double totalNumberOfPaymentPeriods=years*frequency;
+
+        rateFixed=rateFixed/100;
+
+        BigDecimal i=BigDecimal.valueOf(rateFixed/frequency);
+
+        BigDecimal valor1=(i.add(BigDecimal.valueOf(1)));
+        System.out.println("Valor 1: "+valor1);
+        BigDecimal x1=valor1.pow(plazo);
+        System.out.println("X1: "+x1);
+        valor1=i.multiply(x1);
+
+        System.out.println("Valor 1: "+valor1);
 
 
-        Double tasaInteresPeriodica=(rateFixed/100)/frequency;
-       // double numeroTotalPeriodosPago= plazo;
-        Double montoPrestamo=amountCredit.doubleValue();
 
-        System.out.println("years: "+years);
-        System.out.println("periodicInterestRate: "+periodicInterestRate);
-        System.out.println("totalNumberOfPaymentPeriods: "+totalNumberOfPaymentPeriods);
-        System.out.println("tasaInteresPeriodica: "+tasaInteresPeriodica);
-        System.out.println("plazo: "+plazo);
-        System.out.println("numeroTotalPeriodosPago: "+plazo);
-        System.out.println("rateFixed: "+rateFixed);
-        System.out.println("frequency: "+frequency);
+        BigDecimal valor2=i.add(BigDecimal.valueOf(1));
+        System.out.println("Valor 2: "+valor2);
 
-        System.out.println("amountCredit: "+amountCredit);
+        BigDecimal x2=valor2.pow((plazo));
+        valor2=x2.subtract(BigDecimal.valueOf(1));
+        System.out.println("X2: "+x2);
 
 
-        Double resultado=montoPrestamo*(Math.pow(tasaInteresPeriodica*(1+tasaInteresPeriodica),plazo) /Math.pow((1+tasaInteresPeriodica),plazo-1));
+        System.out.println("Valor 2:"+valor2);
 
-        Double i2=tasaInteresPeriodica*(1+tasaInteresPeriodica);
+        BigDecimal valor3=valor1.divide(valor2,RoundingMode.HALF_UP);
+       System.out.println("Valor 3: "+valor3);
 
-        Double i3=Math.pow((tasaInteresPeriodica*(1+tasaInteresPeriodica)),plazo);
-
-        Double i4=(tasaInteresPeriodica*(1+tasaInteresPeriodica))*(tasaInteresPeriodica*(1+tasaInteresPeriodica))*(tasaInteresPeriodica*(1+tasaInteresPeriodica))
-                *(tasaInteresPeriodica*(1+tasaInteresPeriodica))*(tasaInteresPeriodica*(1+tasaInteresPeriodica))*(tasaInteresPeriodica*(1+tasaInteresPeriodica))
-                *(tasaInteresPeriodica*(1+tasaInteresPeriodica))*(tasaInteresPeriodica*(1+tasaInteresPeriodica))*(tasaInteresPeriodica*(1+tasaInteresPeriodica))
-               *(tasaInteresPeriodica*(1+tasaInteresPeriodica));
-
-        System.out.println("i2: "+i2);
-        System.out.println("i3: "+i3);
-        System.out.println("i4:"+i4);
-
-        System.out.println("Resultado: " +resultado);
-
-        df.setRoundingMode(RoundingMode.DOWN);
-        System.out.println("\ndouble (RoundingMode.DOWN) : " + df.format(resultado));  //3.14
-
-        df.setRoundingMode(RoundingMode.UP);
-        System.out.println("double (RoundingMode.UP)  : " + df.format(resultado));    //3.15
+       // BigDecimal fijo=BigDecimal.valueOf(0.0935943796420858);
+        BigDecimal valorFinal=amountCredit.multiply(valor3);
+        System.out.println("valor Final: "+valorFinal);
 
 
-        System.out.println("i3 format " + df.format(i3));
 
-
-        //Pago nivelado
-
-        Double value=periodicInterestRate*(1+periodicInterestRate);
-
-        Double test=Math.pow(value,totalNumberOfPaymentPeriods);
-
-        BigDecimal levelPay=amountCredit.multiply(BigDecimal.valueOf(Math.pow((periodicInterestRate*(1+periodicInterestRate)),totalNumberOfPaymentPeriods)));
-                       // .divide((BigDecimal.valueOf(Math.pow(1+periodicInterestRate,totalNumberOfPaymentPeriods)-1)),2, RoundingMode.HALF_UP);
-
-        BigDecimal levelPay2=BigDecimal.valueOf(Math.pow(1+periodicInterestRate,totalNumberOfPaymentPeriods-1));
-
-        System.out.println("test: "+test);
-        System.out.println("Value: "+value);
-        System.out.println("pago nivelado  "+levelPay);
-        System.out.println("pago nivelado 2 "+levelPay2);
-
-        BigDecimal total=levelPay.add(levelPay2);
-
-        System.out.println("Total: "+total);
-
-        for (int i=0;i<plazo;i++){
+        for (int ii=0;ii<plazo;ii++){
             ScheduledPayment scheduledPayment=new ScheduledPayment(
 
-                    i,
+                    ii,
                     amountCredit,
                     0,
 
-                    BigDecimal.valueOf(0),
+                    valorFinal,
 
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
