@@ -406,19 +406,19 @@ public class PaymentCalculatorController {
 
         rateFixed=rateFixed/100;
 
-        BigDecimal i=BigDecimal.valueOf(rateFixed/frequency);
+        BigDecimal ii=BigDecimal.valueOf(rateFixed/frequency);
 
-        BigDecimal valor1=(i.add(BigDecimal.valueOf(1)));
+        BigDecimal valor1=(ii.add(BigDecimal.valueOf(1)));
         System.out.println("Valor 1: "+valor1);
         BigDecimal x1=valor1.pow(plazo);
         System.out.println("X1: "+x1);
-        valor1=i.multiply(x1);
+        valor1=ii.multiply(x1);
 
         System.out.println("Valor 1: "+valor1);
 
 
 
-        BigDecimal valor2=i.add(BigDecimal.valueOf(1));
+        BigDecimal valor2=ii.add(BigDecimal.valueOf(1));
         System.out.println("Valor 2: "+valor2);
 
         BigDecimal x2=valor2.pow((plazo));
@@ -432,39 +432,50 @@ public class PaymentCalculatorController {
        System.out.println("Valor 3: "+valor3);
 
        // BigDecimal fijo=BigDecimal.valueOf(0.0935943796420858);
-        BigDecimal valorFinal=amountCredit.multiply(valor3);
-        System.out.println("valor Final: "+valorFinal);
+        BigDecimal capitalAmount=amountCredit.multiply(valor3);
+        System.out.println("valor Final: "+capitalAmount);
 
+        BigDecimal contractInitialBalance=amountCredit;
+        BigDecimal contractFinalBalance=amountCredit;
 
+        BigDecimal interest=BigDecimal.valueOf(0);
 
-        for (int ii=0;ii<plazo;ii++){
+        BigDecimal rate = new BigDecimal(rateFixed);
+        for (int i=0;i<plazo+1;i++){
+            if (i<=0){
+                contractInitialBalance=amountCredit;
+                contractFinalBalance= amountCredit;
+            }
+            else{
+                contractFinalBalance=contractFinalBalance.subtract(capitalAmount.subtract(interest));
+            }
             ScheduledPayment scheduledPayment=new ScheduledPayment(
-
-                    ii,
-                    amountCredit,
+                    i,
+                    capitalAmount.subtract(interest),
                     0,
-
-                    valorFinal,
-
+                    capitalAmount.subtract(interest),
+                    interest,
+                    BigDecimal.valueOf(0),
+                    interest,
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
+                    capitalAmount,
                     date,
                     "Activo",
+                    contractInitialBalance,
+                    contractFinalBalance,
                     BigDecimal.valueOf(0),
                     BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    BigDecimal.valueOf(0),
-                    date
+                    null
             );
             scheduledPaymentService.save(scheduledPayment);
+            interest=(contractFinalBalance.multiply(rate)).divide(BigDecimal.valueOf(plazo));
+            contractInitialBalance=contractFinalBalance;
+
         }
 
     }
