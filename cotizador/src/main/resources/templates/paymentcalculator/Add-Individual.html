@@ -18,7 +18,7 @@
 <div class="container">
     <h3>Simulador de Crédito</h3>
     <hr>
-    <form action="#" th:action="@{/creditos/auto/saveIndividual}" th:object="${individual}" method="POST" class="row g-3">
+    <form action="#" th:action="@{/creditos/auto/saveIndividual}" th:object="${theIndividual}" method="POST" class="row g-3">
 
         <!-- Add hidden form filed to handle the update-->
         <input type="hidden" th:field="*{personId}">

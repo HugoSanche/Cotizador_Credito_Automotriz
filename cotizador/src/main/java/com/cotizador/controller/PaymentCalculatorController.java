@@ -95,7 +95,6 @@ public class PaymentCalculatorController {
     public String addPaymentCalculator(Model theModel){
 
         Individual individual=new Individual();
-        Brands brands =new Brands();
 
         //Get all brands from DB and fill to List
         List<Brands> listOfBrands=brandService.findAll();
@@ -106,26 +105,97 @@ public class PaymentCalculatorController {
         if (!listOfBrands.isEmpty()) {
             Brands firstBrand = listOfBrands.get(0); // seleccionar la primera categoría por defecto
             List<Models> listOfModels = modelService.findByBrandId(firstBrand.getBrandId());
-            theModel.addAttribute("theModels", listOfModels);
+            theModel.addAttribute("theListOfModels", listOfModels);
         }
 
         //get years of vehicle
         yearsVehicle=getYear(totalYears);
 
+
+
         //Add models to view
-        theModel.addAttribute("theBrands",listOfBrands);
-        theModel.addAttribute("individual", individual);
+        theModel.addAttribute("theListOfBrands",listOfBrands);
+        theModel.addAttribute("theIndividual", individual);
         theModel.addAttribute("theYearsVehicle",yearsVehicle);
 
         //theModel.addAttribute("theModels",models);
 
-        return "paymentcalculator/Add-PaymentCalculator";
+        return "paymentcalculator/Add-Individual";
+       // return "paymentcalculator/Add-PaymentCalculator";
     }
 
 
-    @PostMapping("/save")
+    @PostMapping("/saveIndividual")
     public String saveIndividual(@Valid @ModelAttribute("individual") Individual theIndividual,
-                                 BindingResult theBindingResult, Model theModel){
+                                 BindingResult theBindingResultIndividual,
+                                 Model theModel){
+
+
+
+        if( theBindingResultIndividual.hasErrors()){
+            yearsVehicle=getYear(totalYears);
+            System.out.println("Error ");
+
+            List<Brands> listOfBrands=brandService.findAll();
+
+            List<Models> listOfModels =modelService.findByModelId(theIndividual.getPaymentCalculadors().get(0).getModelId());
+            theModel.addAttribute("theBrands",listOfBrands);
+            theModel.addAttribute("theModels", listOfModels);
+            theModel.addAttribute("theYearsVehicle",yearsVehicle);
+
+            return "paymentcalculator/Add-PaymentCalculator";
+        }
+        else {
+            //fill null values
+            theIndividual.setDwellingType("NotApplies");
+            theIndividual.setMaritalStatus("Unknoww");
+            theIndividual.setNumberOfDependents(0);
+            theIndividual.setHiringType("Normalpayroll");
+
+            individualService.save(theIndividual);
+
+
+
+            PaymentCalculator paymentCalculator=new PaymentCalculator();
+
+            //Get all brands from DB and fill to List
+            List<Brands> listOfBrands=brandService.findAll();
+
+            //Get all models from DB and fill to list
+            // Inicialmente, cargar los productos de la primera categoría (si existe)
+            if (!listOfBrands.isEmpty()) {
+                Brands firstBrand = listOfBrands.get(0); // seleccionar la primera categoría por defecto
+                List<Models> listOfModels = modelService.findByBrandId(firstBrand.getBrandId());
+                theModel.addAttribute("theListOfModels", listOfModels);
+            }
+
+            //get years of vehicle
+            yearsVehicle=getYear(totalYears);
+
+            //add models to view
+            theModel.addAttribute("theListOfBrands",listOfBrands);
+            theModel.addAttribute("thePaymentCalculator",paymentCalculator);
+            theModel.addAttribute("theChargeService", chargeService);
+            theModel.addAttribute("theIndividual", theIndividual);
+            theModel.addAttribute("theBrands",brandService);
+            theModel.addAttribute("theModels",modelService);
+            theModel.addAttribute("theYearsVehicle",yearsVehicle);
+
+
+
+           // return "paymentcalculator/Show-PaymentCalculator";
+            //return "test/Show";
+            return "paymentcalculator/Add-PaymentCalculator2";
+        }
+    }
+
+
+
+    @PostMapping("/savePaymentCalculator")
+    public String savePaymentCalculator(
+                                  @Valid @ModelAttribute("thePaymentCalculator") PaymentCalculator thepaymentcalculator,
+                                  BindingResult theBindingResultPaymentCalculator,
+                                  Model theModel){
         // get a date
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime dateNextMonth ;
@@ -137,7 +207,162 @@ public class PaymentCalculatorController {
         BigDecimal ivaCommisionForOpening;
 
 
-        if( theBindingResult.hasErrors()){
+        if( theBindingResultPaymentCalculator.hasErrors()){
+            yearsVehicle=getYear(totalYears);
+            System.out.println("Error ");
+
+            List<Brands> listOfBrands=brandService.findAll();
+
+           // List<Models> listOfModels =modelService.findByModelId(theIndividual.getPaymentCalculadors().get(0).getModelId());
+            theModel.addAttribute("theBrands",listOfBrands);
+          //  theModel.addAttribute("theModels", listOfModels);
+            theModel.addAttribute("theYearsVehicle",yearsVehicle);
+
+            return "paymentcalculator/Add-PaymentCalculator2";
+        }
+        else {
+            //fill null values
+
+            Date date = new Date();
+
+            List<PaymentCalculator> paymentCalculatorList = new ArrayList<>();
+
+//*********************************** fill Entity paymentCalculator ***************************************************************
+            PaymentCalculator paymentCalculator = new PaymentCalculator(
+                    date,
+                    thepaymentcalculator.getYearVehicle(),
+                    thepaymentcalculator.getVehiclePrice(),
+                    thepaymentcalculator.getDownPayment(),
+                    //theIndividual.getPaymentCalculadors().get(0).getPersonId(),
+                    thepaymentcalculator.getBrandId(),
+                    thepaymentcalculator.getModelId(),
+                    thepaymentcalculator.getLoanTerm(),
+                    1,
+                    rateFixed,
+                    0);
+
+//***********************************************************************************************************************************
+
+
+            //To get the actual value of IVA
+            Taxes taxes=taxesService.findByName("IVA");
+
+
+//**************************************************  interestPeriod  ******************************************************************
+            //Get Day of payment
+            List<PaymentDay> paymentDay = paymentDayService.findByDayToExecute(true);
+
+            //get days
+            long daysToCalculateInterest = getDays(paymentDay.get(0).getPaymentDay());
+
+            daysToCalculateInterest=20;
+
+            //calculate interest of period for the initial charges
+            interestPeriod = calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(), daysToCalculateInterest);
+            ivaInterestPeriod=calculateIvaInterest(interestPeriod, taxes);
+
+
+//*********************************************************************************************************************************
+            Charges chargeInterestPeriod = chargeService.findByName("Intereses del Periodo");
+
+            //Ad charge commision For Openning
+            ChargesReceivable interesesDelPeriodo;
+
+            //add to DB intereses del periodo
+            interesesDelPeriodo=createChargesReceivable(chargeInterestPeriod.getChargesId(),date, interestPeriod,ivaInterestPeriod);
+
+            System.out.println("charge "+chargeInterestPeriod.getName());
+            // interesesDelPeriodo.addCharges(chargeInterestPeriod);
+            paymentCalculator.addChargesReceivable(interesesDelPeriodo);
+
+
+//******************************************  Comision por apertura  ************************************************************
+            //Get calculation Value for "Comision por apertura"
+            Charges chargeCommisionForOpening = chargeService.findByName("COMISION POR APERTURA");
+
+            //calculate commision For Openning
+            commisionForOpening=calculateCommisionForOpening(paymentCalculator.calculateAmountCredit(),chargeCommisionForOpening);
+
+            //calculate IVA commision For Openning
+            ivaCommisionForOpening=calculateIvaCommisionForOpening(commisionForOpening, taxes);
+
+
+//*********************************************************************************************************************************
+
+            //Ad charge commision For Openning
+            ChargesReceivable comisionXApertura;
+
+            //add to DB comission por apertura
+            comisionXApertura=createChargesReceivable(chargeCommisionForOpening.getChargesId(),date, commisionForOpening,ivaCommisionForOpening);
+
+
+
+            paymentCalculator.addChargesReceivable(comisionXApertura);
+            System.out.println("Hola ");
+
+
+//*************************************  SAVE INDIVIDUAL AND PAYMENT CALCULATOR   *******************************************************
+            //fill individual paymentCalculator and add paymentCalculator;
+            paymentCalculatorList.add(paymentCalculator);
+
+            //add paymentcalculator to individual
+
+            // save the individual
+            paymentCalculatorService.save(paymentCalculator);
+            System.out.println("Hola 3");
+//***********************************************************************************************************************************
+
+            dateNextMonth=getPaymentNextMonth(paymentDay.get(0).getPaymentDay());
+
+            System.out.println("Fecha de hoy: "+today);
+            System.out.println("Fecha siguiente mes: "+dateNextMonth);
+
+
+            //add models to view
+            theModel.addAttribute("theCharges2", paymentCalculator.getChargesReceivable());
+            theModel.addAttribute("theChargeService", chargeService);
+           // theModel.addAttribute("theIndividual", theIndividual);
+            theModel.addAttribute("theBrands",brandService);
+            theModel.addAttribute("theModels",modelService);
+
+
+
+            theModel.addAttribute("thePaymentCalculator", paymentCalculator);
+
+            theModel.addAttribute("theCharges", chargeCommisionForOpening);
+            theModel.addAttribute("theInterestPeriod", interestPeriod);
+            theModel.addAttribute("theIvaInterestPeriod", ivaInterestPeriod);
+            theModel.addAttribute("theCommisionForOpening", commisionForOpening);
+            theModel.addAttribute("theIvaCommisionForOpening", ivaCommisionForOpening);
+
+            createScheduledPayment(paymentCalculator.calculateAmountCredit(),
+                    paymentCalculator.getRateValue(), daysToCalculateInterest,paymentCalculator.getLoanTerm(),
+                    date);
+
+
+
+            //return "paymentcalculator/Show-PaymentCalculator";
+            return "test/Show";
+        }
+    }
+
+    @PostMapping("/save")
+    public String saveIndividual2(@Valid @ModelAttribute("theIndividual") Individual theIndividual,
+                                 BindingResult theBindingResultIndividual,
+
+                                 Model theModel){
+        // get a date
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime dateNextMonth ;
+
+        BigDecimal interestPeriod; //interes del periodo
+        BigDecimal ivaInterestPeriod;
+
+        BigDecimal  commisionForOpening; //comision por apertura
+        BigDecimal ivaCommisionForOpening;
+
+
+        if( theBindingResultIndividual.hasErrors()){
             yearsVehicle=getYear(totalYears);
             System.out.println("Error ");
 
@@ -261,7 +486,6 @@ public class PaymentCalculatorController {
             theModel.addAttribute("theModels",modelService);
 
 
-
             theModel.addAttribute("thePaymentCalculator", paymentCalculator);
 
             theModel.addAttribute("theCharges", chargeCommisionForOpening);
@@ -350,6 +574,7 @@ public class PaymentCalculatorController {
 
         return amountOfCredit.multiply(chargeCommisionForOpening.getCalculationValue()).divide(value, RoundingMode.HALF_UP);
     }
+
     public  BigDecimal calculateIvaCommisionForOpening(BigDecimal commisionForOpening, Taxes taxes){
         BigDecimal ivaCommisionForOpening;
         ivaCommisionForOpening=commisionForOpening.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_UP);
@@ -399,7 +624,9 @@ public class PaymentCalculatorController {
         );
         return chargesReceivable;
     }
-
+/*
+* Crea la tabla de amortizacion
+* */
     public void createScheduledPayment( BigDecimal amountCredit, Double rateFixed, long daysOfInteres, int plazo,Date date)
     {
 
