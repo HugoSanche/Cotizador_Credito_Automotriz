@@ -30,10 +30,11 @@ public class PaymentCalculator  {
     private BigDecimal downPayment;
 
 
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name ="personId" )
-    private Individual individual;
+//    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
+//    @JoinColumn(name ="personId" )
+//    private Individual individual;
 
+    private int personId;
     @Column(name = "BrandId")
     @NotNull
     private int brandId;
@@ -93,14 +94,14 @@ public class PaymentCalculator  {
 
 
     public PaymentCalculator(Date fechaCotizacion, int yearVehicle, BigDecimal vehiclePrice,
-                             BigDecimal downPayment,   int brandId, int modelId, int loanTerm, int rateId,
+                             BigDecimal downPayment, int personId,   int brandId, int modelId, int loanTerm, int rateId,
                              double rateValue, int version) {
         this.paymentCalculatorId = paymentCalculatorId;
         this.fechaCotizacion = fechaCotizacion;
         this.yearVehicle = yearVehicle;
         this.vehiclePrice = vehiclePrice;
         this.downPayment = downPayment;
-
+        this.personId=personId;
         this.brandId = brandId;
         this.modelId = modelId;
         this.loanTerm = loanTerm;
@@ -134,7 +135,7 @@ public void addChargesReceivable(ChargesReceivable theChargesReceivable){
                 ", vehiclePrice=" + vehiclePrice +
                 ", downPayment=" + downPayment +
 
-                ", individual=" + individual +
+
                 ", brandId=" + brandId +
                 ", modelId=" + modelId +
                 ", loanTerm=" + loanTerm +
@@ -198,12 +199,13 @@ public void addChargesReceivable(ChargesReceivable theChargesReceivable){
         this.downPayment = downPayment;
     }
 
-    public Individual getIndividual() {
-        return individual;
+
+    public int getPersonId() {
+        return personId;
     }
 
-    public void setIndividual(Individual individual) {
-        this.individual = individual;
+    public void setPersonId(int personId) {
+        this.personId = personId;
     }
 
     public int getBrandId() {

@@ -49,6 +49,7 @@ public class PaymentCalculatorController {
     @Value("${frequency}")
     double frequency=0;
 
+    int personId;
     BigDecimal value = new BigDecimal(100);//porcentaje 100% pass to BigDecimal
 
 
@@ -182,6 +183,7 @@ public class PaymentCalculatorController {
             theModel.addAttribute("theYearsVehicle",yearsVehicle);
 
 
+            personId= theIndividual.getPersonId();
 
            // return "paymentcalculator/Show-PaymentCalculator";
             //return "test/Show";
@@ -194,8 +196,13 @@ public class PaymentCalculatorController {
     @PostMapping("/savePaymentCalculator")
     public String savePaymentCalculator(
                                   @Valid @ModelAttribute("thePaymentCalculator") PaymentCalculator thepaymentcalculator,
+
                                   BindingResult theBindingResultPaymentCalculator,
                                   Model theModel){
+
+        Individual theIndividual=individualService.findById(personId);
+
+
         // get a date
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime dateNextMonth ;
@@ -233,13 +240,14 @@ public class PaymentCalculatorController {
                     thepaymentcalculator.getYearVehicle(),
                     thepaymentcalculator.getVehiclePrice(),
                     thepaymentcalculator.getDownPayment(),
-                    //theIndividual.getPaymentCalculadors().get(0).getPersonId(),
+                    personId,
                     thepaymentcalculator.getBrandId(),
                     thepaymentcalculator.getModelId(),
                     thepaymentcalculator.getLoanTerm(),
                     1,
                     rateFixed,
-                    0);
+                    0
+                   );
 
 //***********************************************************************************************************************************
 
@@ -298,7 +306,7 @@ public class PaymentCalculatorController {
 
 
             paymentCalculator.addChargesReceivable(comisionXApertura);
-            System.out.println("Hola ");
+
 
 
 //*************************************  SAVE INDIVIDUAL AND PAYMENT CALCULATOR   *******************************************************
@@ -328,7 +336,7 @@ public class PaymentCalculatorController {
 
 
             theModel.addAttribute("thePaymentCalculator", paymentCalculator);
-
+            theModel.addAttribute("theIndividual", theIndividual);
             theModel.addAttribute("theCharges", chargeCommisionForOpening);
             theModel.addAttribute("theInterestPeriod", interestPeriod);
             theModel.addAttribute("theIvaInterestPeriod", ivaInterestPeriod);
@@ -392,7 +400,7 @@ public class PaymentCalculatorController {
                     theIndividual.getPaymentCalculadors().get(0).getYearVehicle(),
                     theIndividual.getPaymentCalculadors().get(0).getVehiclePrice(),
                     theIndividual.getPaymentCalculadors().get(0).getDownPayment(),
-                    //theIndividual.getPaymentCalculadors().get(0).getPersonId(),
+                    personId,
                     theIndividual.getPaymentCalculadors().get(0).getBrandId(),
                     theIndividual.getPaymentCalculadors().get(0).getModelId(),
                     theIndividual.getPaymentCalculadors().get(0).getLoanTerm(),
