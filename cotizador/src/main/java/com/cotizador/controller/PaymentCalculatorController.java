@@ -350,7 +350,7 @@ public class PaymentCalculatorController {
 
 
             //return "paymentcalculator/Show-PaymentCalculator";
-            return "test/Show";
+            return "test/test3";
         }
     }
 

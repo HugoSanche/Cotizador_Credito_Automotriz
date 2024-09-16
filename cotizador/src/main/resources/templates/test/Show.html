@@ -5,11 +5,19 @@
     <title>Individual directory</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title></title>
 
+    <link href="../../static/css/mystyle.css" rel="stylesheet" />
 
 </head>
 <body>
+
+<p>
+    prueba
+</p>
+<h1>
+    hugo
+</h1>
 
 <!-- Form 3 -->
 <div class="form-3-container section-container section-container-image-bg">
@@ -23,7 +31,7 @@
                     <fieldset >
                         <legend >Datos del Cliente</legend>
 
-                        <table  class="LetraNegra" >
+                        <table   >
                             <tbody><tr>
                                 <td style="width: 10%; text-align: right" >
                                     <label id="LBLNombre" >Nombre del Cliente:</label>
@@ -31,14 +39,12 @@
                                 <td style="width: 19%; text-align: left">
                                     <p th:text=${theIndividual.getCompleteName()}></p>
                                 </td>
-
                                 <td style="width: 15%; text-align: right ">
                                     <label id="LBLCorreo" >Correo:</label>
                                 </td>
                                 <td style="width: 15%; text-align: left">
                                     <p th:text=${theIndividual.getEmail()}></p>
                                 </td>
-
                                 <td style="width: 19%; text-align: right">
                                     Tipo de Persona:&nbsp;
                                 </td>
@@ -52,55 +58,103 @@
                     <!-- Your Address  -->
                     <fieldset class="form-group p-3">
                         <legend class="w-auto px-2">Descripción de la Cotización</legend>
-                        <div class="form-group text-left">
-                            <label >Marca:</label>
-                            <p th:text=${theBrands.getName(thePaymentCalculator.getBrandId())}></p>
-                        </div>
 
-                        <div class="form-group text-left">
-                            <label >SubMarca:</label>
-                            <p th:text=${theModels.getName(thePaymentCalculator.getModelId(),thePaymentCalculator.getBrandId())}></p>
-                        </div>
-                        <div class="form-group text-left">
-                            <label >Modelo:</label>
-                            <p th:text=${thePaymentCalculator.getYearVehicle()}></p>
-                        </div>
+                        <table   >
+                            <tbody><tr>
+                                <td style="width: 10%; text-align: right" >
+                                    <label id="LBLMarca" >Marca:</label>
+                                </td>
+                                <td style="width: 19%; text-align: left">
+                                    <p th:text=${theBrands.getName(thePaymentCalculator.getBrandId())}></p>
+                                </td>
+                                <td style="width: 15%; text-align: right ">
+                                    <label id="LBLSubMarca" >SubMarca:</label>
 
-                        <div class="form-group text-left">
-                            <label >Tasa:</label>
-                            <p th:text=${thePaymentCalculator.getRateValue()}></p>
-                        </div>
+                                </td>
+                                <td style="width: 15%; text-align: left">
+                                    <p th:text=${theModels.getName(thePaymentCalculator.getModelId(),thePaymentCalculator.getBrandId())}></p>
+                                </td>
+                                <td style="width: 19%; text-align: right">
+                                    <label id="LBLModelo" >Modelo:</label>
+                                </td>
+                                <td style="width: 15%; text-align: left" >
+                                    <p th:text=${thePaymentCalculator.getYearVehicle()}></p>
+                                </td>
+                            </tr>
+                            </tbody></table>
+<p>
+    Datos del Credito
+</p>
 
-                        <div class="form-group text-left">
-                            <label >Plazo:</label>
-                            <p th:text=${thePaymentCalculator.getLoanTerm()}></p>
-                        </div>
 
-                        <div class="form-group text-left">
-                            <label >Precio del Vehiculo:</label>
-                            <p th:text=${thePaymentCalculator.getVehiclePrice()} ></p>
-                        </div>
+                        <table   >
+                            <tbody><tr>
+                                <td style="width: 10%; text-align: right" >
+                                    <label id="LBLTasa" >Tasa:</label>
+                                </td>
+                                <td style="width: 10%; text-align: left">
+                                    <p th:text=${thePaymentCalculator.getRateValue()}></p>
+                                </td>
+                                <td style="width: 10%; text-align: right ">
+                                    <label id="LBLPlazo" >Plazo:</label>
 
-                        <div class="form-group text-left">
-                            <label >Enganche:</label>
-                            <p th:text=${thePaymentCalculator.getDownPayment()} ></p>
-                        </div>
-                        <div class="form-group text-left">
-                            <label>Monto a Financiar:</label>
-                            <p th:text=${thePaymentCalculator.calculateAmountCredit()} ></p>
-                        </div>
+                                </td>
+                                <td style="width: 10%; text-align: left">
+                                    <p th:text=${thePaymentCalculator.getLoanTerm()}></p>
+                                </td>
+                                <td style="width: 10%; text-align: right">
+                                    <label id="LBLPrecio" >Precio del Vehiculo:</label>
+                                </td>
+                                <td style="width: 10%; text-align: left" >
+                                    <p th:text=${thePaymentCalculator.getVehiclePrice()} ></p>
+                                </td>
+
+                                <td style="width: 10%; text-align: right">
+                                    <label id="LBLEnganche" >Enganche:</label>
+                                </td>
+                                <td style="width: 10%; text-align: left" >
+                                    <p th:text=${thePaymentCalculator.getDownPayment()} ></p>
+                                </td>
+
+                                <td style="width: 10%; text-align: right">
+                                    <label id="LBLMontoFinanciar" >Monto a Financiar:</label>
+                                </td>
+                                <td style="width: 10%; text-align: left" >
+                                    <p th:text=${thePaymentCalculator.calculateAmountCredit()} ></p>
+                                </td>
+
+                            </tr>
+                            </tbody></table>
+
+
+
+
                     </fieldset>
                     <!-- Job Preferences  -->
                     <fieldset class="form-group p-3">
-                        <legend class="w-auto px-2">Job Preferences</legend>
-                        <div class="form-group text-left">
-                            <label for="preferences">Preferences:</label>
-                            <textarea class="form-control preferences" id="preferences" placeholder="Preferences..." name="preferences"></textarea>
-                        </div>
-                        <div class="form-group text-left">
-                            <label for="new-salary">New salary:</label>
-                            <input type="text" class="form-control new-salary" id="new-salary" placeholder="New salary..." name="new-salary">
-                        </div>
+                        <legend class="w-auto px-2">Pago inicial</legend>
+                        <table class="table table-bodered table-striped">
+                            <thead class ="table-dark">
+                            <tr>
+                                <th>Concepto</th>
+                                <th></th>
+                                <th></th>
+                                <th>Importe</th>
+                                <th>Iva</th>
+                                <th>Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="charges : ${theCharges2}">
+                                <td th:text="${charges.getChargesId()}"/>
+                                <td th:text="${theChargeService.getName(charges.getChargesId())}"/>
+                                <td th:text="${theChargeService.getName(charges.getChargesId())}"/>
+                                <td th:text="${charges.getChargeAmount()}"/>
+                                <td th:text="${charges.getvATAmount()}"/>
+                                <td th:text="${charges.getSumAmountAndVATAmount()}"/>
+                            </tr>
+                            </tbody>
+                        </table>
                     </fieldset>
                     <!-- Submit Button  -->
                     <div class="form-group row">
