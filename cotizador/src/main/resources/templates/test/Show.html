@@ -20,19 +20,34 @@
 
                 <form action="" method="post">
                     <!-- Current Occupation  -->
-                    <fieldset class="form-group p-3">
-                        <legend class="w-auto px-2">Datos del Cliente</legend>
-                        <div >
-                            <label>Nombre:</label> <p th:text=${theIndividual.getCompleteName()}></p>
-                        </div>
-                        <div class="form-group text-left">
-                            <label>Correo:</label>
-                            <p th:text=${theIndividual.getEmail()}></p>
+                    <fieldset >
+                        <legend >Datos del Cliente</legend>
 
-                        </div>
-                        <div class="form-group text-left">
-                            <label>Tipo de Persona:</label><p th:text=${theIndividual.getNameDoesBizActivities()}></p>
-                        </div>
+                        <table  class="LetraNegra" >
+                            <tbody><tr>
+                                <td style="width: 10%; text-align: right" >
+                                    <label id="LBLNombre" >Nombre del Cliente:</label>
+                                </td>
+                                <td style="width: 19%; text-align: left">
+                                    <p th:text=${theIndividual.getCompleteName()}></p>
+                                </td>
+
+                                <td style="width: 15%; text-align: right ">
+                                    <label id="LBLCorreo" >Correo:</label>
+                                </td>
+                                <td style="width: 15%; text-align: left">
+                                    <p th:text=${theIndividual.getEmail()}></p>
+                                </td>
+
+                                <td style="width: 19%; text-align: right">
+                                    Tipo de Persona:&nbsp;
+                                </td>
+                                <td style="width: 15%; text-align: left" >
+                                    <p th:text=${theIndividual.getNameDoesBizActivities()}></p>
+                                </td>
+                            </tr>
+                            </tbody></table>
+
                     </fieldset>
                     <!-- Your Address  -->
                     <fieldset class="form-group p-3">
