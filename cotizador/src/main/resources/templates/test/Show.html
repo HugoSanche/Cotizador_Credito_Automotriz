@@ -1,23 +1,19 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+
+<meta charset="UTF-8">
     <title>Individual directory</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
 
-    <link href="../../static/css/mystyle.css" rel="stylesheet" />
+    <link th:href= "@{/css/mystyle.css}" rel="stylesheet" >
 
 </head>
 <body>
 
-<p>
-    prueba
-</p>
-<h1>
-    hugo
-</h1>
+
 
 <!-- Form 3 -->
 <div class="form-3-container section-container section-container-image-bg">
@@ -82,9 +78,9 @@
                                 </td>
                             </tr>
                             </tbody></table>
-<p>
+<t>
     Datos del Credito
-</p>
+</t>
 
 
                         <table   >
@@ -136,19 +132,19 @@
                         <table class="table table-bodered table-striped">
                             <thead class ="table-dark">
                             <tr>
-                                <th>Concepto</th>
-                                <th></th>
-                                <th></th>
-                                <th>Importe</th>
-                                <th>Iva</th>
-                                <th>Total</th>
+                                <th style="width: 10%; text-align: left">Concepto</th>
+                                <th style="width: 25%; text-align: left"></th>
+                                <th style="width: 10%; text-align: left"></th>
+                                <th style="width: 15%; text-align: left">Importe</th>
+                                <th style="width: 15%; text-align: left">Iva</th>
+                                <th style="width: 15%; text-align: left">Total</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="charges : ${theCharges2}">
                                 <td th:text="${charges.getChargesId()}"/>
                                 <td th:text="${theChargeService.getName(charges.getChargesId())}"/>
-                                <td th:text="${theChargeService.getName(charges.getChargesId())}"/>
+                                <td />
                                 <td th:text="${charges.getChargeAmount()}"/>
                                 <td th:text="${charges.getvATAmount()}"/>
                                 <td th:text="${charges.getSumAmountAndVATAmount()}"/>
