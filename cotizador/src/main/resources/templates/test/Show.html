@@ -9,6 +9,7 @@
     <title></title>
 
     <link th:href= "@{/css/mystyle.css}" rel="stylesheet" >
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 </head>
 <body>
@@ -42,13 +43,15 @@
                                     <p th:text=${theIndividual.getEmail()}></p>
                                 </td>
                                 <td style="width: 19%; text-align: right">
-                                    Tipo de Persona:&nbsp;
+                                    <label id="LBLTipoPersona" >Tipo de Persona:&nbsp;</label>
+
                                 </td>
                                 <td style="width: 15%; text-align: left" >
                                     <p th:text=${theIndividual.getNameDoesBizActivities()}></p>
                                 </td>
                             </tr>
-                            </tbody></table>
+                            </tbody>
+                        </table>
 
                     </fieldset>
                     <!-- Your Address  -->
@@ -152,19 +155,45 @@
                             </tbody>
                         </table>
                     </fieldset>
-                    <!-- Submit Button  -->
-                    <div class="form-group row">
-                        <div class="col">
-                            <button type="submit" class="btn btn-primary btn-customized">Send Application</button>
-                        </div>
-                    </div>
+
                 </form>
+                <!-- Submit Button  -->
+                <div class="form-group row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary btn-customized" onclick="myFunction()">Tabla de Amortización</button>
+                    </div>
+                </div>
+
+                <div id="myDIV">
+                    <h4>Recommended products</h4>
+                    <p>List of products recommended for this client:</p>
+                    <table class="w3-table-all w3-tiny">
+                        <tr>
+                            <th>Recommendations</th>
+                        </tr>
+                        <tr>
+                            <td>Product</td>
+                        </tr>
+                    </table>
+                </div>
+
+
 
             </div>
         </div>
     </div>
 </div>
 
+<script>
+    function myFunction() {
+      var x = document.getElementById("myDIV");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+</script>
 
 
 </body>

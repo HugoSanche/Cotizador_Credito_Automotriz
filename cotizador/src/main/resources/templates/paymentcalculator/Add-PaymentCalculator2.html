@@ -45,7 +45,8 @@
                                     <p th:text=${theIndividual.getEmail()}></p>
                                 </td>
                                 <td style="width: 19%; text-align: right">
-                                    Tipo de Persona:&nbsp;
+                                    <label id="LBLTipoPersona" >Tipo de Persona:&nbsp;</label>
+
                                 </td>
                                 <td style="width: 15%; text-align: left" >
                                     <p th:text=${theIndividual.getNameDoesBizActivities()}></p>
@@ -64,67 +65,88 @@
                 <!-- User's Preferences  -->
                     <fieldset class="form-group border p-3">
                         <legend class="w-auto px-2">Datos del Auto</legend>
-                        <div class="col-md-4">
-                            <label class="form-label">Year Vehicle</label>
-                            <select class="form-select form-select-sm" th:field="*{yearVehicle}">
-                                <option th:each="year:${theYearsVehicle}"
-                                        th:text="${year}"
-                                        th:value="${year}">Years
-                                </option>
-                            </select>
-                        </div>
 
-                        <div class="col-4">
-                            <label class="form-label">Marca</label>
-                            <br>
-                            <select id="dropdownBrand" onchange="cargarProductos()" class="form-select form-select-sm" th:field="*{brandId}">
-                                <option th:each="brand:${theListOfBrands}"
-                                        th:text="${brand.getName()}"
-                                        th:value="${brand.getBrandId()}">Marca</option>
-                            </select>
-                        </div>
+                        <table   >
+                            <tbody><tr>
+                                <td style="width: 10%; text-align: right" >
+                                    <label id="LBLYearVehicle" >Year Vehicle</label>
+                                </td>
+                                <td style="width: 19%; text-align: left">
+                                    <select class="form-select form-select-sm" th:field="*{yearVehicle}">
+                                        <option th:each="year:${theYearsVehicle}"
+                                                th:text="${year}"
+                                                th:value="${year}">Years
+                                        </option>
+                                    </select>
+                                </td>
+                                <td style="width: 15%; text-align: right ">
+                                    <label id="LBLMarca" >Marca</label>
+                                </td>
+                                <td style="width: 15%; text-align: left">
+                                    <select id="dropdownBrand" onchange="cargarProductos()" class="form-select form-select-sm" th:field="*{brandId}">
+                                        <option th:each="brand:${theListOfBrands}"
+                                                th:text="${brand.getName()}"
+                                                th:value="${brand.getBrandId()}">Marca</option>
+                                    </select>
+                                </td>
+                                <td style="width: 19%; text-align: right">
+                                    <label id="LBLModelo" >Modelo:&nbsp;</label>
 
-                        <div class="col-4">
-                            <label class="form-label">Modelo</label>
-                            <br>
-                            <select id="dropdownModel" class="form-select form-select-sm" th:field="*{modelId}">
-                                <option th:each="model : ${theListOfModels}"
-                                        th:text="${model.getName()}"
-                                        th:value="${model.getModelId()}">Modelo</option>
+                                </td>
+                                <td style="width: 15%; text-align: left" >
+                                    <select id="dropdownModel" class="form-select form-select-sm" th:field="*{modelId}">
+                                        <option th:each="model : ${theListOfModels}"
+                                                th:text="${model.getName()}"
+                                                th:value="${model.getModelId()}">Modelo</option>
 
-                                </option>
-                            </select>
-                        </div>
-                    </fieldset>
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
 
-
-                    <!-- User's Preferences  -->
-                    <fieldset class="form-group border p-3">
-                        <legend class="w-auto px-2">Datos del Credito</legend>
-                        <div class="col-md-4">
-                            <label  class="form-label">vehiclePrice</label>
-                            <input type="text" th:field="*{vehiclePrice}"
-                                   class="form-control form-control-sm" placeholder="vehiclePrice">
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Down Payment</label>
-                            <input type="text" th:field="*{downPayment}"
-                                   class="form-control form-control-sm" placeholder="downPayment">
-                        </div>
-                        <div class="col-4">
-                            <label class="form-label">Loan Term</label>
-                            <br>
-                            <select class="form-select form-select-sm" th:field="*{loanTerm}">
-                                <option th:value=12>12</option>
-                                <option th:value=24>24</option>
-                                <option th:value=36>36</option>
-                                <option th:value=48>48</option>
-                                <option th:value=60>60</option>
-                            </select>
-                        </div>
 
                     </fieldset>
+                <fieldset class="form-group border p-3">
+                    <legend class="w-auto px-2">Datos del Credito</legend>
+                        <table   >
+                            <tbody><tr>
+                                <td style="width: 10%; text-align: right" >
+                                    <label id="LBLImporteFinanciar" >Importe a Financiar:</label>
+                                </td>
+                                <td style="width: 19%; text-align: left">
+                                    <input type="text" th:field="*{vehiclePrice}"
+                                           class="form-control form-control-sm" placeholder="Importe a Financiar">
+                                </td>
+                                <td style="width: 15%; text-align: right ">
+                                    <label id="LBLEnganche" >Enganche:</label>
+                                </td>
+                                <td style="width: 15%; text-align: left">
+                                    <input type="text" th:field="*{downPayment}"
+                                           class="form-control form-control-sm" placeholder="Enganche">
+                                </td>
+                                <td style="width: 19%; text-align: right">
+                                    <label id="LBLPlazo" >Plazo:&nbsp;</label>
+
+                                </td>
+                                <td style="width: 15%; text-align: left" >
+                                    <select class="form-select form-select-sm" th:field="*{loanTerm}">
+                                        <option th:value=12>12</option>
+                                        <option th:value=24>24</option>
+                                        <option th:value=36>36</option>
+                                        <option th:value=48>48</option>
+                                        <option th:value=60>60</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </fieldset>
+
+                <br>
+                <br>
                 <div>
                     <button  type="submit" class="btn btn-info col-2">Solicitar</button>
                 </div>
@@ -134,17 +156,7 @@
             </div>
         </div>
 
-    <script  th:inline="javascript">
-        function greetWorld() {
-            alert("hello world")
-        }
-
-        function salute(name) {
-            alert("hello: " )
-        }
-
-    </script>
-
+        <!-- Obtiene la lista de los modelos en base a la marca seleccionada  -->
     <script type="text/javascript">
         function cargarProductos() {
             var categoriaId = $("#dropdownBrand").val();
@@ -153,7 +165,6 @@
                 type: "GET",
                 url: "/creditos/auto/modelos/" + categoriaId,
                 dataType: 'json',
-
 
                 success: function(data) {
 
