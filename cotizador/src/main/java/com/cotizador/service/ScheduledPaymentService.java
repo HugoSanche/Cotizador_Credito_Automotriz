@@ -7,7 +7,7 @@ import java.util.List;
 public interface ScheduledPaymentService {
     List<ScheduledPayment> findAll();
 
-    ScheduledPayment find(int contrato, int anexo);
+    List<ScheduledPayment> find(int paymentCalculatorId);
     ScheduledPayment save(ScheduledPayment theScheduledPayment);
-    void delete(int contrato, int anexo);
+    void delete(int paymentCalculatorId);
 }

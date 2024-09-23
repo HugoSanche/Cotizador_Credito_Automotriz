@@ -24,13 +24,13 @@ public class ScheduledPaymentDAOJpaImp implements ScheduledPaymentDAO{
     }
 
     @Override
-    public ScheduledPayment find(int contrato, int anexo) {
-        TypedQuery<ScheduledPayment> theQuery=entityManager.createQuery("from ScheduledPayment where contrato=:pContrato and anexo=:pAnexo",ScheduledPayment.class);
-        theQuery.setParameter("pContrato",contrato);
-        theQuery.setParameter("pAnexo",anexo);
-        ScheduledPayment theScheduledPayment = null;
+    public List<ScheduledPayment> find(int paymentCalculatorId) {
+        TypedQuery<ScheduledPayment> theQuery=entityManager.createQuery("from ScheduledPayment where paymentCalculatorId=:pPaymentCalculatorId",ScheduledPayment.class);
+        theQuery.setParameter("pPaymentCalculatorId",paymentCalculatorId);
+
+        List<ScheduledPayment> theScheduledPayment = null;
         try {
-            theScheduledPayment = theQuery.getSingleResult();
+            theScheduledPayment = theQuery.getResultList();
         } catch (Exception e) {
             theScheduledPayment = null;
         }
@@ -45,7 +45,8 @@ public class ScheduledPaymentDAOJpaImp implements ScheduledPaymentDAO{
     }
 
     @Override
-    public void delete(int contrato, int anexo) {
-
+    public void delete(int paymentCalculatorId) {
+        ScheduledPayment scheduledPayment=entityManager.find(ScheduledPayment.class,paymentCalculatorId);
+        entityManager.remove(scheduledPayment);
     }
 }

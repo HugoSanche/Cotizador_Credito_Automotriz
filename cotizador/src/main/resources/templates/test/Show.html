@@ -165,18 +165,35 @@
                 </div>
 
                 <div id="myDIV">
-                    <h4>Recommended products</h4>
-                    <p>List of products recommended for this client:</p>
-                    <table class="w3-table-all w3-tiny">
+                    <h4>Tabla de Amortizacion </h4>
+                    <p>Cotización</p>
+                    <table class="table table-bodered table-striped">
+                        <thead class ="table-dark">
                         <tr>
-                            <th>Recommendations</th>
+                            <th style="width: 10%; text-align: left">Renta</th>
+                            <th style="width: 10%; text-align: left">Fecha</th>
+                            <th style="width: 10%; text-align: left">Capital Inicial</th>
+                            <th style="width: 10%; text-align: left">Pago (Interes + Capital)</th>
+                            <th style="width: 10%; text-align: left">Interes </th>
+                            <th style="width: 10%; text-align: left">Pago a Capital</th>
+                            <th style="width: 10%; text-align: left">Capital Final</th>
                         </tr>
-                        <tr>
-                            <td>Product</td>
+                        </thead>
+                        <tbody>
+                        <tr th:each="scheduledPayment : ${theScheduledPayment}">
+
+                            <td th:text="${scheduledPayment.getPaymentNumber()}"/>
+                            <td th:text="${scheduledPayment.getDueDate()}"/>
+                            <td th:text="${#numbers.formatCurrency(scheduledPayment.getContractInitialBalance())}"/>
+                            <td th:text="${#numbers.formatCurrency(scheduledPayment.getCapitalAmount())}"/>
+                            <td th:text="${#numbers.formatCurrency(scheduledPayment.getInterestAmount())}"/>
+                            <td th:text="${#numbers.formatCurrency(scheduledPayment.getCapitalAmount())}"/>
+                            <td th:text="${#numbers.formatCurrency(scheduledPayment.getContractFinalBalance())}"/>
+
                         </tr>
+                        </tbody>
                     </table>
                 </div>
-
 
 
             </div>
@@ -193,6 +210,18 @@
         x.style.display = "none";
       }
     }
+
+        // Bloquea la tabla amortizacion al cargar la pagina.
+        $(document).ready(function() {
+               var x = document.getElementById("myDIV");
+               if (x.style.display === "none") {
+                   x.style.display = "block";
+                 }
+                 else {
+                   x.style.display = "none";
+               }
+        });
+
 </script>
 
 

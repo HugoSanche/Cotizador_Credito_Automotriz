@@ -131,8 +131,6 @@ public class PaymentCalculatorController {
                                  BindingResult theBindingResultIndividual,
                                  Model theModel){
 
-
-
         if( theBindingResultIndividual.hasErrors()){
             yearsVehicle=getYear(totalYears);
             System.out.println("Error ");
@@ -326,7 +324,24 @@ public class PaymentCalculatorController {
             System.out.println("Fecha siguiente mes: "+dateNextMonth);
 
 
+            createScheduledPayment(paymentCalculator.calculateAmountCredit(),paymentCalculator.getPaymentCalculatorId(),
+                    paymentCalculator.getRateValue(), daysToCalculateInterest,paymentCalculator.getLoanTerm(),
+                    date);
+
             //add models to view
+
+            List<ScheduledPayment> scheduledPayment= scheduledPaymentService.find(paymentCalculator.getPaymentCalculatorId());
+
+            System.out.println("PaymentCalculatorId() "+paymentCalculator.getPaymentCalculatorId());
+
+            System.out.println("PaymentNumber "+scheduledPayment.get(0).getPaymentNumber());
+            System.out.println("DueDate() "+scheduledPayment.get(0).getDueDate());
+            System.out.println("ContractInitialBalance() "+ scheduledPayment.get(0).getContractInitialBalance());
+            scheduledPayment.get(0).getCapitalAmount();
+            scheduledPayment.get(0).getInterestAmount();
+            scheduledPayment.get(0).getContractFinalBalance();
+
+            theModel.addAttribute("theScheduledPayment", scheduledPayment);
             theModel.addAttribute("theCharges2", paymentCalculator.getChargesReceivable());
             theModel.addAttribute("theChargeService", chargeService);
            // theModel.addAttribute("theIndividual", theIndividual);
@@ -343,9 +358,6 @@ public class PaymentCalculatorController {
             theModel.addAttribute("theCommisionForOpening", commisionForOpening);
             theModel.addAttribute("theIvaCommisionForOpening", ivaCommisionForOpening);
 
-            createScheduledPayment(paymentCalculator.calculateAmountCredit(),
-                    paymentCalculator.getRateValue(), daysToCalculateInterest,paymentCalculator.getLoanTerm(),
-                    date);
 
 
 
@@ -485,14 +497,19 @@ public class PaymentCalculatorController {
             System.out.println("Fecha de hoy: "+today);
             System.out.println("Fecha siguiente mes: "+dateNextMonth);
 
+            //Create table amortizacion
+            createScheduledPayment(paymentCalculator.calculateAmountCredit(), paymentCalculator.getPaymentCalculatorId(),
+                    paymentCalculator.getRateValue(), daysToCalculateInterest,paymentCalculator.getLoanTerm(),
+                    date);
 
             //add models to view
+
+
             theModel.addAttribute("theCharges2", paymentCalculator.getChargesReceivable());
             theModel.addAttribute("theChargeService", chargeService);
             theModel.addAttribute("theIndividual", theIndividual);
             theModel.addAttribute("theBrands",brandService);
             theModel.addAttribute("theModels",modelService);
-
 
             theModel.addAttribute("thePaymentCalculator", paymentCalculator);
 
@@ -502,9 +519,7 @@ public class PaymentCalculatorController {
             theModel.addAttribute("theCommisionForOpening", commisionForOpening);
             theModel.addAttribute("theIvaCommisionForOpening", ivaCommisionForOpening);
 
-           createScheduledPayment(paymentCalculator.calculateAmountCredit(),
-                    paymentCalculator.getRateValue(), daysToCalculateInterest,paymentCalculator.getLoanTerm(),
-                    date);
+
 
 
 
@@ -635,7 +650,7 @@ public class PaymentCalculatorController {
 /*
 * Crea la tabla de amortizacion
 * */
-    public void createScheduledPayment( BigDecimal amountCredit, Double rateFixed, long daysOfInteres, int plazo,Date date)
+    public void createScheduledPayment( BigDecimal amountCredit,  int paymentCalculatorId, Double rateFixed, long daysOfInteres, int plazo,Date date)
     {
 
 
@@ -684,7 +699,7 @@ public class PaymentCalculatorController {
             else{
                 contractFinalBalance=contractFinalBalance.subtract(capitalAmount.subtract(interest));
             }
-            ScheduledPayment scheduledPayment=new ScheduledPayment(
+            ScheduledPayment scheduledPayment=new ScheduledPayment(paymentCalculatorId,
                     i,
                     capitalAmount.subtract(interest),
                     0,

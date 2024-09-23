@@ -22,8 +22,8 @@ public class ScheduledPaymentServiceImp implements ScheduledPaymentService{
     }
 
     @Override
-    public ScheduledPayment find(int contrato, int anexo) {
-        return scheduledPaymentDAO.find(contrato,anexo);
+    public List<ScheduledPayment> find(int paymentCalculatorId) {
+        return scheduledPaymentDAO.find(paymentCalculatorId);
     }
 
     @Transactional
@@ -34,8 +34,8 @@ public class ScheduledPaymentServiceImp implements ScheduledPaymentService{
 
     @Transactional
     @Override
-    public void delete(int contrato, int anexo) {
+    public void delete(int paymentCalculatorId) {
 
-        scheduledPaymentDAO.delete(contrato,anexo);
+        scheduledPaymentDAO.delete(paymentCalculatorId);
     }
 }

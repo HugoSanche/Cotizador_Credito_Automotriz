@@ -15,7 +15,8 @@ public class ScheduledPayment {
     @Column(name = "ScheduledPaymentId")
     private BigInteger scheduledPaymentId;
 
-
+    @Column(name = "PaymentCalculatorId")
+    private int paymentCalculatorId;
     @Column(name = "PaymentNumber")
     private int paymentNumber;
     @Column(name = "CapitalAmount")
@@ -63,7 +64,7 @@ public class ScheduledPayment {
     public ScheduledPayment() {
     }
 
-    public ScheduledPayment(int paymentNumber, BigDecimal capitalAmount,
+    public ScheduledPayment(int paymentCalculatorId, int paymentNumber, BigDecimal capitalAmount,
                             int capitalQuantityOfDays, BigDecimal capitalBalance, BigDecimal interestAmount,
                             BigDecimal interestQuantityOfDays, BigDecimal interestBalance, BigDecimal vATAmountForCapital,
                             BigDecimal vATBalanceForCapital, BigDecimal paymentToDeferAmount, BigDecimal paymentToDeferBalance,
@@ -71,7 +72,7 @@ public class ScheduledPayment {
                             BigDecimal totalPaymentAmount, Date dueDate, String status, BigDecimal contractInitialBalance,
                             BigDecimal contractFinalBalance, BigDecimal vATAmountForInterest, BigDecimal vATBalanceForInterest,
                             Date cancellationDate) {
-
+    this.paymentCalculatorId=paymentCalculatorId;
         this.paymentNumber = paymentNumber;
         this.capitalAmount = capitalAmount;
         this.capitalQuantityOfDays = capitalQuantityOfDays;
@@ -93,6 +94,14 @@ public class ScheduledPayment {
         this.vATAmountForInterest = vATAmountForInterest;
         this.vATBalanceForInterest = vATBalanceForInterest;
         this.cancellationDate = cancellationDate;
+    }
+
+    public int getPaymentCalculatorId() {
+        return paymentCalculatorId;
+    }
+
+    public void setPaymentCalculatorId(int paymentCalculatorId) {
+        this.paymentCalculatorId = paymentCalculatorId;
     }
 
     public BigInteger getScheduledPaymentId() {
