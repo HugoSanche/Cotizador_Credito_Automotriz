@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -16,7 +16,7 @@ public class PaymentCalculator  {
     @Column(name = "PaymentCalculatorId")
     private int paymentCalculatorId;
     @Column(name = "Date")
-    private Date fechaCotizacion;
+    private LocalDateTime fechaCotizacion;
     @Column(name = "YearVehicle")
     @NotNull(message = "is required")
     private int yearVehicle;
@@ -67,15 +67,15 @@ public class PaymentCalculator  {
 
 
     @Column(name = "LastUpdate")
-    private Date lastUpdate;
+    private LocalDateTime lastUpdate;
     @Column(name = "Register")
-    private Date register;
+    private LocalDateTime register;
 
 
     public PaymentCalculator() {
     }
 
-    public PaymentCalculator(int paymentCalculatorId, Date fechaCotizacion, int yearVehicle, BigDecimal vehiclePrice,
+    public PaymentCalculator(int paymentCalculatorId, LocalDateTime fechaCotizacion, int yearVehicle, BigDecimal vehiclePrice,
                              BigDecimal downPayment,  int brandId, int modelId, int loanTerm, int rateId,
                              double rateValue, int version) {
         this.paymentCalculatorId = paymentCalculatorId;
@@ -93,7 +93,7 @@ public class PaymentCalculator  {
     }
 
 
-    public PaymentCalculator(Date fechaCotizacion, int yearVehicle, BigDecimal vehiclePrice,
+    public PaymentCalculator(LocalDateTime fechaCotizacion, int yearVehicle, BigDecimal vehiclePrice,
                              BigDecimal downPayment, int personId,   int brandId, int modelId, int loanTerm, int rateId,
                              double rateValue, int version) {
         this.paymentCalculatorId = paymentCalculatorId;
@@ -143,19 +143,19 @@ public void addChargesReceivable(ChargesReceivable theChargesReceivable){
                 '}';
     }
 
-    public Date getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Date lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
-    public Date getRegister() {
+    public LocalDateTime getRegister() {
         return register;
     }
 
-    public void setRegister(Date register) {
+    public void setRegister(LocalDateTime register) {
         this.register = register;
     }
 
@@ -167,11 +167,11 @@ public void addChargesReceivable(ChargesReceivable theChargesReceivable){
         this.paymentCalculatorId = paymentCalculatorId;
     }
 
-    public Date getFechaCotizacion() {
+    public LocalDateTime getFechaCotizacion() {
         return fechaCotizacion;
     }
 
-    public void setFechaCotizacion(Date fechaCotizacion) {
+    public void setFechaCotizacion(LocalDateTime fechaCotizacion) {
         this.fechaCotizacion = fechaCotizacion;
     }
 

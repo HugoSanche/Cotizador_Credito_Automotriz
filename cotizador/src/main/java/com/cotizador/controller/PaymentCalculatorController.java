@@ -19,7 +19,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -30,14 +29,10 @@ public class PaymentCalculatorController {
     IndividualService individualService;
     PaymentCalculatorService paymentCalculatorService;
     ChargeService chargeService;
-
     PaymentDayService paymentDayService;
-
     BrandService brandService;
     ModelService modelService;
-
     TaxesService taxesService;
-
     ScheduledPaymentService scheduledPaymentService;
 
     @Value("${fixed.rate}")
@@ -51,7 +46,6 @@ public class PaymentCalculatorController {
 
     int personId;
     BigDecimal value = new BigDecimal(100);//porcentaje 100% pass to BigDecimal
-
 
     public PaymentCalculatorController(IndividualService individualService, PaymentCalculatorService paymentCalculatorService, ChargeService chargeService,
                                        PaymentDayService paymentDayService, BrandService brandService,
@@ -228,7 +222,7 @@ public class PaymentCalculatorController {
         else {
             //fill null values
 
-            Date date = new Date();
+            LocalDateTime date = LocalDateTime.now();
 
             List<PaymentCalculator> paymentCalculatorList = new ArrayList<>();
 
@@ -257,11 +251,14 @@ public class PaymentCalculatorController {
 //**************************************************  interestPeriod  ******************************************************************
             //Get Day of payment
             List<PaymentDay> paymentDay = paymentDayService.findByDayToExecute(true);
+            int dayToPayment=paymentDay.get(0).getPaymentDay();
 
-            //get days
-            long daysToCalculateInterest = getDays(paymentDay.get(0).getPaymentDay());
+            System.out.println("dayToPayment "+dayToPayment);
 
-            daysToCalculateInterest=20;
+            //get days of interest
+            int daysToCalculateInterest = getDays(dayToPayment);
+
+           // daysToCalculateInterest=20;
 
             //calculate interest of period for the initial charges
             interestPeriod = calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(), daysToCalculateInterest);
@@ -326,7 +323,7 @@ public class PaymentCalculatorController {
 
             createScheduledPayment(paymentCalculator.calculateAmountCredit(),paymentCalculator.getPaymentCalculatorId(),
                     paymentCalculator.getRateValue(), daysToCalculateInterest,paymentCalculator.getLoanTerm(),
-                    date);
+                    date, dayToPayment);
 
             //add models to view
 
@@ -402,7 +399,7 @@ public class PaymentCalculatorController {
             theIndividual.setNumberOfDependents(0);
             theIndividual.setHiringType("Normalpayroll");
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Date date = new Date();
+            LocalDateTime date =LocalDateTime.now();
 
             List<PaymentCalculator> paymentCalculatorList = new ArrayList<>();
 
@@ -431,10 +428,11 @@ public class PaymentCalculatorController {
             //Get Day of payment
             List<PaymentDay> paymentDay = paymentDayService.findByDayToExecute(true);
 
+            int dayToPayment=paymentDay.get(0).getPaymentDay();
             //get days
-            long daysToCalculateInterest = getDays(paymentDay.get(0).getPaymentDay());
+            int daysToCalculateInterest = getDays(dayToPayment);
 
-            daysToCalculateInterest=20;
+           // daysToCalculateInterest=20;
 
             //calculate interest of period for the initial charges
             interestPeriod = calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(), daysToCalculateInterest);
@@ -500,7 +498,7 @@ public class PaymentCalculatorController {
             //Create table amortizacion
             createScheduledPayment(paymentCalculator.calculateAmountCredit(), paymentCalculator.getPaymentCalculatorId(),
                     paymentCalculator.getRateValue(), daysToCalculateInterest,paymentCalculator.getLoanTerm(),
-                    date);
+                    date, dayToPayment);
 
             //add models to view
 
@@ -529,7 +527,7 @@ public class PaymentCalculatorController {
     }
 
     //get number of days to calculate interest of period
-    public long getDays(int day){
+    public int getDays(int day){
 
         //validate day
         if (day <1){
@@ -547,9 +545,9 @@ public class PaymentCalculatorController {
                 .withDayOfMonth(day);
 
         //get differences between today and paymentday from nex month
-        long daysBetween=0;
+        int daysBetween=0;
         try {
-            daysBetween = Duration.between(today, firstOfNextMonth).toDays();
+            daysBetween = (int)Duration.between(today, firstOfNextMonth).toDays();
             return daysBetween;
         }
         catch (DateTimeParseException e){
@@ -626,7 +624,7 @@ public class PaymentCalculatorController {
 
 
 
-    public ChargesReceivable createChargesReceivable(int ChargesId, Date date, BigDecimal chargeAmount, BigDecimal ivaChargeAmount){
+    public ChargesReceivable createChargesReceivable(int ChargesId, LocalDateTime date, BigDecimal chargeAmount, BigDecimal ivaChargeAmount){
         ChargesReceivable chargesReceivable=new ChargesReceivable(
                 ChargesId,
                 date,
@@ -650,7 +648,8 @@ public class PaymentCalculatorController {
 /*
 * Crea la tabla de amortizacion
 * */
-    public void createScheduledPayment( BigDecimal amountCredit,  int paymentCalculatorId, Double rateFixed, long daysOfInteres, int plazo,Date date)
+    public void createScheduledPayment( BigDecimal amountCredit,  int paymentCalculatorId, Double rateFixed,
+                                        int daysOfInteres, int plazo, LocalDateTime date, int dayToPayment)
     {
 
 
@@ -659,31 +658,23 @@ public class PaymentCalculatorController {
         BigDecimal ii=BigDecimal.valueOf(rateFixed/frequency);
 
         BigDecimal valor1=(ii.add(BigDecimal.valueOf(1)));
-        System.out.println("Valor 1: "+valor1);
         BigDecimal x1=valor1.pow(plazo);
-        System.out.println("X1: "+x1);
         valor1=ii.multiply(x1);
-
-        System.out.println("Valor 1: "+valor1);
-
 
 
         BigDecimal valor2=ii.add(BigDecimal.valueOf(1));
-        System.out.println("Valor 2: "+valor2);
 
         BigDecimal x2=valor2.pow((plazo));
         valor2=x2.subtract(BigDecimal.valueOf(1));
-        System.out.println("X2: "+x2);
 
 
-        System.out.println("Valor 2:"+valor2);
 
         BigDecimal valor3=valor1.divide(valor2,RoundingMode.HALF_UP);
-       System.out.println("Valor 3: "+valor3);
+
 
        // BigDecimal fijo=BigDecimal.valueOf(0.0935943796420858);
         BigDecimal capitalAmount=amountCredit.multiply(valor3);
-        System.out.println("valor Final: "+capitalAmount);
+
 
         BigDecimal contractInitialBalance=amountCredit;
         BigDecimal contractFinalBalance=amountCredit;
@@ -722,6 +713,9 @@ public class PaymentCalculatorController {
                     BigDecimal.valueOf(0),
                     null
             );
+
+            date=date.plusMonths(1).withDayOfMonth(dayToPayment);
+
             scheduledPaymentService.save(scheduledPayment);
             interest=(contractFinalBalance.multiply(rate)).divide(BigDecimal.valueOf(plazo));
             contractInitialBalance=contractFinalBalance;

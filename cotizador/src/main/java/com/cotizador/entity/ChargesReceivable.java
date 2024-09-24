@@ -3,8 +3,8 @@ package com.cotizador.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,9 +24,9 @@ public class ChargesReceivable {
 //    private List<Charges> charges2;
 
     @Column(name = "DueDate")
-    private Date dueDate;
+    private LocalDateTime dueDate;
     @Column(name = "EnforceabilityDate")
-    private Date enforceabilityDate;
+    private LocalDateTime enforceabilityDate;
     @Column(name = "ChargeAmount")
     private BigDecimal chargeAmount;
 
@@ -49,7 +49,7 @@ public class ChargesReceivable {
     @Column(name = "Comments")
     private String comments;
     @Column(name = "LastUpdate")
-    private Date lastUpdate;
+    private LocalDateTime lastUpdate;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST, CascadeType.REFRESH})
@@ -62,14 +62,14 @@ public class ChargesReceivable {
 
 
     @Column(name = "Register")
-    private Date register;
+    private LocalDateTime register;
     @Column(name = "Status")
     private String status;
 
-    public ChargesReceivable(int chargesId, Date dueDate, Date enforceabilityDate, BigDecimal chargeAmount,
+    public ChargesReceivable(int chargesId, LocalDateTime dueDate, LocalDateTime enforceabilityDate, BigDecimal chargeAmount,
                              BigDecimal chargeBalance, BigDecimal vATAmount, BigDecimal vATBalance, BigDecimal lateInterestAmount,
                              BigDecimal lateInterestBalance, BigDecimal lateInterestQtyOfDays, BigDecimal vATAmountForLateInterest,
-                             BigDecimal vATBalanceForLateInterest, String comments, Date lastUpdate, Date register,
+                             BigDecimal vATBalanceForLateInterest, String comments, LocalDateTime lastUpdate, LocalDateTime register,
                              String status) {
         this.chargesId=chargesId;
         this.dueDate = dueDate;
@@ -135,19 +135,19 @@ public class ChargesReceivable {
         this.chargesReceivableId = chargesReceivableId;
     }
 
-    public Date getDueDate() {
+    public LocalDateTime getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
-    public Date getEnforceabilityDate() {
+    public LocalDateTime getEnforceabilityDate() {
         return enforceabilityDate;
     }
 
-    public void setEnforceabilityDate(Date enforceabilityDate) {
+    public void setEnforceabilityDate(LocalDateTime enforceabilityDate) {
         this.enforceabilityDate = enforceabilityDate;
     }
 
@@ -231,19 +231,19 @@ public class ChargesReceivable {
         this.comments = comments;
     }
 
-    public Date getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Date lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
-    public Date getRegister() {
+    public LocalDateTime getRegister() {
         return register;
     }
 
-    public void setRegister(Date register) {
+    public void setRegister(LocalDateTime register) {
         this.register = register;
     }
 

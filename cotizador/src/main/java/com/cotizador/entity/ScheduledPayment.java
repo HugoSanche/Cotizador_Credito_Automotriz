@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 //Tabla de amortizacion
 @Entity
@@ -47,7 +47,7 @@ public class ScheduledPayment {
     @Column(name = "TotalPaymentAmount")
     private BigDecimal totalPaymentAmount;
     @Column(name = "DueDate")
-    private Date dueDate;
+    private LocalDateTime dueDate;
     @Column(name = "Status")
     private String status;
     @Column(name = "ContractInitialBalance")
@@ -59,7 +59,7 @@ public class ScheduledPayment {
     @Column(name = "VATBalanceForInterest")
     private BigDecimal vATBalanceForInterest;
     @Column(name = "CancellationDate")
-    private Date cancellationDate;
+    private LocalDateTime cancellationDate;
 
     public ScheduledPayment() {
     }
@@ -69,9 +69,9 @@ public class ScheduledPayment {
                             BigDecimal interestQuantityOfDays, BigDecimal interestBalance, BigDecimal vATAmountForCapital,
                             BigDecimal vATBalanceForCapital, BigDecimal paymentToDeferAmount, BigDecimal paymentToDeferBalance,
                             BigDecimal vATAmountForPaymentToDefer, BigDecimal vATBalanceForPaymentToDefer,
-                            BigDecimal totalPaymentAmount, Date dueDate, String status, BigDecimal contractInitialBalance,
+                            BigDecimal totalPaymentAmount, LocalDateTime dueDate, String status, BigDecimal contractInitialBalance,
                             BigDecimal contractFinalBalance, BigDecimal vATAmountForInterest, BigDecimal vATBalanceForInterest,
-                            Date cancellationDate) {
+                            LocalDateTime cancellationDate) {
     this.paymentCalculatorId=paymentCalculatorId;
         this.paymentNumber = paymentNumber;
         this.capitalAmount = capitalAmount;
@@ -226,11 +226,11 @@ public class ScheduledPayment {
         this.totalPaymentAmount = totalPaymentAmount;
     }
 
-    public Date getDueDate() {
+    public LocalDateTime getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -274,11 +274,11 @@ public class ScheduledPayment {
         this.vATBalanceForInterest = vATBalanceForInterest;
     }
 
-    public Date getCancellationDate() {
+    public LocalDateTime getCancellationDate() {
         return cancellationDate;
     }
 
-    public void setCancellationDate(Date cancellationDate) {
+    public void setCancellationDate(LocalDateTime cancellationDate) {
         this.cancellationDate = cancellationDate;
     }
 }
