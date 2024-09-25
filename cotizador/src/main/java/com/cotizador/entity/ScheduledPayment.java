@@ -281,4 +281,8 @@ public class ScheduledPayment {
     public void setCancellationDate(LocalDateTime cancellationDate) {
         this.cancellationDate = cancellationDate;
     }
+
+    public BigDecimal sumCapitalInterest(BigDecimal capitalAmount1,BigDecimal interestAmount1){
+        return capitalAmount1.add(interestAmount1);
+    }
 }
