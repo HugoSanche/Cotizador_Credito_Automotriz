@@ -94,7 +94,6 @@ public class PaymentCalculatorController {
         //Get all brands from DB and fill to List
         List<Brands> listOfBrands=brandService.findAll();
 
-
         //Get all models from DB and fill to list
         // Inicialmente, cargar los productos de la primera categoría (si existe)
         if (!listOfBrands.isEmpty()) {
@@ -105,7 +104,6 @@ public class PaymentCalculatorController {
 
         //get years of vehicle
         yearsVehicle=getYear(totalYears);
-
 
 
         //Add models to view
@@ -119,24 +117,15 @@ public class PaymentCalculatorController {
        // return "paymentcalculator/Add-PaymentCalculator";
     }
 
-
     @PostMapping("/saveIndividual")
-    public String saveIndividual(@Valid @ModelAttribute("individual") Individual theIndividual,
+    public String saveIndividual(@Valid @ModelAttribute("theIndividual") Individual theIndividual,
                                  BindingResult theBindingResultIndividual,
                                  Model theModel){
 
         if( theBindingResultIndividual.hasErrors()){
-            yearsVehicle=getYear(totalYears);
-            System.out.println("Error ");
+            System.out.println("Error Individual");
 
-            List<Brands> listOfBrands=brandService.findAll();
-
-            List<Models> listOfModels =modelService.findByModelId(theIndividual.getPaymentCalculadors().get(0).getModelId());
-            theModel.addAttribute("theBrands",listOfBrands);
-            theModel.addAttribute("theModels", listOfModels);
-            theModel.addAttribute("theYearsVehicle",yearsVehicle);
-
-            return "paymentcalculator/Add-PaymentCalculator";
+            return "paymentcalculator/Add-Individual";
         }
         else {
             //fill null values
@@ -174,7 +163,6 @@ public class PaymentCalculatorController {
             theModel.addAttribute("theModels",modelService);
             theModel.addAttribute("theYearsVehicle",yearsVehicle);
 
-
             personId= theIndividual.getPersonId();
 
            // return "paymentcalculator/Show-PaymentCalculator";
@@ -208,15 +196,15 @@ public class PaymentCalculatorController {
 
         if( theBindingResultPaymentCalculator.hasErrors()){
             yearsVehicle=getYear(totalYears);
-            System.out.println("Error ");
+            System.out.println("Error savePaymentCalculator");
 
             List<Brands> listOfBrands=brandService.findAll();
 
-           // List<Models> listOfModels =modelService.findByModelId(theIndividual.getPaymentCalculadors().get(0).getModelId());
+            List<Models> listOfModels =modelService.findByModelId(theIndividual.getPaymentCalculadors().get(0).getModelId());
             theModel.addAttribute("theBrands",listOfBrands);
-          //  theModel.addAttribute("theModels", listOfModels);
+            theModel.addAttribute("theModels", listOfModels);
             theModel.addAttribute("theYearsVehicle",yearsVehicle);
-
+            theModel.addAttribute("theIndividual", theIndividual);
             return "paymentcalculator/Add-PaymentCalculator2";
         }
         else {
