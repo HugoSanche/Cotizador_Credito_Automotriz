@@ -183,7 +183,7 @@
                         <tr th:each="scheduledPayment : ${theScheduledPayment}">
 
                             <td th:text="${scheduledPayment.getPaymentNumber()}"/>
-                            <td th:text="${scheduledPayment.getDueDate()}"/>
+                            <td th:text="${#temporals.format(scheduledPayment.getDueDate(), 'dd-MM-yyyy')}"/>
                             <td th:text="${#numbers.formatCurrency(scheduledPayment.getContractInitialBalance())}"/>
                             <td th:text="${#numbers.formatCurrency(scheduledPayment.getCapitalAmount())}"/>
                             <td th:text="${#numbers.formatCurrency(scheduledPayment.getInterestAmount())}"/>
