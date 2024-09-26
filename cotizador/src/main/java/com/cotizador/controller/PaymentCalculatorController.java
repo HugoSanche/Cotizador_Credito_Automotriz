@@ -175,14 +175,11 @@ public class PaymentCalculatorController {
 
     @PostMapping("/savePaymentCalculator")
     public String savePaymentCalculator(
-                                  @Valid @ModelAttribute("thePaymentCalculator") PaymentCalculator thepaymentcalculator,
-
+                                  @Valid @ModelAttribute("thepaymentcalculator") PaymentCalculator thepaymentcalculator,
                                   BindingResult theBindingResultPaymentCalculator,
                                   Model theModel){
 
         Individual theIndividual=individualService.findById(personId);
-
-
         // get a date
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime dateNextMonth ;
@@ -193,18 +190,35 @@ public class PaymentCalculatorController {
         BigDecimal  commisionForOpening; //comision por apertura
         BigDecimal ivaCommisionForOpening;
 
-
         if( theBindingResultPaymentCalculator.hasErrors()){
-            yearsVehicle=getYear(totalYears);
             System.out.println("Error savePaymentCalculator");
 
+            System.out.println("bindingResult = " + theBindingResultPaymentCalculator);
+            System.out.println("thepaymentcalculator = " +thepaymentcalculator);
+
+            //Get all brands from DB and fill to List
             List<Brands> listOfBrands=brandService.findAll();
 
-            List<Models> listOfModels =modelService.findByModelId(theIndividual.getPaymentCalculadors().get(0).getModelId());
-            theModel.addAttribute("theBrands",listOfBrands);
-            theModel.addAttribute("theModels", listOfModels);
+            //Get all models from DB and fill to list
+            // Inicialmente, cargar los productos de la primera categoría (si existe)
+            if (!listOfBrands.isEmpty()) {
+                Brands firstBrand = listOfBrands.get(0); // seleccionar la primera categoría por defecto
+                List<Models> listOfModels = modelService.findByBrandId(thepaymentcalculator.getBrandId());
+                theModel.addAttribute("theListOfModels", listOfModels);System.out.println("UNO ");
+            }
+            else{
+                List<Models> listOfModels =modelService.findByModelId(thepaymentcalculator.getBrandId());
+                theModel.addAttribute("theListOfModels", listOfModels);
+            }
+            yearsVehicle=getYear(totalYears);
+          //  System.out.println("listOfBrands "+listOfBrands.get(0));
+            theModel.addAttribute("thePaymentCalculator",thepaymentcalculator);
+
+            theModel.addAttribute("theListOfBrands",listOfBrands);
+            //theModel.addAttribute("theModels", listOfModels);
             theModel.addAttribute("theYearsVehicle",yearsVehicle);
             theModel.addAttribute("theIndividual", theIndividual);
+
             return "paymentcalculator/Add-PaymentCalculator2";
         }
         else {
@@ -354,7 +368,6 @@ public class PaymentCalculatorController {
     @PostMapping("/save")
     public String saveIndividual2(@Valid @ModelAttribute("theIndividual") Individual theIndividual,
                                  BindingResult theBindingResultIndividual,
-
                                  Model theModel){
         // get a date
         LocalDateTime today = LocalDateTime.now();

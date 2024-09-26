@@ -78,7 +78,19 @@
                                                 th:value="${year}">Years
                                         </option>
                                     </select>
+<!--                                    <div class="form-check form-check-inline" th:each="year : ${theYearsVehicle}">-->
+<!--                                        <input class="form-check-input"-->
+<!--                                               th:field="*{yearVehicle}"-->
+<!--                                               th:value="${year}"-->
+<!--                                               type="checkbox">-->
+<!--                                        <label class="form-check-label"-->
+<!--                                               th:for="${#ids.prev('yearVehicle')}"-->
+<!--                                               th:text="${year}"/>-->
+<!--                                    </div>-->
+
                                 </td>
+                                <span  th:if="${#fields.hasErrors('yearVehicle')}" th:errors="*{yearVehicle}" class="error"></span>
+
                                 <td style="width: 15%; text-align: right ">
                                     <label id="LBLMarca" >Marca</label>
                                 </td>
@@ -89,6 +101,9 @@
                                                 th:value="${brand.getBrandId()}">Marca</option>
                                     </select>
                                 </td>
+                                <span  th:if="${#fields.hasErrors('brandId')}" th:errors="*{brandId}" class="error"></span>
+
+
                                 <td style="width: 19%; text-align: right">
                                     <label id="LBLModelo" >Modelo:&nbsp;</label>
 
@@ -101,6 +116,7 @@
 
                                         </option>
                                     </select>
+                                    <span  th:if="${#fields.hasErrors('modelId')}" th:errors="*{modelId}" class="error"></span>
                                 </td>
                             </tr>
                             </tbody>
@@ -118,7 +134,14 @@
                                 <td style="width: 19%; text-align: left">
                                     <input type="text" th:field="*{vehiclePrice}"
                                            class="form-control form-control-sm" placeholder="Importe a Financiar">
+
+
                                 </td>
+                                <div>
+                                    <span  th:if="${#fields.hasErrors('vehiclePrice')}" th:errors="*{vehiclePrice}" class="error"></span>
+                                </div>
+
+
                                 <td style="width: 15%; text-align: right ">
                                     <label id="LBLEnganche" >Enganche:</label>
                                 </td>
@@ -126,9 +149,13 @@
                                     <input type="text" th:field="*{downPayment}"
                                            class="form-control form-control-sm" placeholder="Enganche">
                                 </td>
+                                <div>
+                                    <span  th:if="${#fields.hasErrors('downPayment')}" th:errors="*{downPayment}" class="error"></span>
+                                </div>
+
+
                                 <td style="width: 19%; text-align: right">
                                     <label id="LBLPlazo" >Plazo:&nbsp;</label>
-
                                 </td>
                                 <td style="width: 15%; text-align: left" >
                                     <select class="form-select form-select-sm" th:field="*{loanTerm}">
@@ -139,6 +166,11 @@
                                         <option th:value=60>60</option>
                                     </select>
                                 </td>
+                                <div>
+                                    <span  th:if="${#fields.hasErrors('loanTerm')}" th:errors="*{loanTerm}" class="error"></span>
+                                </div>
+
+
                             </tr>
                             </tbody>
                         </table>
@@ -160,7 +192,7 @@
     <script type="text/javascript">
         function cargarProductos() {
             var categoriaId = $("#dropdownBrand").val();
-
+            alert("Hola ");
             $.ajax({
                 type: "GET",
                 url: "/creditos/auto/modelos/" + categoriaId,

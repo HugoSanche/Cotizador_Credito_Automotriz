@@ -22,11 +22,11 @@ public class PaymentCalculator  {
     private int yearVehicle;
 
     @Column(name = "VehiclePrice")
-    @NotNull(message = "is required")
+    @NotNull(message = "is required 1")
     private BigDecimal vehiclePrice;
 
     @Column(name = "DownPayment")
-    @NotNull(message = "is required")
+    @NotNull(message = "is required 2")
     private BigDecimal downPayment;
 
 
