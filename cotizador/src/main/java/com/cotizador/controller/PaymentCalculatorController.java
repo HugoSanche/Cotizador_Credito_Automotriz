@@ -136,8 +136,6 @@ public class PaymentCalculatorController {
 
             individualService.save(theIndividual);
 
-
-
             PaymentCalculator paymentCalculator=new PaymentCalculator();
 
             //Get all brands from DB and fill to List
@@ -171,8 +169,6 @@ public class PaymentCalculatorController {
         }
     }
 
-
-
     @PostMapping("/savePaymentCalculator")
     public String savePaymentCalculator(
                                   @Valid @ModelAttribute("thepaymentcalculator") PaymentCalculator thepaymentcalculator,
@@ -192,9 +188,6 @@ public class PaymentCalculatorController {
 
         if( theBindingResultPaymentCalculator.hasErrors()){
             System.out.println("Error savePaymentCalculator");
-
-            System.out.println("bindingResult = " + theBindingResultPaymentCalculator);
-            System.out.println("thepaymentcalculator = " +thepaymentcalculator);
 
             //Get all brands from DB and fill to List
             List<Brands> listOfBrands=brandService.findAll();
@@ -244,28 +237,23 @@ public class PaymentCalculatorController {
                    );
 
 //***********************************************************************************************************************************
-
-
             //To get the actual value of IVA
             Taxes taxes=taxesService.findByName("IVA");
-
 
 //**************************************************  interestPeriod  ******************************************************************
             //Get Day of payment
             List<PaymentDay> paymentDay = paymentDayService.findByDayToExecute(true);
             int dayToPayment=paymentDay.get(0).getPaymentDay();
 
-            System.out.println("dayToPayment "+dayToPayment);
-
             //get days of interest
             int daysToCalculateInterest = getDays(dayToPayment);
 
-           // daysToCalculateInterest=20;
+            daysToCalculateInterest=20;
+
 
             //calculate interest of period for the initial charges
             interestPeriod = calculateInterest(paymentCalculator.calculateAmountCredit(), paymentCalculator.getRateValue(), daysToCalculateInterest);
             ivaInterestPeriod=calculateIvaInterest(interestPeriod, taxes);
-
 
 //*********************************************************************************************************************************
             Charges chargeInterestPeriod = chargeService.findByName("Intereses del Periodo");
@@ -276,7 +264,6 @@ public class PaymentCalculatorController {
             //add to DB intereses del periodo
             interesesDelPeriodo=createChargesReceivable(chargeInterestPeriod.getChargesId(),date, interestPeriod,ivaInterestPeriod);
 
-            System.out.println("charge "+chargeInterestPeriod.getName());
             // interesesDelPeriodo.addCharges(chargeInterestPeriod);
             paymentCalculator.addChargesReceivable(interesesDelPeriodo);
 
@@ -291,7 +278,6 @@ public class PaymentCalculatorController {
             //calculate IVA commision For Openning
             ivaCommisionForOpening=calculateIvaCommisionForOpening(commisionForOpening, taxes);
 
-
 //*********************************************************************************************************************************
 
             //Ad charge commision For Openning
@@ -300,11 +286,7 @@ public class PaymentCalculatorController {
             //add to DB comission por apertura
             comisionXApertura=createChargesReceivable(chargeCommisionForOpening.getChargesId(),date, commisionForOpening,ivaCommisionForOpening);
 
-
-
             paymentCalculator.addChargesReceivable(comisionXApertura);
-
-
 
 //*************************************  SAVE INDIVIDUAL AND PAYMENT CALCULATOR   *******************************************************
             //fill individual paymentCalculator and add paymentCalculator;
@@ -314,31 +296,15 @@ public class PaymentCalculatorController {
 
             // save the individual
             paymentCalculatorService.save(paymentCalculator);
-            System.out.println("Hola 3");
 //***********************************************************************************************************************************
-
             dateNextMonth=getPaymentNextMonth(paymentDay.get(0).getPaymentDay());
-
-            System.out.println("Fecha de hoy: "+today);
-            System.out.println("Fecha siguiente mes: "+dateNextMonth);
-
 
             createScheduledPayment(paymentCalculator.calculateAmountCredit(),paymentCalculator.getPaymentCalculatorId(),
                     paymentCalculator.getRateValue(), daysToCalculateInterest,paymentCalculator.getLoanTerm(),
                     date, dayToPayment);
 
             //add models to view
-
             List<ScheduledPayment> scheduledPayment= scheduledPaymentService.find(paymentCalculator.getPaymentCalculatorId());
-
-            System.out.println("PaymentCalculatorId() "+paymentCalculator.getPaymentCalculatorId());
-
-            System.out.println("PaymentNumber "+scheduledPayment.get(0).getPaymentNumber());
-            System.out.println("DueDate() "+scheduledPayment.get(0).getDueDate());
-            System.out.println("ContractInitialBalance() "+ scheduledPayment.get(0).getContractInitialBalance());
-            scheduledPayment.get(0).getCapitalAmount();
-            scheduledPayment.get(0).getInterestAmount();
-            scheduledPayment.get(0).getContractFinalBalance();
 
             theModel.addAttribute("theScheduledPayment", scheduledPayment);
             theModel.addAttribute("theCharges2", paymentCalculator.getChargesReceivable());
@@ -346,9 +312,6 @@ public class PaymentCalculatorController {
            // theModel.addAttribute("theIndividual", theIndividual);
             theModel.addAttribute("theBrands",brandService);
             theModel.addAttribute("theModels",modelService);
-
-
-
             theModel.addAttribute("thePaymentCalculator", paymentCalculator);
             theModel.addAttribute("theIndividual", theIndividual);
             theModel.addAttribute("theCharges", chargeCommisionForOpening);
@@ -356,9 +319,6 @@ public class PaymentCalculatorController {
             theModel.addAttribute("theIvaInterestPeriod", ivaInterestPeriod);
             theModel.addAttribute("theCommisionForOpening", commisionForOpening);
             theModel.addAttribute("theIvaCommisionForOpening", ivaCommisionForOpening);
-
-
-
 
             //return "paymentcalculator/Show-PaymentCalculator";
             return "test/show";
@@ -378,7 +338,6 @@ public class PaymentCalculatorController {
 
         BigDecimal  commisionForOpening; //comision por apertura
         BigDecimal ivaCommisionForOpening;
-
 
         if( theBindingResultIndividual.hasErrors()){
             yearsVehicle=getYear(totalYears);
@@ -420,7 +379,6 @@ public class PaymentCalculatorController {
 
 //***********************************************************************************************************************************
 
-
             //To get the actual value of IVA
             Taxes taxes=taxesService.findByName("IVA");
 
@@ -433,6 +391,7 @@ public class PaymentCalculatorController {
             //get days
             int daysToCalculateInterest = getDays(dayToPayment);
 
+            System.out.println(daysToCalculateInterest);
            // daysToCalculateInterest=20;
 
             //calculate interest of period for the initial charges
@@ -466,18 +425,13 @@ public class PaymentCalculatorController {
 
 
 //*********************************************************************************************************************************
-
-            //Ad charge commision For Openning
+            //Add charge commision For Openning
             ChargesReceivable comisionXApertura;
 
             //add to DB comission por apertura
             comisionXApertura=createChargesReceivable(chargeCommisionForOpening.getChargesId(),date, commisionForOpening,ivaCommisionForOpening);
 
-
-
            paymentCalculator.addChargesReceivable(comisionXApertura);
-            System.out.println("Hola ");
-
 
 //*************************************  SAVE INDIVIDUAL AND PAYMENT CALCULATOR   *******************************************************
             //fill individual paymentCalculator and add paymentCalculator;
@@ -485,16 +439,10 @@ public class PaymentCalculatorController {
 
             //add paymentcalculator to individual
            theIndividual.setPaymentCalculadors(paymentCalculatorList);
-            System.out.println("Hola 2");
+
             // save the individual
            individualService.save(theIndividual);
-            System.out.println("Hola 3");
 //***********************************************************************************************************************************
-
-            dateNextMonth=getPaymentNextMonth(paymentDay.get(0).getPaymentDay());
-
-            System.out.println("Fecha de hoy: "+today);
-            System.out.println("Fecha siguiente mes: "+dateNextMonth);
 
             //Create table amortizacion
             createScheduledPayment(paymentCalculator.calculateAmountCredit(), paymentCalculator.getPaymentCalculatorId(),
@@ -502,25 +450,17 @@ public class PaymentCalculatorController {
                     date, dayToPayment);
 
             //add models to view
-
-
             theModel.addAttribute("theCharges2", paymentCalculator.getChargesReceivable());
             theModel.addAttribute("theChargeService", chargeService);
             theModel.addAttribute("theIndividual", theIndividual);
             theModel.addAttribute("theBrands",brandService);
             theModel.addAttribute("theModels",modelService);
-
             theModel.addAttribute("thePaymentCalculator", paymentCalculator);
-
             theModel.addAttribute("theCharges", chargeCommisionForOpening);
             theModel.addAttribute("theInterestPeriod", interestPeriod);
             theModel.addAttribute("theIvaInterestPeriod", ivaInterestPeriod);
             theModel.addAttribute("theCommisionForOpening", commisionForOpening);
             theModel.addAttribute("theIvaCommisionForOpening", ivaCommisionForOpening);
-
-
-
-
 
             //return "paymentcalculator/Show-PaymentCalculator";
            return "test/Show";
@@ -534,25 +474,34 @@ public class PaymentCalculatorController {
         if (day <1){
             return 0;
         }
-
         // get a reference to today
         LocalDateTime today = LocalDateTime.now();
+        int daysBetween = 0;
+        if (today.getDayOfMonth()>day) {
+            // having today,
+            LocalDateTime firstOfNextMonth = today
+                    // add one to the month
+                    .withMonth(today.getMonthValue() + 1)
 
-        // having today,
-        LocalDateTime firstOfNextMonth = today
-                // add one to the month
-                .withMonth(today.getMonthValue() + 1)
-                // and take the first day of that month
-                .withDayOfMonth(day);
+                    // and take the first day of that month
+                    .withDayOfMonth(day);
 
-        //get differences between today and paymentday from nex month
-        int daysBetween=0;
-        try {
-            daysBetween = (int)Duration.between(today, firstOfNextMonth).toDays();
-            return daysBetween;
+            //get differences between today and paymentday from nex month
+            try {
+                daysBetween = (int) Duration.between(today, firstOfNextMonth).toDays();
+                return daysBetween;
+            } catch (DateTimeParseException e) {
+                System.out.println(e.getParsedString());
+            }
         }
-        catch (DateTimeParseException e){
-            System.out.println(e.getParsedString());
+        else{
+            //get differences between today and paymentday from nex month
+            try {System.out.println("getDayOfMonth() "+today.getDayOfMonth());
+                daysBetween = day-today.getDayOfMonth();
+                return daysBetween;
+            } catch (DateTimeParseException e) {
+                System.out.println(e.getParsedString());
+            }
         }
         return daysBetween;
     }
@@ -587,7 +536,6 @@ public class PaymentCalculatorController {
         for (int i=totalYears-1; i>=0;i--){
             years.add(beforeOfNextMonth.minusYears(i).getYear());
             beforeOfNextMonth.minusYears(i);
-            //System.out.println( beforeOfNextMonth.minusYears(i).getYear());
         }
         return years;
     }
@@ -652,36 +600,19 @@ public class PaymentCalculatorController {
     public void createScheduledPayment( BigDecimal amountCredit,  int paymentCalculatorId, Double rateFixed,
                                         int daysOfInteres, int plazo, LocalDateTime date, int dayToPayment)
     {
-
-
         rateFixed=rateFixed/100;
-
         BigDecimal ii=BigDecimal.valueOf(rateFixed/frequency);
-
         BigDecimal valor1=(ii.add(BigDecimal.valueOf(1)));
         BigDecimal x1=valor1.pow(plazo);
         valor1=ii.multiply(x1);
-
-
         BigDecimal valor2=ii.add(BigDecimal.valueOf(1));
-
         BigDecimal x2=valor2.pow((plazo));
         valor2=x2.subtract(BigDecimal.valueOf(1));
-
-
-
-        BigDecimal valor3=valor1.divide(valor2,RoundingMode.HALF_UP);
-
-
-       // BigDecimal fijo=BigDecimal.valueOf(0.0935943796420858);
+        BigDecimal valor3=valor1.divide(valor2,2, RoundingMode.HALF_EVEN);
         BigDecimal capitalAmount=amountCredit.multiply(valor3);
-
-
         BigDecimal contractInitialBalance=amountCredit;
         BigDecimal contractFinalBalance=amountCredit;
-
         BigDecimal interest=BigDecimal.valueOf(0);
-
         BigDecimal rate = new BigDecimal(rateFixed);
         for (int i=0;i<plazo+1;i++){
             if (i<=0){
@@ -714,13 +645,10 @@ public class PaymentCalculatorController {
                     BigDecimal.valueOf(0),
                     null
             );
-
             date=date.plusMonths(1).withDayOfMonth(dayToPayment);
-
             scheduledPaymentService.save(scheduledPayment);
-            interest=(contractFinalBalance.multiply(rate)).divide(BigDecimal.valueOf(plazo));
+            interest=(contractFinalBalance.multiply(rate)).divide(BigDecimal.valueOf(plazo),2, RoundingMode.HALF_EVEN);
             contractInitialBalance=contractFinalBalance;
-
         }
 
     }
