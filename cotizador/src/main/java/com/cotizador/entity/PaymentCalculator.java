@@ -18,15 +18,18 @@ public class PaymentCalculator  {
     @Column(name = "Date")
     private LocalDateTime fechaCotizacion;
     @Column(name = "YearVehicle")
+
     @NotNull(message = "is required")
     private int yearVehicle;
 
     @Column(name = "VehiclePrice")
-    @NotNull(message = "is required 1")
+    @NotNull(message = "is required 111111111111111111111111111111")
+
     private BigDecimal vehiclePrice;
 
     @Column(name = "DownPayment")
-    @NotNull(message = "is required 2")
+    @NotNull(message = "is required 111111111111111111111111111111")
+
     private BigDecimal downPayment;
 
 
@@ -36,14 +39,12 @@ public class PaymentCalculator  {
 
     private int personId;
     @Column(name = "BrandId")
-    @NotNull
     private int brandId;
-    @NotNull
     @Column(name = "ModelId")
     private int modelId;
 
     @Column(name = "LoanTerm")
-    @NotNull
+
     private int loanTerm;
 
     @Column(name = "RateId")
