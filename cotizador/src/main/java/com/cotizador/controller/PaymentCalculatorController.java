@@ -542,12 +542,12 @@ public class PaymentCalculatorController {
     public BigDecimal calculateCommisionForOpening(BigDecimal amountOfCredit, Charges  chargeCommisionForOpening){
         BigDecimal value = new BigDecimal(100);
 
-        return amountOfCredit.multiply(chargeCommisionForOpening.getCalculationValue()).divide(value, RoundingMode.HALF_UP);
+        return amountOfCredit.multiply(chargeCommisionForOpening.getCalculationValue()).divide(value, RoundingMode.HALF_EVEN);
     }
 
     public  BigDecimal calculateIvaCommisionForOpening(BigDecimal commisionForOpening, Taxes taxes){
         BigDecimal ivaCommisionForOpening;
-        ivaCommisionForOpening=commisionForOpening.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_UP);
+        ivaCommisionForOpening=commisionForOpening.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_EVEN);
         return ivaCommisionForOpening;
     }
     public BigDecimal calculateInterest(BigDecimal amountCredit, double rateFixed, long daysOfInteres){
@@ -558,15 +558,15 @@ public class PaymentCalculatorController {
 
         BigDecimal daysOfYears = new BigDecimal(360);
         BigDecimal daysOfInt = new BigDecimal(daysOfInteres);
-        BigDecimal interestPeriod=amountCredit.multiply(rate).divide(daysOfYears, RoundingMode.HALF_UP ).multiply(daysOfInt);
+        BigDecimal interestPeriod=amountCredit.multiply(rate).divide(daysOfYears, RoundingMode.HALF_EVEN ).multiply(daysOfInt);
 
-        interestPeriod = interestPeriod.setScale(2, RoundingMode.CEILING);
+        interestPeriod = interestPeriod.setScale(2, RoundingMode.HALF_EVEN);
         return interestPeriod;
     }
     public BigDecimal calculateIvaInterest(BigDecimal interestPeriod, Taxes taxes){
         BigDecimal ivainterestPeriod;
         //Get IVA and divide 100
-        ivainterestPeriod=interestPeriod.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_UP);
+        ivainterestPeriod=interestPeriod.multiply(BigDecimal.valueOf(taxes.getValue())).divide(value, RoundingMode.HALF_EVEN);
 
         return ivainterestPeriod;
     }
@@ -605,11 +605,21 @@ public class PaymentCalculatorController {
         BigDecimal valor1=(ii.add(BigDecimal.valueOf(1)));
         BigDecimal x1=valor1.pow(plazo);
         valor1=ii.multiply(x1);
+
+
         BigDecimal valor2=ii.add(BigDecimal.valueOf(1));
         BigDecimal x2=valor2.pow((plazo));
         valor2=x2.subtract(BigDecimal.valueOf(1));
-        BigDecimal valor3=valor1.divide(valor2,2, RoundingMode.HALF_EVEN);
+
+
+        BigDecimal valor3=valor1.divide(valor2, RoundingMode.HALF_EVEN);
+
+        System.out.println("amountCredit "+amountCredit);
+        System.out.println("valor3 "+valor3);
+
         BigDecimal capitalAmount=amountCredit.multiply(valor3);
+        System.out.println("capitalAmount "+capitalAmount);
+
         BigDecimal contractInitialBalance=amountCredit;
         BigDecimal contractFinalBalance=amountCredit;
         BigDecimal interest=BigDecimal.valueOf(0);
@@ -620,7 +630,8 @@ public class PaymentCalculatorController {
                 contractFinalBalance= amountCredit;
             }
             else{
-                contractFinalBalance=contractFinalBalance.subtract(capitalAmount.subtract(interest));
+                contractFinalBalance=contractFinalBalance.subtract(capitalAmount);
+                contractFinalBalance=contractFinalBalance.subtract(interest);
             }
             ScheduledPayment scheduledPayment=new ScheduledPayment(paymentCalculatorId,
                     i,
