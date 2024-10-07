@@ -634,10 +634,14 @@ public class PaymentCalculatorController {
                 contractInitialBalance=amountCredit;
                 contractFinalBalance= amountCredit;
             } else if (i==1) {
-                interest = (contractFinalBalance.multiply(rate)).divide(BigDecimal.valueOf(plazo), 2, RoundingMode.HALF_EVEN);
+
+                interest = (contractFinalBalance.multiply(rate)).divide(BigDecimal.valueOf(frequency),  RoundingMode.HALF_EVEN);
+
                 capitalAmount=amountCredit.multiply(valor3);
                 cuotaNivelada=capitalAmount;
+
                 capitalAmount=capitalAmount.subtract(interest);
+
                 contractFinalBalance=contractFinalBalance.subtract(capitalAmount);
             } else{
                 contractFinalBalance=contractFinalBalance.subtract(capitalAmount);
@@ -670,7 +674,7 @@ public class PaymentCalculatorController {
             scheduledPaymentService.save(scheduledPayment);
 
             //calculate interest
-            interest = (contractFinalBalance.multiply(rate)).divide(BigDecimal.valueOf(plazo), RoundingMode.HALF_EVEN);
+            interest = (contractFinalBalance.multiply(rate)).divide(BigDecimal.valueOf(frequency), RoundingMode.HALF_EVEN);
             capitalAmount =cuotaNivelada.subtract(interest);
 
             contractInitialBalance = contractFinalBalance;
