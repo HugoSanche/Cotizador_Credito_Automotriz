@@ -197,7 +197,7 @@ public class PaymentCalculatorController {
             if (!listOfBrands.isEmpty()) {
                 Brands firstBrand = listOfBrands.get(0); // seleccionar la primera categoría por defecto
                 List<Models> listOfModels = modelService.findByBrandId(thepaymentcalculator.getBrandId());
-                theModel.addAttribute("theListOfModels", listOfModels);System.out.println("UNO ");
+                theModel.addAttribute("theListOfModels", listOfModels);
             }
             else{
                 List<Models> listOfModels =modelService.findByModelId(thepaymentcalculator.getBrandId());
@@ -613,31 +613,46 @@ public class PaymentCalculatorController {
 
 
         BigDecimal valor3=valor1.divide(valor2, RoundingMode.HALF_EVEN);
-
-        System.out.println("amountCredit "+amountCredit);
-        System.out.println("valor3 "+valor3);
-
-        BigDecimal capitalAmount=amountCredit.multiply(valor3);
-        System.out.println("capitalAmount "+capitalAmount);
+        BigDecimal capitalAmount=BigDecimal.valueOf(0);
 
         BigDecimal contractInitialBalance=amountCredit;
         BigDecimal contractFinalBalance=amountCredit;
         BigDecimal interest=BigDecimal.valueOf(0);
         BigDecimal rate = new BigDecimal(rateFixed);
+        BigDecimal cuotaNivelada=BigDecimal.valueOf(0);
+
         for (int i=0;i<plazo+1;i++){
             if (i<=0){
                 contractInitialBalance=amountCredit;
                 contractFinalBalance= amountCredit;
-            }
-            else{
+            } else if (i==1) {
+
+                System.out.println("Renta "+i);
+                interest = (contractFinalBalance.multiply(rate)).divide(BigDecimal.valueOf(plazo), 2, RoundingMode.HALF_EVEN);
+                System.out.println("interest "+interest);
+
+                capitalAmount=amountCredit.multiply(valor3);
+                System.out.println("capitalAmount "+capitalAmount);
+
+                cuotaNivelada=capitalAmount;
+
+                capitalAmount=capitalAmount.subtract(interest);
+                System.out.println("capitalAmount "+capitalAmount);
+
+                System.out.println("contractFinalBalance "+contractFinalBalance);
                 contractFinalBalance=contractFinalBalance.subtract(capitalAmount);
-                contractFinalBalance=contractFinalBalance.subtract(interest);
+                System.out.println("contractFinalBalance "+contractFinalBalance);
+
+                System.out.println("------------------------------");
+            } else{
+                contractFinalBalance=contractFinalBalance.subtract(capitalAmount);
+               // contractFinalBalance=contractFinalBalance.subtract(interest);
             }
             ScheduledPayment scheduledPayment=new ScheduledPayment(paymentCalculatorId,
                     i,
-                    capitalAmount.subtract(interest),
+                    capitalAmount,
                     0,
-                    capitalAmount.subtract(interest),
+                    capitalAmount,
                     interest,
                     BigDecimal.valueOf(0),
                     interest,
@@ -658,8 +673,15 @@ public class PaymentCalculatorController {
             );
             date=date.plusMonths(1).withDayOfMonth(dayToPayment);
             scheduledPaymentService.save(scheduledPayment);
-            interest=(contractFinalBalance.multiply(rate)).divide(BigDecimal.valueOf(plazo),2, RoundingMode.HALF_EVEN);
-            contractInitialBalance=contractFinalBalance;
+
+                interest = (contractFinalBalance.multiply(rate)).divide(BigDecimal.valueOf(plazo), 2, RoundingMode.HALF_EVEN);
+                capitalAmount =cuotaNivelada.subtract(interest);
+                contractInitialBalance = contractFinalBalance;
+                System.out.println("Renta "+i);
+                System.out.println("interest "+interest);
+                System.out.println("capitalAmount "+capitalAmount);
+
+
         }
 
     }
